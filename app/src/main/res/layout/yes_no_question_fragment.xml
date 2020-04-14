@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_quiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:text="2"
+        android:textSize="20sp"
+        android:padding="8dp"
+        android:layout_marginBottom="1dp"
+        android:id="@+id/question_number"/>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="זמן שנותר"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/time_left_text"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_left"
+            android:layout_alignParentRight="true"
+            android:text="30"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="אדווה מאוד מתקשה בעיצוב"
+        android:textSize="20sp"
+        android:padding="8dp"
+        android:layout_marginBottom="40dp"
+        android:id="@+id/question"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="נכון אבל היא משתדלת"
+        android:background="#0091EA"
+        android:textColor="#fff"
+        android:padding="8dp"
+        android:layout_marginBottom="24dp"
+        android:id="@+id/choice1"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="לא נכון אחת הטובות"
+        android:background="#0091EA"
+        android:textColor="#fff"
+        android:padding="8dp"
+        android:layout_marginBottom="24dp"
+        android:id="@+id/choice2"/>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:text="הבא"
+        android:textSize="20sp"
+        android:padding="8dp"
+        android:paddingRight="16dp"
+        android:visibility="gone"
+        android:id="@+id/next"/>
+
+
+
+
+</LinearLayout>
