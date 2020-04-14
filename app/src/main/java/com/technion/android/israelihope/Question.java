@@ -16,8 +16,9 @@ public class Question {
     private Map<Utils.UserType,Integer> count_rights;
     private int count_answers;
     private int first_quiz_index; // if it is not first quiz it will be -1
+    private Utils.UserType subject;
 
-    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int count_answers, int firstQuizIndex) {
+    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int count_answers, int firstQuizIndex,Utils.UserType subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
@@ -29,6 +30,7 @@ public class Question {
         InitCountRights();
         this.count_answers = count_answers;
         this.first_quiz_index = firstQuizIndex;
+        this.subject=subject;
     }
     private void InitCountRights(){
         count_rights.put(Utils.UserType.A,0);
@@ -59,6 +61,14 @@ public class Question {
 
     public void setQuestionType(Utils.QuestionType questionType) {
         this.question_type = questionType;
+    }
+
+    public Utils.UserType getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Utils.UserType subject) {
+        this.subject = subject;
     }
 
     public ArrayList<String> getPossibleAnswers() {

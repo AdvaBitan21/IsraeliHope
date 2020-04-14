@@ -96,7 +96,7 @@ public class YesNoQuestionFragment extends Fragment {
             @Override
             public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice2);}});
 
-      
+
 
 
 
