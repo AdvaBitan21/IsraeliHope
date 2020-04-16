@@ -67,8 +67,8 @@ public class YesNoQuestionFragment extends Fragment {
                         mUser = document.toObject(User.class);
                     }
 
-                    InitUI();
-                    InitTimer();
+                    initUI();
+                    initTimer();
 
 
                 }
@@ -76,7 +76,7 @@ public class YesNoQuestionFragment extends Fragment {
         });
     }
 
-    private void InitUI(){
+    private void initUI(){
 
         TextView questionIndex = getActivity().findViewById(R.id.question_number);
         questionIndex.setText(mQuestion.getFirstQuizIndex());
@@ -88,13 +88,13 @@ public class YesNoQuestionFragment extends Fragment {
         choice1.setText(mQuestion.getPossibleAnswers().get(0));
         choice1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice1);}});
+            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice1);}});
 
         final Button choice2= getActivity().findViewById(R.id.choice2);
         choice2.setText(mQuestion.getPossibleAnswers().get(1));
         choice2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice2);}});
+            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice2);}});
 
 
 
@@ -102,7 +102,7 @@ public class YesNoQuestionFragment extends Fragment {
 
     }
 
-    private void CheckAnswer(String possible_answer,Button btn){
+    private void checkAnswer(String possible_answer,Button btn){
         mCountDownTimer.cancel();
         final Map<String, Object> updates = new HashMap<String, Object>();
         updates.put("count_answers",mQuestion.getCountAnswers()+1);
@@ -110,6 +110,9 @@ public class YesNoQuestionFragment extends Fragment {
         if(possible_answer.equals(mQuestion.getRightAnswers())) {
             if(btn!=null)
                 btn.setBackgroundColor(Color.GREEN);
+
+            if(mQuestion.getFirstQuizIndex()>=0)
+                ((MainActivity)getActivity()).IncreasFirstQuizScore();
 
             mQuestion.addRightAnswerByUser(mUser.getType());
             updates.put("count_rights",mQuestion.getCountRights());
@@ -127,10 +130,10 @@ public class YesNoQuestionFragment extends Fragment {
 
         }
 
-        NextQuestion();
+        nextQuestion();
 
     }
-    private void InitTimer(){
+    private void initTimer(){
         final TextView timeLeft = getActivity().findViewById(R.id.time_left);
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
@@ -141,14 +144,14 @@ public class YesNoQuestionFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                CheckAnswer("dummy",null);
+                checkAnswer("dummy",null);
                 //can add message that time is over
             }
         }.start();
 
     }
 
-    private void NextQuestion() {
+    private void nextQuestion() {
         Button next = getActivity().findViewById(R.id.next);
         next.setVisibility(View.VISIBLE);
         next.setOnClickListener(new View.OnClickListener() {
@@ -156,10 +159,10 @@ public class YesNoQuestionFragment extends Fragment {
             public void onClick(View view) {
                 int index = mQuestion.getFirstQuizIndex();
                 if (index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ) {
-                    //Move to DoneFirstQuizFragment
+                    //Move to FirstQuizFinishFragment
+                    ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
                     return;
                 }
-                index++;
                 Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", index + 1);
                 questionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

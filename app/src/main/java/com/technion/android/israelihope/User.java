@@ -6,12 +6,22 @@ public class User {
     private String full_name;
     private String birth_date;
     private Utils.UserType type;
+    private int score_first_quiz;
 
     public User(String email, String full_name, String birth_date, Utils.UserType type) {
         this.email = email;
         this.full_name = full_name;
         this.birth_date = birth_date;
         this.type = type;
+        this.score_first_quiz=0;
+    }
+
+    public int getScoreFirstQuiz() {
+        return score_first_quiz;
+    }
+
+    public void setScoreFirstQuiz(int num_rights_first_quiz) {
+        this.score_first_quiz = num_rights_first_quiz;
     }
 
     public String getEmail() {

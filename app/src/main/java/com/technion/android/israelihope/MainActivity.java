@@ -20,12 +20,26 @@ import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int first_quiz_rights_amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
     }
+
+    public int getFirstQuizRightsAmount() {
+        return first_quiz_rights_amount;
+    }
+
+    public void setFirstQuizRightsAmount(int first_quiz_rights_amount) {
+        this.first_quiz_rights_amount = first_quiz_rights_amount;
+    }
+
+    public void IncreasFirstQuizScore(){
+        first_quiz_rights_amount++;
+    }
+
     /**
      * Replaces the current main fragment.
      */

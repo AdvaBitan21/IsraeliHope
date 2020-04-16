@@ -70,7 +70,7 @@
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="נתפלח ליום הסטודנט של 202"
+        android:text="נתפלח ליום הסטודנט של 2021"
         android:id="@+id/choice3"/>
     <CheckBox
         android:layout_width="match_parent"
