@@ -24,8 +24,8 @@ public class FirstQuizFinishFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        int rights =((MainActivity)getActivity()).getFirstQuizRightsAmount();
-        int score = (int)(Math.round(rights/20.0));
+        double rights =(double)((MainActivity)getActivity()).getFirstQuizRightsAmount();
+        int score = (int)(Math.round(rights/Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ));
         ((TextView)getActivity().findViewById(R.id.score)).setText(score);
 
         FirebaseFirestore db =FirebaseFirestore.getInstance();
