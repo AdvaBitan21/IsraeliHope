@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "380361586191",
+    "firebase_url": "https://israelihope-7be78.firebaseio.com",
+    "project_id": "israelihope-7be78",
+    "storage_bucket": "israelihope-7be78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380361586191:android:5cac1f4dfd8e892fdbd57a",
+        "android_client_info": {
+          "package_name": "com.technion.android.israelihope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380361586191-djo9b03efsl20sriv1sgqfhq59flg07t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technion.android.israelihope",
+            "certificate_hash": "66485c565a46f030af0407edabdc130a14c2a46e"
+          }
+        },
+        {
+          "client_id": "380361586191-tol3magc01vhl7b0jafnqt0qjpp71t2r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtESmyonhLs-2lXZtY2pjJkenHxlAuYGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380361586191-tol3magc01vhl7b0jafnqt0qjpp71t2r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
