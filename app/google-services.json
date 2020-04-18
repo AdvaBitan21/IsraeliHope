@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "380361586191-tr8i3qhff6eor656fp8q6u8rfijac2ag.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technion.android.israelihope",
+            "certificate_hash": "b36604b4c69b8d656b16a7a67cca9a9f39aa70b9"
+          }
+        },
+        {
           "client_id": "380361586191-69u3a7cc0heg3c2h8n2u7l22olkaf9ep.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
