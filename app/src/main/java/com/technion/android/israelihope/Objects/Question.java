@@ -1,4 +1,6 @@
-package com.technion.android.israelihope;
+package com.technion.android.israelihope.Objects;
+
+import com.technion.android.israelihope.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,8 @@
-package com.technion.android.israelihope;
+package com.technion.android.israelihope.Objects;
+
+import android.net.Uri;
+
+import com.technion.android.israelihope.Utils;
 
 public class User {
 
@@ -7,13 +11,19 @@ public class User {
     private String birth_date;
     private Utils.UserType type;
     private int score_first_quiz;
+    private int num_challenges;
+    private String url_string;
+    private String status;
 
-    public User(String email, String full_name, String birth_date, Utils.UserType type) {
+    public User(String email, String full_name, String birth_date, Utils.UserType type, int num_challenges, String url_string, String status) {
         this.email = email;
         this.full_name = full_name;
         this.birth_date = birth_date;
         this.type = type;
         this.score_first_quiz=0;
+        this.num_challenges = num_challenges;
+        this.url_string = url_string;
+        this.status = status;
     }
 
     public int getScoreFirstQuiz() {
@@ -56,4 +66,27 @@ public class User {
         this.type = type;
     }
 
+    public int getNum_challenges() {
+        return num_challenges;
+    }
+
+    public void setNum_challenges(int num_challenges) {
+        this.num_challenges = num_challenges;
+    }
+
+    public String getUrl_string() {
+        return url_string;
+    }
+
+    public void setUrl_string(String url_string) {
+        this.url_string = url_string;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

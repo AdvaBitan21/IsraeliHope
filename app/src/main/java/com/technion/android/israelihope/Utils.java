@@ -1,30 +1,23 @@
 package com.technion.android.israelihope;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.technion.android.israelihope.Objects.Question;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Utils {
-    enum QuestionType {
+    public enum QuestionType {
         YesNo,
         Close,
         CheckBox
     }
 
-    enum UserType{
+    public enum UserType{
         A,
         B,
         C,
