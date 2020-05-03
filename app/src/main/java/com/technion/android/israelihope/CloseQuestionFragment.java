@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,13 +18,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,8 +66,8 @@ public class CloseQuestionFragment extends Fragment {
                         mUser = document.toObject(User.class);
                     }
 
-                    InitUI();
-                    InitTimer();
+                    initUI();
+                    initTimer();
 
 
                 }
@@ -76,7 +75,7 @@ public class CloseQuestionFragment extends Fragment {
         });
     }
 
-    private void InitUI(){
+    private void initUI(){
 
         TextView questionIndex = getActivity().findViewById(R.id.question_number);
         questionIndex.setText(mQuestion.getFirstQuizIndex());
@@ -88,31 +87,31 @@ public class CloseQuestionFragment extends Fragment {
         choice1.setText(mQuestion.getPossibleAnswers().get(0));
         choice1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice1);}});
+            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice1);}});
 
         final Button choice2= getActivity().findViewById(R.id.choice2);
         choice2.setText(mQuestion.getPossibleAnswers().get(1));
         choice2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice2);}});
+            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice2);}});
 
         final Button choice3= getActivity().findViewById(R.id.choice3);
         choice3.setText(mQuestion.getPossibleAnswers().get(2));
         choice3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice3);}});
+            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice3);}});
 
         final Button choice4= getActivity().findViewById(R.id.choice4);
         choice4.setText(mQuestion.getPossibleAnswers().get(3));
         choice4.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer(mQuestion.getPossibleAnswers().get(0),choice4);}});
+            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice4);}});
 
 
 
     }
 
-    private void CheckAnswer(String possible_answer,Button btn){
+    private void checkAnswer(String possible_answer,Button btn){
         mCountDownTimer.cancel();
         final Map<String, Object> updates = new HashMap<String, Object>();
         updates.put("count_answers",mQuestion.getCountAnswers()+1);
@@ -120,6 +119,9 @@ public class CloseQuestionFragment extends Fragment {
         if(possible_answer.equals(mQuestion.getRightAnswers())) {
             if(btn!=null)
                 btn.setBackgroundColor(Color.GREEN);
+
+            if(mQuestion.getFirstQuizIndex()>=0)
+                ((MainActivity)getActivity()).IncreasFirstQuizScore();
 
             mQuestion.addRightAnswerByUser(mUser.getType());
             updates.put("count_rights",mQuestion.getCountRights());
@@ -137,10 +139,10 @@ public class CloseQuestionFragment extends Fragment {
 
         }
 
-        NextQuestion();
+        nextQuestion();
 
     }
-    private void InitTimer(){
+    private void initTimer(){
         final TextView timeLeft = getActivity().findViewById(R.id.time_left);
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
@@ -151,14 +153,14 @@ public class CloseQuestionFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                CheckAnswer("dummy",null);
+                checkAnswer("dummy",null);
                 //can add message that time is over
             }
         }.start();
 
     }
 
-    private void NextQuestion() {
+    private void nextQuestion() {
         Button next = getActivity().findViewById(R.id.next);
         next.setVisibility(View.VISIBLE);
         next.setOnClickListener(new View.OnClickListener() {
@@ -166,10 +168,9 @@ public class CloseQuestionFragment extends Fragment {
             public void onClick(View view) {
                 int index = mQuestion.getFirstQuizIndex();
                 if (index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ) {
-                    //Move to DoneFirstQuizFragment
+                    ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
                     return;
                 }
-                index++;
                 Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", index + 1);
                 questionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

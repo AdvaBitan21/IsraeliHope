@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,11 +19,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,8 +69,8 @@ public class CheckBoxQuestionFragment extends Fragment {
                         mUser = document.toObject(User.class);
                     }
 
-                    InitUI();
-                    InitTimer();
+                    initUI();
+                    initTimer();
 
 
                 }
@@ -79,7 +78,7 @@ public class CheckBoxQuestionFragment extends Fragment {
         });
     }
 
-    private void InitUI(){
+    private void initUI(){
 
         TextView questionIndex = getActivity().findViewById(R.id.question_number);
         questionIndex.setText(mQuestion.getFirstQuizIndex());
@@ -101,15 +100,15 @@ public class CheckBoxQuestionFragment extends Fragment {
         choice4.setText(mQuestion.getPossibleAnswers().get(3));
 
         final CheckBox choice5= getActivity().findViewById(R.id.choice5);
-        choice4.setText(mQuestion.getPossibleAnswers().get(4));
+        choice5.setText(mQuestion.getPossibleAnswers().get(4));
 
         final Button doneBtn= getActivity().findViewById(R.id.done);
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { CheckAnswer();}});
+            public void onClick(View view) { checkAnswer();}});
     }
 
-    private void ColorTheRightAndWrongAnsers(){
+    private void colorTheRightAndWrongAnsers(){
         ArrayList<String> choices = mQuestion.getPossibleAnswers();
 
         if(mQuestion.getRightAnswers().contains(choices.get(0))) {
@@ -149,13 +148,13 @@ public class CheckBoxQuestionFragment extends Fragment {
 
 
     }
-    private void CheckAnswer(){
+    private void checkAnswer(){
         mCountDownTimer.cancel();
         Button btn =getActivity().findViewById(R.id.done);
         final Map<String, Object> updates = new HashMap<String, Object>();
         updates.put("count_answers",mQuestion.getCountAnswers()+1);
 
-        ColorTheRightAndWrongAnsers();
+        colorTheRightAndWrongAnsers();
         if(((CheckBox)getActivity().findViewById(R.id.choice1)).isChecked())
             check[0]++;
         if(((CheckBox)getActivity().findViewById(R.id.choice2)).isChecked())
@@ -174,6 +173,10 @@ public class CheckBoxQuestionFragment extends Fragment {
             btn.setText("נכון מאוד");
             mQuestion.addRightAnswerByUser(mUser.getType());
             updates.put("count_rights", mQuestion.getCountRights());
+
+            if(mQuestion.getFirstQuizIndex()>=0)
+                ((MainActivity)getActivity()).IncreasFirstQuizScore();
+
         }
         else{
             btn.setText("יש לך טעות");
@@ -183,10 +186,10 @@ public class CheckBoxQuestionFragment extends Fragment {
         DocumentReference questionRef = db.collection("Questions").document(mQuestion.getId());
         questionRef.update(updates);
 
-        NextQuestion();
+        nextQuestion();
 
     }
-    private void InitTimer(){
+    private void initTimer(){
         final TextView timeLeft = getActivity().findViewById(R.id.time_left);
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
@@ -197,14 +200,14 @@ public class CheckBoxQuestionFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                CheckAnswer();
+                checkAnswer();
                 //can add message that time is over
             }
         }.start();
 
     }
 
-    private void NextQuestion() {
+    private void nextQuestion() {
         Button next = getActivity().findViewById(R.id.next);
         next.setVisibility(View.VISIBLE);
         next.setOnClickListener(new View.OnClickListener() {
@@ -213,10 +216,9 @@ public class CheckBoxQuestionFragment extends Fragment {
                 int index= mQuestion.getFirstQuizIndex();
                 if(index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ)
                 {
-                    //Move to DoneFirstQuizFragment
+                    ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
                     return;
                 }
-                index++;
                 Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", index+1);
                 questionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

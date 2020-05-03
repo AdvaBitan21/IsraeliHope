@@ -1,4 +1,6 @@
-package com.technion.android.israelihope;
+package com.technion.android.israelihope.Objects;
+
+import com.technion.android.israelihope.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ public class Question {
     private int first_quiz_index; // if it is not first quiz it will be -1
     private Utils.UserType subject;
 
-    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int count_answers, int firstQuizIndex,Utils.UserType subject) {
+    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int firstQuizIndex,Utils.UserType subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
@@ -28,7 +30,7 @@ public class Question {
         this.to_email = to_email;
         this.count_rights = new HashMap<>();
         InitCountRights();
-        this.count_answers = count_answers;
+        this.count_answers = 0;
         this.first_quiz_index = firstQuizIndex;
         this.subject=subject;
     }
