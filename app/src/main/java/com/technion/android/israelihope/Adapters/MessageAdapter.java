@@ -1,6 +1,7 @@
 package com.technion.android.israelihope.Adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +26,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private Context mContext;
     private List<Chat> mChat;
-    private String image_url;
+    private Uri image_uri;
 
     FirebaseUser firebaseUser;
 
-    public MessageAdapter(Context mContext, List<Chat> mChat, String image_url){
+    public MessageAdapter(Context mContext, List<Chat> mChat, Uri image_uri){
         this.mContext = mContext;
         this.mChat = mChat;
-        this.image_url = image_url;
+        this.image_uri = image_uri;
     }
 
     @NonNull
@@ -57,7 +58,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         holder.show_message.setText(chat.getMessage());
         holder.message_time.setText(chat.getMessageTime());
 
-        Glide.with(mContext).load(image_url).into(holder.profile_image);
+        Glide.with(mContext).load(image_uri).into(holder.profile_image);
     }
 
     @Override

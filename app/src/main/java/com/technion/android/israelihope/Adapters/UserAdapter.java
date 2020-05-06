@@ -48,8 +48,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final User user = mUsers.get(position);
-        holder.username.setText(user.getFullName());
-        Glide.with(mContext).load(user.getUrl_string()).into(holder.profile_image);
+        holder.username.setText(user.getUserName());
+        Glide.with(mContext).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(holder.profile_image);
         holder.num_challenges.setText(user.getNum_challenges());
 
         lastMessage(user.getEmail(), holder.last_msg);

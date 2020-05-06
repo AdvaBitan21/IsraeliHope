@@ -1,29 +1,32 @@
 package com.technion.android.israelihope.Objects;
 
-import android.net.Uri;
-
 import com.technion.android.israelihope.Utils;
 
 public class User {
 
     private String email;
-    private String full_name;
+    private String user_name;
     private String birth_date;
     private Utils.UserType type;
     private int score_first_quiz;
     private int num_challenges;
-    private String url_string;
     private String status;
 
-    public User(String email, String full_name, String birth_date, Utils.UserType type, int num_challenges, String url_string, String status) {
+    public User(String email, String user_name, String birth_date, Utils.UserType type, int num_challenges, String status) {
         this.email = email;
-        this.full_name = full_name;
+        this.user_name = user_name;
         this.birth_date = birth_date;
         this.type = type;
         this.score_first_quiz=0;
         this.num_challenges = num_challenges;
-        this.url_string = url_string;
         this.status = status;
+    }
+
+    public User(String email, String user_name, String birth_date) {
+        this.email = email;
+        this.user_name = user_name;
+        this.birth_date = birth_date;
+        this.status = "online";
     }
 
     public int getScoreFirstQuiz() {
@@ -42,12 +45,12 @@ public class User {
         this.email = email;
     }
 
-    public String getFullName() {
-        return full_name;
+    public String getUserName() {
+        return user_name;
     }
 
-    public void setFullName(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getBirthDate() {
@@ -72,14 +75,6 @@ public class User {
 
     public void setNum_challenges(int num_challenges) {
         this.num_challenges = num_challenges;
-    }
-
-    public String getUrl_string() {
-        return url_string;
-    }
-
-    public void setUrl_string(String url_string) {
-        this.url_string = url_string;
     }
 
     public String getStatus() {

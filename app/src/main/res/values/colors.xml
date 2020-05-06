@@ -8,4 +8,15 @@
     <color name="colorGreen">#05DF29</color>
     <color name="colorRed">#05DF29</color>
 
+    <color name="white">#FFFFFE</color>
+    <color name="black">#000000</color>
+
+    <color name="lightGrey">#F7FAFB</color>
+    <color name="Grey">#BFBFBF</color>
+    <color name="darkGrey">#7A7A7A</color>
+    <color name="transparentGrey">#66BFBFBF</color>
+
+    <color name="transparent">#00ff0000</color>
+    <color name="green">#21B160</color>
+
 </resources>

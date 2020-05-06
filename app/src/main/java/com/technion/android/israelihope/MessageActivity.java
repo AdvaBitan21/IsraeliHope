@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -100,10 +101,10 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                username.setText(user.getFullName());
-                Glide.with(getApplicationContext()).load(user.getUrl_string()).into(profile_image);
+                username.setText(user.getUserName());
+                Glide.with(getApplicationContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(profile_image);
 
-                readMessage(firebaseUser.getEmail(), userEmail, user.getUrl_string());
+                readMessage(firebaseUser.getEmail(), userEmail, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
             }
 
             @Override
@@ -144,7 +145,7 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void readMessage(final String myEmail, final String userEmail, final String image_url){
+    private void readMessage(final String myEmail, final String userEmail, final Uri image_uri){
         mchat = new ArrayList<>();
 
         reference = FirebaseDatabase.getInstance().getReference().child("Chats");
@@ -159,7 +160,7 @@ public class MessageActivity extends AppCompatActivity {
                         mchat.add(chat);
                     }
 
-                    messageAdapter = new MessageAdapter(MessageActivity.this, mchat, image_url);
+                    messageAdapter = new MessageAdapter(MessageActivity.this, mchat, image_uri);
                     recyclerView.setAdapter(messageAdapter);
                 }
             }

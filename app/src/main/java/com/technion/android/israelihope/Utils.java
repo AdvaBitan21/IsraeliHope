@@ -1,5 +1,9 @@
 package com.technion.android.israelihope;
 
+import android.app.Activity;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +26,10 @@ public class Utils {
         B,
         C,
         D
-
     }
 
     public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 20;
+    public static int OPEN_GALLERY_REQUEST = 1;
 
 
 
@@ -61,6 +65,25 @@ public class Utils {
                 }
             });
         }
+
+    /**
+     * Enables/Disables all child views in a view group.
+     * Sets clicksEnabled field (needed for back button)
+     *
+     * @param viewGroup the view group
+     * @param enabled   true to enable, false to disable
+     */
+    public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = viewGroup.getChildAt(i);
+            view.setEnabled(enabled);
+            if (view instanceof ViewGroup) {
+                enableDisableClicks(activity, (ViewGroup) view, enabled);
+            }
+        }
+    }
+
 
 
 }

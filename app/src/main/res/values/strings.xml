@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">IsraeliHope</string>
+
+    <string name="login">התחברות</string>
+    <string name="signup">הרשמה</string>
+    <string name="signup_title">פתיחת חשבון</string>
+
+
+    <string name="user_name">שם משתמש</string>
+    <string name="email">אימייל</string>
+    <string name="password">סיסמה</string>
+    <string name="age">תאריך לידה</string>
+    <string name="forgot_password">שכחת סיסמה?</string>
+
+    <string name="enter_details">הכנס פרטים</string>
+    <string name="wrong_details">פרטי התחברות שגויים</string>
+    <string name="no_internet">אין חיבור לאינטרנט</string>
+    <string name="illegal_name">יש לבחור שם משתמש שמורכב מאותיות בעברית</string>
+    <string name="illegal_email">כתובת האימייל לא חוקית</string>
+    <string name="illegal_password">יש לבחור סיסמה שמכילה 6 תווים לפחות</string>
+    <string name="email_exists">כתובת האימייל כבר קיימת במערכת</string>
+    <string name="illegal_age">תאריך הלידה שהוכנס אינו חוקי</string>
+    <string name="illegal_image">יש לבחור תמונת פרופיל</string>
+
+
+
 </resources>
