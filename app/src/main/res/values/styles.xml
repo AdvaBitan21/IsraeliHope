@@ -25,7 +25,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <!--DatePicker for signup activity-->
+    <!--DatePicker for SignupActivity-->
     <style name="MySpinnerDatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:datePickerStyle">@style/MySpinnerDatePicker</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
@@ -33,6 +33,16 @@
 
     <style name="MySpinnerDatePicker" parent="android:Widget.Material.DatePicker">
         <item name="android:datePickerMode">spinner</item>
+    </style>
+
+    <style name="Theme.AppCompat.White" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:layoutDirection">rtl</item>
     </style>
 
 </resources>

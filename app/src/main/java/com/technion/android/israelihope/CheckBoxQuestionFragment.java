@@ -175,7 +175,7 @@ public class CheckBoxQuestionFragment extends Fragment {
             updates.put("count_rights", mQuestion.getCountRights());
 
             if(mQuestion.getFirstQuizIndex()>=0)
-                ((MainActivity)getActivity()).IncreasFirstQuizScore();
+                ((MainActivity)getActivity()).IncreaseFirstQuizScore();
 
         }
         else{

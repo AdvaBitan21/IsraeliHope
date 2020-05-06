@@ -23,7 +23,9 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MessageActivity" />
         <activity android:name=".ChatsActivity" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

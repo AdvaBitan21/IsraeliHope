@@ -121,7 +121,7 @@ public class CloseQuestionFragment extends Fragment {
                 btn.setBackgroundColor(Color.GREEN);
 
             if(mQuestion.getFirstQuizIndex()>=0)
-                ((MainActivity)getActivity()).IncreasFirstQuizScore();
+                ((MainActivity)getActivity()).IncreaseFirstQuizScore();
 
             mQuestion.addRightAnswerByUser(mUser.getType());
             updates.put("count_rights",mQuestion.getCountRights());
