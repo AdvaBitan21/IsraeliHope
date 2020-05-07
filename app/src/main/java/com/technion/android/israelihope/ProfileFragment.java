@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.technion.android.israelihope.Objects.User;
 
 public class ProfileFragment extends Fragment {
@@ -49,9 +54,8 @@ public class ProfileFragment extends Fragment {
         TextView userBirthday = getView().findViewById(R.id.birthDate);
         userBirthday.setText(user.getBirthDate());
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         CircleImageView profileImage = getView().findViewById(R.id.profile_image);
-        Glide.with(this).load(firebaseUser.getPhotoUrl()).into(profileImage);
+        Utils.loadProfileImage(getContext(), profileImage, user.getEmail());
 
     }
 
