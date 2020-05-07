@@ -1,11 +1,15 @@
 package com.technion.android.israelihope;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +25,7 @@ import com.technion.android.israelihope.Objects.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatsActivity extends AppCompatActivity {
+public class ChatsFragment extends Fragment {
 
     private RecyclerView recyclerView;
 
@@ -33,14 +37,20 @@ public class ChatsActivity extends AppCompatActivity {
 
     private List<Chatlist> usersList;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chats);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.chats_fragment, null);
+    }
 
-        recyclerView = findViewById(R.id.my_recycler_view);
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = getView().findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -66,6 +76,7 @@ public class ChatsActivity extends AppCompatActivity {
         });
     }
 
+
     private void chatList() {
        mUsers = new ArrayList<>();
        reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -81,7 +92,7 @@ public class ChatsActivity extends AppCompatActivity {
                        }
                    }
                }
-               userAdapter = new UserAdapter(getApplicationContext(), mUsers);
+               userAdapter = new UserAdapter(getContext(), mUsers);
                recyclerView.setAdapter(userAdapter);
            }
 

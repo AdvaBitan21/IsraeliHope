@@ -13,16 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:windowSoftInputMode="adjustPan">
+        <activity android:name=".ProfileFragment"></activity>
         <activity
             android:name=".SignupActivity"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MessageActivity" />
-        <activity android:name=".ChatsActivity" />
+        <activity android:name=".ChatsFragment" />
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />

@@ -318,7 +318,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0, R.anim.slide_down);
+        overridePendingTransition(0, R.anim.slide_out_down);
     }
 
     @Override

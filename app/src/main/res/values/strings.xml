@@ -11,6 +11,7 @@
     <string name="password">סיסמה</string>
     <string name="age">תאריך לידה</string>
     <string name="forgot_password">שכחת סיסמה?</string>
+    <string name="change_password">שינוי סיסמה</string>
 
     <string name="enter_details">הכנס פרטים</string>
     <string name="wrong_details">פרטי התחברות שגויים</string>
@@ -21,7 +22,6 @@
     <string name="email_exists">כתובת האימייל כבר קיימת במערכת</string>
     <string name="illegal_age">תאריך הלידה שהוכנס אינו חוקי</string>
     <string name="illegal_image">יש לבחור תמונת פרופיל</string>
-
 
 
 </resources>

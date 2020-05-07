@@ -1,31 +1,39 @@
 package com.technion.android.israelihope;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.Objects.User;
 
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
     private int first_quiz_rights_amount;
-    DatabaseReference reference;
-    FirebaseUser firebaseUser;
-    FirebaseAuth mAuth;
+    private DatabaseReference reference;
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth mAuth;
+
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +48,34 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-
-
+        initCurrentUser();
         initToolBar();
+        // loadFragment(new ChatsActivity()); // TODO - when the chats fragment won't crush
+    }
+
+
+    private void initCurrentUser() {
+
+        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+        Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mUser = document.toObject(User.class);
+                    }
+                }
+            }
+        });
+    }
+
+    public User getCurrentUser() {
+        return mUser;
+    }
+
+    public void setCurrentUser(User user) {
+        this.mUser = user;
     }
 
 
@@ -104,7 +137,15 @@ public class MainActivity extends AppCompatActivity {
     private void initToolBar() {
 
         FirebaseUser user = mAuth.getCurrentUser();
-        Glide.with(this).load(user.getPhotoUrl()).into((CircleImageView) findViewById(R.id.profile));
+        CircleImageView profileImage = (CircleImageView) findViewById(R.id.profile);
+        Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new ProfileFragment());
+            }
+        });
 
     }
 

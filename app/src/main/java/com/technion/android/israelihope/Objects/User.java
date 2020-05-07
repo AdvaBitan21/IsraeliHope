@@ -12,6 +12,8 @@ public class User {
     private int num_challenges;
     private String status;
 
+    public User() {}
+
     public User(String email, String user_name, String birth_date, Utils.UserType type, int num_challenges, String status) {
         this.email = email;
         this.user_name = user_name;
@@ -49,7 +51,7 @@ public class User {
         return user_name;
     }
 
-    public void setFullName(String user_name) {
+    public void setUserName(String user_name) {
         this.user_name = user_name;
     }
 
