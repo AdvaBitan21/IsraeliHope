@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:windowSoftInputMode="adjustPan">
-        <activity android:name=".ProfileFragment"></activity>
+        <activity android:name=".ChangePasswordDialog"></activity>
+        <activity android:name=".ProfileFragment" />
         <activity
             android:name=".SignupActivity"
             android:theme="@style/Theme.AppCompat.Translucent"

@@ -35,12 +35,16 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupAnimations();
+        getUserDetails();
+        initChangePasswordDialog();
+    }
+
+    private void setupAnimations() {
         Animation slide_in_down = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down);
         getView().findViewById(R.id.layout).startAnimation(slide_in_down);
         Animation fade_in = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         getView().findViewById(R.id.backLayout).startAnimation(fade_in);
-
-        getUserDetails();
     }
 
 
@@ -57,6 +61,17 @@ public class ProfileFragment extends Fragment {
         CircleImageView profileImage = getView().findViewById(R.id.profile_image);
         Utils.loadProfileImage(getContext(), profileImage, user.getEmail());
 
+    }
+
+
+    private void initChangePasswordDialog() {
+        getView().findViewById(R.id.changePasswordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangePasswordDialog dialog = new ChangePasswordDialog();
+                dialog.show(getActivity().getSupportFragmentManager(), "change password dialog");
+            }
+        });
     }
 
 }

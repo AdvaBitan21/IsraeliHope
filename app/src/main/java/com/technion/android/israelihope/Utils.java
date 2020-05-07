@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 
 public class Utils {
+
     public enum QuestionType {
         YesNo,
         Close,
@@ -77,7 +78,6 @@ public class Utils {
      * @param email     the email of the user
      */
     public static void loadProfileImage(final Context context, final ImageView imageView, String email) {
-
         FirebaseStorage.getInstance().getReference().child("profileImages/" + email + ".jpeg")
                 .getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
@@ -85,9 +85,8 @@ public class Utils {
                 Glide.with(context).load(task.getResult()).into(imageView);
             }
         });
-
-
     }
+
 
     /**
      * Enables/Disables all child views in a view group.
