@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         initCurrentUser();
         initToolBar();
-        // loadFragment(new ChatsActivity()); // TODO - when the chats fragment won't crush
+        loadFragment(new ChatsFragment()); // TODO - when the chats fragment won't crush
     }
 
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (getCurrentFragment() instanceof ProfileFragment) {
-                    profileImage.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake));
+                    onBackPressed();
                     return;
                 }
                 loadFragment(new ProfileFragment());
@@ -172,8 +172,14 @@ public class MainActivity extends AppCompatActivity {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
+        // Customize onBackPressed for specific fragments //
+        if(getCurrentFragment() instanceof ProfileFragment) {
+            ((ProfileFragment)getCurrentFragment()).animateOut();
+            return;
+        }
+
         if (count == 1) finish();
-        else if (count > 1) getFragmentManager().popBackStack();
+        else if (count > 1) getSupportFragmentManager().popBackStack();
         else super.onBackPressed();
 
     }

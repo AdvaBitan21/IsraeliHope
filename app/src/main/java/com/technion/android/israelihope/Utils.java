@@ -29,7 +29,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 public class Utils {
 
@@ -118,10 +117,9 @@ public class Utils {
     }
 
 
-    /**
-     *  **************************** Profile Picture Management *****************************
-     **/
 
+
+// ================================= Profile Picture Management ================================= //
 
     /**
      * Loads a users profile picture into the desired imageView.
@@ -147,8 +145,8 @@ public class Utils {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        if(context instanceof Activity)
-            ((Activity)context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), OPEN_GALLERY_REQUEST);
+        if (context instanceof Activity)
+            ((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), OPEN_GALLERY_REQUEST);
 
     }
 
@@ -200,9 +198,8 @@ public class Utils {
         user.updateProfile(request);
     }
 
-    /**
-     * **************************************************************************************
-     **/
+
+// ============================================================================================== //
 
 
 }

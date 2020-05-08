@@ -58,14 +58,6 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void setupAnimations() {
-        Animation slide_in_down = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down);
-        getView().findViewById(R.id.layout).startAnimation(slide_in_down);
-        Animation fade_in = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        getView().findViewById(R.id.backLayout).startAnimation(fade_in);
-    }
-
-
     private void getUserDetails() {
 
         TextView userName = getView().findViewById(R.id.userName);
@@ -194,6 +186,30 @@ public class ProfileFragment extends Fragment {
                 .document(mUser.getEmail())
                 .update("birthDate", birthDate);
     }
+
+
+    private void setupAnimations() {
+        Animation slide_in_down = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down);
+        getView().findViewById(R.id.layout).startAnimation(slide_in_down);
+        Animation fade_in = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        getView().findViewById(R.id.backLayout).startAnimation(fade_in);
+    }
+
+    public void animateOut() {
+       Animation slide_out_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_up);
+       getView().findViewById(R.id.layout).startAnimation(slide_out_up);
+       Animation fade_out = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
+       getView().findViewById(R.id.backLayout).startAnimation(fade_out);
+
+       slide_out_up.setAnimationListener(new Animation.AnimationListener(){
+           public void onAnimationStart(Animation a){}
+           public void onAnimationRepeat(Animation a){}
+           public void onAnimationEnd(Animation a){
+               getFragmentManager().popBackStack();
+           }
+
+       });
+   }
 
 
     @Override

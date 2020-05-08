@@ -56,24 +56,25 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
 
-        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(firebaseUser.getEmail());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                usersList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
-                    usersList.add(chatlist);
-                }
-
-                chatList();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        // TODO - I put it in comment because it crushes :(
+//        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(firebaseUser.getEmail());
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                usersList.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
+//                    usersList.add(chatlist);
+//                }
+//
+//                chatList();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
 
