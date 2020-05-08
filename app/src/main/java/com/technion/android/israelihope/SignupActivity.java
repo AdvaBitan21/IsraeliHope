@@ -37,6 +37,7 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignupActivity extends AppCompatActivity {
@@ -100,7 +101,7 @@ public class SignupActivity extends AppCompatActivity {
         findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openFileChooser();
+                Utils.openImageChooser(SignupActivity.this);
             }
         });
     }
@@ -143,7 +144,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    uploadProfilePicture(profileImage, user.getEmail());
+                    Utils.uploadProfileImage(profileImage, user.getEmail());
                     FirebaseFirestore.getInstance()
                             .collection("Users")
                             .document(user.getEmail())
@@ -240,52 +241,6 @@ public class SignupActivity extends AppCompatActivity {
             return null;
         }
         return birth_date;
-    }
-
-
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), Utils.OPEN_GALLERY_REQUEST);
-    }
-
-    private void uploadProfilePicture(Bitmap bitmap, String email) {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-        final StorageReference reference = FirebaseStorage.getInstance()
-                .getReference("profileImages")
-                .child(email + ".jpeg");
-
-        reference.putBytes(baos.toByteArray())
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        getDownloadUrl(reference);
-                    }
-                });
-    }
-
-    private void getDownloadUrl(StorageReference reference) {
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                setUserProfileUri(uri);
-            }
-        });
-    }
-
-    private void setUserProfileUri(Uri uri) {
-
-        FirebaseUser user = mAuth.getCurrentUser();
-
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(uri)
-                .build();
-
-        user.updateProfile(request);
     }
 
 

@@ -1,9 +1,11 @@
 package com.technion.android.israelihope;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +24,7 @@ import com.technion.android.israelihope.Objects.User;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,6 +54,31 @@ public class MainActivity extends AppCompatActivity {
         initCurrentUser();
         initToolBar();
         // loadFragment(new ChatsActivity()); // TODO - when the chats fragment won't crush
+    }
+
+
+    private void initToolBar() {
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        final CircleImageView profileImage = findViewById(R.id.profile);
+        Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getCurrentFragment() instanceof ProfileFragment) {
+                    profileImage.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake));
+                    return;
+                }
+                loadFragment(new ProfileFragment());
+            }
+        });
+
+    }
+
+
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.fragmant_container);
     }
 
 
@@ -88,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void IncreaseFirstQuizScore(){
+    public void IncreaseFirstQuizScore() {
         first_quiz_rights_amount++;
     }
 
@@ -109,23 +137,8 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
-    public void onBackPressed()
-    {
-       /* if (!Utils.clicksEnabled) {
-            return;
-        }*/
-        int count = getSupportFragmentManager().getBackStackEntryCount();
 
-        if (count == 1)
-            finish();
-        else if (getFragmentManager().getBackStackEntryCount() > 1)
-            getFragmentManager().popBackStack();
-        else
-            super.onBackPressed();
-    }
-
-    private void status(String status){
+    private void status(String status) {
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getEmail());
 
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -134,31 +147,37 @@ public class MainActivity extends AppCompatActivity {
         reference.updateChildren(hashMap);
     }
 
-    private void initToolBar() {
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        CircleImageView profileImage = (CircleImageView) findViewById(R.id.profile);
-        Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
-
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadFragment(new ProfileFragment());
-            }
-        });
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-       // status("online");
+        // status("online");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        status("offline");
+        //status("offline");
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 1) finish();
+        else if (count > 1) getFragmentManager().popBackStack();
+        else super.onBackPressed();
+
+    }
+
+
 }
 

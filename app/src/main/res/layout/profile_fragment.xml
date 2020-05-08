@@ -28,7 +28,7 @@
             app:civ_border_width="1dp" />
 
         <ImageButton
-            android:id="@+id/editIcon"
+            android:id="@+id/editImageButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/profile_image"
@@ -56,12 +56,17 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_below="@id/divider12"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toRightOf="@id/saveUserName"
             android:background="@color/transparent"
             android:drawableStart="@drawable/user"
             android:drawableLeft="@drawable/user"
             android:drawablePadding="15dp"
             android:drawableTint="@color/colorPrimaryDark"
+            android:focusable="false"
             android:gravity="center_vertical|start"
             android:hint="@string/user_name"
             android:inputType="textPersonName"
@@ -97,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_below="@id/divider15"
+            android:layout_toRightOf="@id/editBirthDate"
             android:layout_margin="10dp"
             android:background="@color/transparent"
             android:clickable="true"
@@ -188,69 +194,81 @@
             android:layout_below="@id/changePasswordButton"
             android:background="?android:attr/listDivider" />
 
-    <!--
+        <Button
+            android:id="@+id/saveUserName"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/divider12"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="15dp"
+            android:background="@color/transparent"
+            android:text="@string/save"
+            android:textColor="@color/colorPrimaryDark"
+            android:visibility="invisible" />
+
+        <!--
+                <LinearLayout
+                android:id="@+id/illegal_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider17"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="right"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:id="@+id/error6"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginLeft="3dp"
+                    android:src="@drawable/ic_error" />
+
+                <TextView
+                    android:id="@+id/illegal_name_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="@string/illegal_name"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
             <LinearLayout
-            android:id="@+id/illegal_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/divider17"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="right"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="invisible">
-
-            <ImageView
-                android:id="@+id/error6"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_marginLeft="3dp"
-                android:src="@drawable/ic_error" />
-
-            <TextView
-                android:id="@+id/illegal_name_txt"
+                android:id="@+id/illegal_birth_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/divider17"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="right"
-                android:text="@string/illegal_name"
-                android:textColor="@color/colorAccent"
-                android:textSize="12sp"
-                android:visibility="visible" />
-        </LinearLayout>
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
-        <LinearLayout
-            android:id="@+id/illegal_birth_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/divider17"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="right"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="invisible">
+                <ImageView
+                    android:id="@+id/error4"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginLeft="3dp"
+                    android:src="@drawable/ic_error" />
 
-            <ImageView
-                android:id="@+id/error4"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_marginLeft="3dp"
-                android:src="@drawable/ic_error" />
-
-            <TextView
-                android:id="@+id/illegal_birth_date_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="@string/illegal_age"
-                android:textColor="@color/colorAccent"
-                android:textSize="12sp"
-                android:visibility="visible" />
-        </LinearLayout>
-    -->
+                <TextView
+                    android:id="@+id/illegal_birth_date_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="@string/illegal_age"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+        -->
 
     </RelativeLayout>
 

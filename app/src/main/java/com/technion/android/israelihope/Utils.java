@@ -2,22 +2,34 @@ package com.technion.android.israelihope;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Objects.Question;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 public class Utils {
 
@@ -71,20 +83,20 @@ public class Utils {
         });
     }
 
-    /**
-     * Loads a users profile picture into the desired imageView.
-     *
-     * @param imageView the imageView to load the picture into.
-     * @param email     the email of the user
-     */
-    public static void loadProfileImage(final Context context, final ImageView imageView, String email) {
-        FirebaseStorage.getInstance().getReference().child("profileImages/" + email + ".jpeg")
-                .getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                Glide.with(context).load(task.getResult()).into(imageView);
-            }
-        });
+
+    public static void closeKeyboard(Context context) {
+
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        View view = ((Activity) context).getCurrentFocus();
+        if (view == null)
+            view = new View((Activity) context);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void openKeyboard(Context context, EditText editText) {
+
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, 0);
     }
 
 
@@ -104,6 +116,93 @@ public class Utils {
             }
         }
     }
+
+
+    /**
+     *  **************************** Profile Picture Management *****************************
+     **/
+
+
+    /**
+     * Loads a users profile picture into the desired imageView.
+     *
+     * @param imageView the imageView to load the picture into.
+     * @param email     the email of the user
+     */
+    public static void loadProfileImage(final Context context, final ImageView imageView, String email) {
+        FirebaseStorage.getInstance().getReference().child("profileImages/" + email + ".jpeg")
+                .getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Glide.with(context).load(task.getResult()).into(imageView);
+            }
+        });
+    }
+
+
+    /**
+     * Opens image gallery in order to choose a picture.
+     */
+    public static void openImageChooser(Context context) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        if(context instanceof Activity)
+            ((Activity)context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), OPEN_GALLERY_REQUEST);
+
+    }
+
+
+    /**
+     * Uploads a users profile image to firebase storage.
+     *
+     * @param bitmap the bitmap of the image to upload.
+     * @param email  the email of the user.
+     */
+    public static void uploadProfileImage(Bitmap bitmap, String email) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+        final StorageReference reference = FirebaseStorage.getInstance()
+                .getReference("profileImages")
+                .child(email + ".jpeg");
+
+        reference.putBytes(baos.toByteArray())
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        getDownloadUrl(reference);
+                    }
+                });
+    }
+
+
+    private static void getDownloadUrl(StorageReference reference) {
+        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                setUserProfileUri(uri);
+            }
+        });
+    }
+
+
+    private static void setUserProfileUri(Uri uri) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(uri)
+                .build();
+
+        assert user != null;
+        user.updateProfile(request);
+    }
+
+    /**
+     * **************************************************************************************
+     **/
 
 
 }
