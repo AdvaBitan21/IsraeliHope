@@ -4,6 +4,7 @@
     <string name="login">התחברות</string>
     <string name="signup">הרשמה</string>
     <string name="signup_title">פתיחת חשבון</string>
+    <string name="login_title">כניסה לחשבון</string>
 
 
     <string name="user_name">שם משתמש</string>
@@ -22,6 +23,8 @@
     <string name="email_exists">כתובת האימייל כבר קיימת במערכת</string>
     <string name="illegal_age">תאריך הלידה שהוכנס אינו חוקי</string>
     <string name="illegal_image">יש לבחור תמונת פרופיל</string>
+    <string name="illegal_city">יש לבחור עיר מגורים</string>
+
 
     <string name="old_password">סיסמה נוכחית</string>
     <string name="new_password">סיסמה חדשה</string>
@@ -31,7 +34,6 @@
     <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
     <string name="save">שמירה</string>
     <string name="cancel">ביטול</string>
-
-
+    <string name="city">עיר מגורים</string>
 
 </resources>

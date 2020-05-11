@@ -6,6 +6,7 @@ public class User {
 
     private String email;
     private String user_name;
+    private String city;
     private String birth_date;
     private Utils.UserType type;
     private int score_first_quiz;
@@ -14,9 +15,10 @@ public class User {
 
     public User() {}
 
-    public User(String email, String user_name, String birth_date, Utils.UserType type, int num_challenges, String status) {
+    public User(String email, String user_name, String city, String birth_date, Utils.UserType type, int num_challenges, String status) {
         this.email = email;
         this.user_name = user_name;
+        this.city = city;
         this.birth_date = birth_date;
         this.type = type;
         this.score_first_quiz=0;
@@ -24,9 +26,10 @@ public class User {
         this.status = status;
     }
 
-    public User(String email, String user_name, String birth_date) {
+    public User(String email, String user_name, String city, String birth_date) {
         this.email = email;
         this.user_name = user_name;
+        this.city = city;
         this.birth_date = birth_date;
         this.status = "online";
     }
@@ -53,6 +56,14 @@ public class User {
 
     public void setUserName(String user_name) {
         this.user_name = user_name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getBirthDate() {

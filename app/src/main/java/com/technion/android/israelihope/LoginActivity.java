@@ -1,15 +1,9 @@
 package com.technion.android.israelihope;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,6 +11,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,12 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-
-        // Make status bar transparent
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window w = getWindow();
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
 
         initLoginBtn();
         initBackButton();
@@ -70,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
 
                             switch (task.getException().getMessage()) {
-
                                 case "There is no user record corresponding to this identifier. The user may have been deleted.":
                                 case "The email address is badly formatted.":
                                 case "The password is invalid or the user does not have a password.":
@@ -82,7 +72,6 @@ public class LoginActivity extends AppCompatActivity {
                                     break;
                                 default:
                                     Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
                             }
 
                             hideProgressBar();

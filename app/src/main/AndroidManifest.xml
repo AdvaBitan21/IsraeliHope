@@ -4,7 +4,6 @@
 
     <application
         android:allowBackup="true"
-        android:fitsSystemWindows="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -13,25 +12,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:windowSoftInputMode="adjustPan">
-        <activity android:name=".ChangePasswordDialog"></activity>
-        <activity android:name=".ProfileFragment" />
-        <activity
-            android:name=".SignupActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".MessageActivity" />
         <activity android:name=".ChatsFragment" />
+        <activity android:name=".ChangePasswordDialog" />
+        <activity android:name=".ProfileFragment" />
         <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:name=".SignUpActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".LoginActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

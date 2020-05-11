@@ -98,7 +98,6 @@ public class Utils {
         imm.showSoftInput(editText, 0);
     }
 
-
     /**
      * Enables/Disables all child views in a view group.
      *
@@ -115,7 +114,6 @@ public class Utils {
             }
         }
     }
-
 
 
 

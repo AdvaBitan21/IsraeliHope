@@ -4,43 +4,35 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Objects.User;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Bitmap profileImage;
@@ -52,16 +44,12 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // Make status bar transparent
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window w = getWindow();
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
-
         setupDatePicker();
         setupImagePicker();
+        initCityAutocomplete();
         initSignUpButton();
         initBackButton();
+
     }
 
 
@@ -87,7 +75,7 @@ public class SignupActivity extends AppCompatActivity {
         birth_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog dialog = new DatePickerDialog(SignupActivity.this,
+                DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this,
                         R.style.MySpinnerDatePickerStyle, date,
                         myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
@@ -101,7 +89,14 @@ public class SignupActivity extends AppCompatActivity {
         findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.openImageChooser(SignupActivity.this);
+                Utils.openImageChooser(SignUpActivity.this);
+            }
+        });
+
+        findViewById(R.id.editImageButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.openImageChooser(SignUpActivity.this);
             }
         });
     }
@@ -125,6 +120,14 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    private void initCityAutocomplete() {
+        String[] cities = getResources().getStringArray(R.array.cities);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, cities);
+        AutoCompleteTextView textView = findViewById(R.id.city);
+        textView.setAdapter(adapter);
+    }
+
 
     private void signUpUser(final User user) {
 
@@ -136,8 +139,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         String password = getPassword();
-        if (password.equals(""))
-            return;
+        assert password != null;
 
         showProgressBar();
         mAuth.createUserWithEmailAndPassword(user.getEmail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -151,7 +153,7 @@ public class SignupActivity extends AppCompatActivity {
                             .set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
                         }
@@ -170,12 +172,12 @@ public class SignupActivity extends AppCompatActivity {
                             findViewById(R.id.no_internet).setVisibility(View.VISIBLE);
                             break;
                         default:
-                            Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             break;
                     }
 
                     hideProgressBar();
-                    Utils.enableDisableClicks(SignupActivity.this, (ViewGroup) findViewById(android.R.id.content).getRootView(), true);
+                    Utils.enableDisableClicks(SignUpActivity.this, (ViewGroup) findViewById(android.R.id.content).getRootView(), true);
                 }
             }
         });
@@ -202,13 +204,19 @@ public class SignupActivity extends AppCompatActivity {
             return null;
         }
 
+        String city = getCity();
+        if (city == null) {
+            findViewById(R.id.illegal_city).setVisibility(View.VISIBLE);
+            return null;
+        }
+
         String birth_date = getBirthDate();
         if (birth_date == null) {
             findViewById(R.id.illegal_birth_date).setVisibility(View.VISIBLE);
             return null;
         }
 
-        return new User(email, name, birth_date);
+        return new User(email, name, city, birth_date);
     }
 
     private String getName() {
@@ -237,10 +245,22 @@ public class SignupActivity extends AppCompatActivity {
 
     private String getBirthDate() {
         String birth_date = ((EditText) findViewById(R.id.birth_date)).getText().toString();
-        if (birth_date.equals("")) {
+        if (birth_date.equals(""))
             return null;
-        }
+
         return birth_date;
+    }
+
+    private String getCity() {
+
+        String[] cities = getResources().getStringArray(R.array.cities);
+
+        String city = ((AutoCompleteTextView) findViewById(R.id.city)).getText().toString().trim();
+        if (city.equals("") || !Arrays.asList(cities).contains(city))
+            return null;
+
+        return city;
+
     }
 
 
@@ -266,9 +286,8 @@ public class SignupActivity extends AppCompatActivity {
         findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
         findViewById(R.id.no_internet).setVisibility(View.INVISIBLE);
         findViewById(R.id.illegal_image).setVisibility(View.INVISIBLE);
-
+        findViewById(R.id.illegal_city).setVisibility(View.INVISIBLE);
     }
-
 
     @Override
     public void onBackPressed() {
