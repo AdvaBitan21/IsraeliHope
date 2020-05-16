@@ -15,12 +15,12 @@ public class Question {
     private String from_email;
     private String to_email;
     //private Religon religon_target need to add the religon the question discusses on
-    private Map<Utils.UserType,Integer> count_rights;
+    private Map<Utils.UserType, Integer> count_rights;
     private int count_answers;
     private int first_quiz_index; // if it is not first quiz it will be -1
     private Utils.UserType subject;
 
-    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int firstQuizIndex,Utils.UserType subject) {
+    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int firstQuizIndex, Utils.UserType subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
@@ -32,13 +32,14 @@ public class Question {
         InitCountRights();
         this.count_answers = 0;
         this.first_quiz_index = firstQuizIndex;
-        this.subject=subject;
+        this.subject = subject;
     }
-    private void InitCountRights(){
-        count_rights.put(Utils.UserType.A,0);
-        count_rights.put(Utils.UserType.B,0);
-        count_rights.put(Utils.UserType.C,0);
-        count_rights.put(Utils.UserType.D,0);
+
+    private void InitCountRights() {
+        count_rights.put(Utils.UserType.A, 0);
+        count_rights.put(Utils.UserType.B, 0);
+        count_rights.put(Utils.UserType.C, 0);
+        count_rights.put(Utils.UserType.D, 0);
     }
 
     public String getId() {
@@ -130,7 +131,7 @@ public class Question {
         this.first_quiz_index = firstQuizIndex;
     }
 
-    public void addRightAnswerByUser(Utils.UserType type){
-        count_rights.put(type,count_rights.get(type)+1);
+    public void addRightAnswerByUser(Utils.UserType type) {
+        count_rights.put(type, count_rights.get(type) + 1);
     }
 }

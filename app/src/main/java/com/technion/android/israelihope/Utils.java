@@ -118,6 +118,7 @@ public class Utils {
 
 
 
+
 // ================================= Profile Picture Management ================================= //
 
     /**
@@ -197,7 +198,6 @@ public class Utils {
         user.updateProfile(request);
     }
 
-
 // ============================================================================================== //
 
     public static void status(String status) {
@@ -205,7 +205,8 @@ public class Utils {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);
 
-        FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
+        if(firebaseUser != null)
+            FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
     }
 
 }

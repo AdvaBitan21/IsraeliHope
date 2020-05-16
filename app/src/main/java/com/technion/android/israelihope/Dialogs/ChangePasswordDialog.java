@@ -1,4 +1,4 @@
-package com.technion.android.israelihope;
+package com.technion.android.israelihope.Dialogs;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.technion.android.israelihope.R;
 
 public class ChangePasswordDialog extends AppCompatDialogFragment {
 

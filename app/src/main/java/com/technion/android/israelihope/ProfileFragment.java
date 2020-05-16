@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.technion.android.israelihope.Dialogs.ChangePasswordDialog;
 import com.technion.android.israelihope.Objects.User;
 
 import java.io.IOException;
@@ -55,6 +57,7 @@ public class ProfileFragment extends Fragment {
         initEditUserName();
         initDatePicker();
         initChangePasswordDialog();
+        initLogOutButton();
     }
 
 
@@ -166,6 +169,22 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private void initLogOutButton() {
+
+        final Button logoutButton = getActivity().findViewById(R.id.logout);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+                Utils.status("offline");
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+    }
+
 
     private void updateUserName(String name) {
         mUser.setUserName(name);
@@ -196,20 +215,24 @@ public class ProfileFragment extends Fragment {
     }
 
     public void animateOut() {
-       Animation slide_out_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_up);
-       getView().findViewById(R.id.layout).startAnimation(slide_out_up);
-       Animation fade_out = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
-       getView().findViewById(R.id.backLayout).startAnimation(fade_out);
+        Animation slide_out_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_up);
+        getView().findViewById(R.id.layout).startAnimation(slide_out_up);
+        Animation fade_out = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
+        getView().findViewById(R.id.backLayout).startAnimation(fade_out);
 
-       slide_out_up.setAnimationListener(new Animation.AnimationListener(){
-           public void onAnimationStart(Animation a){}
-           public void onAnimationRepeat(Animation a){}
-           public void onAnimationEnd(Animation a){
-               getFragmentManager().popBackStack();
-           }
+        slide_out_up.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation a) {
+            }
 
-       });
-   }
+            public void onAnimationRepeat(Animation a) {
+            }
+
+            public void onAnimationEnd(Animation a) {
+                getFragmentManager().popBackStack();
+            }
+
+        });
+    }
 
 
     @Override

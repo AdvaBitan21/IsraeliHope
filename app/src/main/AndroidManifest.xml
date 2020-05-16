@@ -15,7 +15,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".MessageActivity" />
         <activity android:name=".ChatsFragment" />
-        <activity android:name=".ChangePasswordDialog" />
+        <activity android:name=".Dialogs.ChangePasswordDialog" />
         <activity android:name=".ProfileFragment" />
         <activity
             android:name=".SignUpActivity"

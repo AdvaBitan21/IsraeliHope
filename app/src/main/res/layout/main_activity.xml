@@ -55,10 +55,10 @@
                 android:layout_height="25dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="16dp"
-                android:src="@color/Grey"
+                android:elevation="5dp"
                 app:civ_border_color="@color/Grey"
                 app:civ_border_width="1dp"
-                android:elevation="5dp"/>
+                app:civ_circle_background_color="@color/Grey"/>
 
         </androidx.appcompat.widget.Toolbar>
 

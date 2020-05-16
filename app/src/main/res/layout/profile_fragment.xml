@@ -13,7 +13,7 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="30dp"
+        android:paddingBottom="10dp"
         android:background="@drawable/semi_round_background">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -269,6 +269,18 @@
                     android:visibility="visible" />
             </LinearLayout>
         -->
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/changePasswordButton"
+            android:background="@color/transparent"
+            android:text="@string/log_out"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/Grey"
+            android:layout_marginTop="10dp"/>
+
 
     </RelativeLayout>
 

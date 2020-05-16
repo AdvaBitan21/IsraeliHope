@@ -13,7 +13,8 @@ public class User {
     private int num_challenges;
     private String status;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String email, String user_name, String city, String birth_date, Utils.UserType type, int num_challenges, String status) {
         this.email = email;
@@ -21,7 +22,7 @@ public class User {
         this.city = city;
         this.birth_date = birth_date;
         this.type = type;
-        this.score_first_quiz=0;
+        this.score_first_quiz = 0;
         this.num_challenges = num_challenges;
         this.status = status;
     }

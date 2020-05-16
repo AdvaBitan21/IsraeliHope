@@ -51,7 +51,7 @@
             android:layout_width="170dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
+            android:layout_above="@id/wrong_details"
             app:srcCompat="@drawable/logo_white"
             android:elevation="10dp"/>
 
@@ -197,7 +197,7 @@
             android:layout_above="@id/forgotPassword"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/round_border_background"
             android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/login"
@@ -210,7 +210,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/forgotPassword"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:elevation="10dp"
             android:visibility="gone">
 
