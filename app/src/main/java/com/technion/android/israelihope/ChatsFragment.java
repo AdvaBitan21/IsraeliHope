@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +20,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Adapters.UserAdapter;
 import com.technion.android.israelihope.Objects.Chatlist;
 import com.technion.android.israelihope.Objects.User;
@@ -33,7 +43,6 @@ public class ChatsFragment extends Fragment {
     private List<User> mUsers;
 
     FirebaseUser firebaseUser;
-    DatabaseReference reference;
 
     private List<Chatlist> usersList;
 
@@ -56,23 +65,31 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
 
-        // TODO - I put it in comment because it crushes :(
-//        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(firebaseUser.getEmail());
-//        reference.addValueEventListener(new ValueEventListener() {
+        Query query = FirebaseFirestore.getInstance().collection("Chatlist");
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                usersList.clear();
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    Chatlist chatlist = document.toObject(Chatlist.class);
+                    usersList.add(chatlist);
+                }
+
+                chatList();
+            }
+        });
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                usersList.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
-//                    usersList.add(chatlist);
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    usersList.clear();
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Chatlist chatlist = document.toObject(Chatlist.class);
+//                        usersList.add(chatlist);
+//                    }
+//
+//                    chatList();
 //                }
-//
-//                chatList();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
 //            }
 //        });
     }
@@ -80,27 +97,23 @@ public class ChatsFragment extends Fragment {
 
     private void chatList() {
        mUsers = new ArrayList<>();
-       reference = FirebaseDatabase.getInstance().getReference("Users");
-       reference.addValueEventListener(new ValueEventListener() {
+       CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+       requestCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
            @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+           public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                mUsers.clear();
-               for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                   User user = snapshot.getValue(User.class);
+               for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                   User user = document.toObject(User.class);
                    for (Chatlist chatlist : usersList) {
-                       if(user.getEmail().equals(chatlist.getEmail())){
+                       if(user.getEmail().equals(chatlist.getEmail()) && !user.getEmail().equals(firebaseUser.getEmail())){
                            mUsers.add(user);
                        }
                    }
                }
-               userAdapter = new UserAdapter(getContext(), mUsers);
+               userAdapter = new UserAdapter(getContext(), mUsers, true);
                recyclerView.setAdapter(userAdapter);
            }
-
-           @Override
-           public void onCancelled(@NonNull DatabaseError databaseError) {
-
-           }
        });
+
     }
 }

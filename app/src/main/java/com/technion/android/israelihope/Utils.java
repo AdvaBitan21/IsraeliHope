@@ -27,6 +27,7 @@ import com.technion.android.israelihope.Objects.Question;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 
@@ -199,5 +200,12 @@ public class Utils {
 
 // ============================================================================================== //
 
+    public static void status(String status) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
+    }
 
 }

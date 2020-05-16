@@ -1,14 +1,15 @@
 package com.technion.android.israelihope.Objects;
 
-import java.sql.Timestamp;
+
+import com.google.firebase.Timestamp;
 
 public class Chat {
     private String sender;
     private String receiver;
     private String message;
-    private String messageTime;
+    private Timestamp messageTime; //TODO change to Date
 
-    public Chat(String sender, String receiver, String message, String messageTime) {
+    public Chat(String sender, String receiver, String message, Timestamp messageTime) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
@@ -42,11 +43,11 @@ public class Chat {
         this.message = message;
     }
 
-    public String getMessageTime() {
+    public Timestamp getMessageTime() {
         return messageTime;
     }
 
-    public void setMessageTime(String messageTime) {
+    public void setMessageTime(Timestamp messageTime) {
         this.messageTime = messageTime;
     }
 }

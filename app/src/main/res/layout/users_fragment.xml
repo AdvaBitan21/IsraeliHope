@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatsFragment">
+    tools:context=".UsersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
+        android:id="@+id/my_user_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/design_default_color_on_primary" />
 
-
+        />
 </RelativeLayout>

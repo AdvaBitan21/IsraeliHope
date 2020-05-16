@@ -8,6 +8,44 @@
     android:focusableInTouchMode="true"
     tools:context=".MessageActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorPrimary"
+            android:gravity="top"
+            android:paddingTop="25dp">
+
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/menu"
+                android:tint="@color/design_default_color_on_primary" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="שם משתמש"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_view"
         android:layout_width="match_parent"
@@ -52,7 +90,7 @@
             android:padding="20dp"
             android:rotation="180"
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
 
         <EditText

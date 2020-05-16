@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         initCurrentUser();
         initToolBar();
-        loadFragment(new ChatsFragment()); // TODO - when the chats fragment won't crush
+        loadFragment(new ChatsFragment());
     }
 
 
@@ -71,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 loadFragment(new ProfileFragment());
+            }
+        });
+
+        ImageView add_users = findViewById(R.id.add_users);
+        add_users.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new UsersFragment());
             }
         });
 
@@ -138,26 +149,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getEmail());
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-
-        reference.updateChildren(hashMap);
-    }
+//    private void status(String status) {
+//        firebaseUser = mAuth.getCurrentUser();
+//        HashMap<String, Object> hashMap = new HashMap<>();
+//        hashMap.put("status", status);
+//
+//        FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // status("online");
+        Utils.status("online");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //status("offline");
+        Utils.status("offline");
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Utils.status("online");
+    }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        status("offline");
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

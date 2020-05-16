@@ -1,7 +1,6 @@
 package com.technion.android.israelihope.Adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.technion.android.israelihope.Objects.Chat;
 import com.technion.android.israelihope.R;
+import com.technion.android.israelihope.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
@@ -26,15 +27,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private Context mContext;
     private List<Chat> mChat;
-    private Uri image_uri;
+    private List<String> isSender;
 
     FirebaseUser firebaseUser;
 
-    public MessageAdapter(Context mContext, List<Chat> mChat, Uri image_uri){
+    public MessageAdapter(Context mContext, List<Chat> mChat, List<String> isSender){
         this.mContext = mContext;
         this.mChat = mChat;
-        this.image_uri = image_uri;
+        this.isSender = isSender;
     }
+
 
     @NonNull
     @Override
@@ -54,16 +56,33 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
 
         Chat chat = mChat.get(position);
+        SimpleDateFormat simple_format = new SimpleDateFormat("HH:mm");
+        Timestamp time = chat.getMessageTime();
+        if(time == null){
+            return;
+        }
+        holder.message_time.setText(simple_format.format(time.toDate()));
 
         holder.show_message.setText(chat.getMessage());
-        holder.message_time.setText(chat.getMessageTime());
 
-        Glide.with(mContext).load(image_uri).into(holder.profile_image);
+
+        Utils.loadProfileImage(mContext, holder.profile_image, isSender.get(position));
+
     }
 
     @Override
     public int getItemCount() {
         return mChat.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mChat.get(position).getSender().equals(firebaseUser.getEmail())){
+            return MSG_TYPE_RIGHT;
+        }
+        else
+            return MSG_TYPE_LEFT;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -78,15 +97,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             profile_image = itemView.findViewById(R.id.avatar);
             message_time = itemView.findViewById(R.id.message_time);
         }
-    }
 
-    @Override
-    public int getItemViewType(int position) {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mChat.get(position).getSender().equals(firebaseUser.getEmail())){
-            return MSG_TYPE_RIGHT;
-        }
-        else
-            return MSG_TYPE_LEFT;
     }
 }
