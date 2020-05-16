@@ -158,6 +158,7 @@ public class MessageActivity extends AppCompatActivity {
                         messageAdapter = new MessageAdapter(MessageActivity.this, mchat, isSender);
 //                        messageAdapter.notifyDataSetChanged();
                         recyclerView.setAdapter(messageAdapter);
+                        recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
 
                     }
                 });
