@@ -47,7 +47,7 @@ public class FirstQuizWelcomeFragment  extends Fragment {
                     for (DocumentSnapshot doc : task.getResult()) {
                         //Move to next question
                         Question q = doc.toObject(Question.class);
-                        switch (q.getQuestionType()){
+                        switch (q.getQuestion_type()){
                             case YesNo: ((MainActivity) getContext()).loadFragment(new YesNoQuestionFragment(q));break;
                             case Close: ((MainActivity) getContext()).loadFragment(new CloseQuestionFragment(q));break;
                             case CheckBox: ((MainActivity) getContext()).loadFragment(new CheckBoxQuestionFragment(q));break;

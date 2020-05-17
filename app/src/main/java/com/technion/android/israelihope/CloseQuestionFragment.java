@@ -38,6 +38,8 @@ public class CloseQuestionFragment extends Fragment {
     private User mUser;
     private CountDownTimer mCountDownTimer;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
+    private Button mChosen;
+    private boolean isChosen=false;
 
 
     public CloseQuestionFragment(Question question) {
@@ -68,6 +70,7 @@ public class CloseQuestionFragment extends Fragment {
 
                     initUI();
                     initTimer();
+                    InitNextQuestion();
 
 
                 }
@@ -78,68 +81,77 @@ public class CloseQuestionFragment extends Fragment {
     private void initUI(){
 
         TextView questionIndex = getActivity().findViewById(R.id.question_number);
-        questionIndex.setText(mQuestion.getFirstQuizIndex());
+        questionIndex.setText(""+mQuestion.getFirst_quiz_index());
 
         TextView questionContent = getActivity().findViewById(R.id.question);
         questionIndex.setText(mQuestion.getContent());
 
         final Button choice1= getActivity().findViewById(R.id.choice1);
-        choice1.setText(mQuestion.getPossibleAnswers().get(0));
+        choice1.setText(mQuestion.getPossible_answers().get(0));
         choice1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice1);}});
+            public void onClick(View view) { if(isChosen==false ){isChosen=true;}
+            else {mChosen.setBackgroundColor(Color.BLUE); }
+                mChosen=choice1;mChosen.setBackgroundColor(Color.GRAY);
+            }});
 
         final Button choice2= getActivity().findViewById(R.id.choice2);
-        choice2.setText(mQuestion.getPossibleAnswers().get(1));
+        choice2.setText(mQuestion.getPossible_answers().get(1));
         choice2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice2);}});
+            public void onClick(View view) { if(isChosen==false ){isChosen=true;}
+            else {mChosen.setBackgroundColor(Color.BLUE); }
+                mChosen=choice2;mChosen.setBackgroundColor(Color.GRAY);
+            }});
 
         final Button choice3= getActivity().findViewById(R.id.choice3);
-        choice3.setText(mQuestion.getPossibleAnswers().get(2));
+        choice3.setText(mQuestion.getPossible_answers().get(2));
         choice3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice3);}});
+            public void onClick(View view) { if(isChosen==false ){isChosen=true;}
+            else {mChosen.setBackgroundColor(Color.BLUE); }
+                mChosen=choice3;mChosen.setBackgroundColor(Color.GRAY);
+            }});
 
         final Button choice4= getActivity().findViewById(R.id.choice4);
-        choice4.setText(mQuestion.getPossibleAnswers().get(3));
+        choice4.setText(mQuestion.getPossible_answers().get(3));
         choice4.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { checkAnswer(mQuestion.getPossibleAnswers().get(0),choice4);}});
+            public void onClick(View view) { if(isChosen==false ){isChosen=true;}
+            else {mChosen.setBackgroundColor(Color.BLUE); }
+                mChosen=choice4;mChosen.setBackgroundColor(Color.GRAY);
+            }});
 
 
 
     }
 
-    private void checkAnswer(String possible_answer,Button btn){
-        mCountDownTimer.cancel();
+    private void checkAnswer(){
         final Map<String, Object> updates = new HashMap<String, Object>();
-        updates.put("count_answers",mQuestion.getCountAnswers()+1);
+        updates.put("count_answers",mQuestion.getCount_answers()+1);
 
-        if(possible_answer.equals(mQuestion.getRightAnswers())) {
-            if(btn!=null)
-                btn.setBackgroundColor(Color.GREEN);
+        if(mChosen!=null&&mQuestion.getRight_answers().contains(mChosen.getText())) {
+            if(mChosen!=null)
+                mChosen.setBackgroundColor(Color.GREEN);
 
-            if(mQuestion.getFirstQuizIndex()>=0)
+            if(mQuestion.getFirst_quiz_index()>=0)
                 ((MainActivity)getActivity()).IncreaseFirstQuizScore();
 
             mQuestion.addRightAnswerByUser(mUser.getType());
-            updates.put("count_rights",mQuestion.getCountRights());
+            updates.put("countRights",mQuestion.getCountRights());
 
-            DocumentReference questionRef = db.collection("Questions").document(mQuestion.getId());
-            questionRef.update(updates);
+
 
         }
         else {
-            if(btn!=null)
-                btn.setBackgroundColor(Color.RED);
+            if(mChosen!=null)
+                mChosen.setBackgroundColor(Color.RED);
 
-            DocumentReference questionRef = db.collection("Questions").document(mQuestion.getId());
-            questionRef.update(updates);
 
         }
-
-        nextQuestion();
+        DocumentReference questionRef = db.collection("Questions").document(mQuestion.getId());
+        questionRef.update(updates);
+        //nextQuestion();
 
     }
     private void initTimer(){
@@ -148,58 +160,70 @@ public class CloseQuestionFragment extends Fragment {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis = millisUntilFinished;
-                timeLeft.setText(((int) (mTimeLeftInMillis / 1000) % 60));
+                timeLeft.setText(""+((int) (mTimeLeftInMillis / 1000) % 60));
             }
 
             @Override
             public void onFinish() {
-                checkAnswer("dummy",null);
+                nextQuestion();
                 //can add message that time is over
             }
         }.start();
 
     }
 
+
     private void nextQuestion() {
+        mCountDownTimer.cancel();
+
+        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
+        checkAnswer();
+        int index = mQuestion.getFirst_quiz_index();
+        if (index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ) {
+            //Move to FirstQuizFinishFragment
+            ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
+            return;
+        }
+        Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", index + 1);
+        questionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot doc : task.getResult()) {
+                        //Move to next question
+                        Question q = doc.toObject(Question.class);
+                        switch (q.getQuestion_type()) {
+                            case YesNo:
+                                ((MainActivity) getContext()).loadFragment(new YesNoQuestionFragment(q));
+                                break;
+                            case Close:
+                                ((MainActivity) getContext()).loadFragment(new CloseQuestionFragment(q));
+                                break;
+                            case CheckBox:
+                                ((MainActivity) getContext()).loadFragment(new CheckBoxQuestionFragment(q));
+                                break;
+                            default:
+                                break;
+
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void InitNextQuestion() {
+
         Button next = getActivity().findViewById(R.id.next);
         next.setVisibility(View.VISIBLE);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int index = mQuestion.getFirstQuizIndex();
-                if (index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ) {
-                    ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
-                    return;
-                }
-                Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", index + 1);
-                questionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot doc : task.getResult()) {
-                                //Move to next question
-                                Question q = doc.toObject(Question.class);
-                                switch (q.getQuestionType()) {
-                                    case YesNo:
-                                        ((MainActivity) getContext()).loadFragment(new YesNoQuestionFragment(q));
-                                        break;
-                                    case Close:
-                                        ((MainActivity) getContext()).loadFragment(new CloseQuestionFragment(q));
-                                        break;
-                                    case CheckBox:
-                                        ((MainActivity) getContext()).loadFragment(new CheckBoxQuestionFragment(q));
-                                        break;
-                                    default:
-                                        break;
-
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
+                nextQuestion();
+            }});
     }
+
 
 
 }

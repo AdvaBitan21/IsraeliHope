@@ -52,7 +52,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final User user = mUsers.get(position);
-        holder.username.setText(user.getUserName());
+        holder.username.setText(user.getUser_name());
         holder.num_challenges.setText(String.valueOf(user.getNum_challenges()));
 
         Utils.loadProfileImage(mContext, holder.profile_image, user.getEmail());
@@ -82,7 +82,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.putExtra("userEmail", user.getEmail());
-                intent.putExtra("userName", user.getUserName());
+                intent.putExtra("userName", user.getUser_name());
                 mContext.startActivity(intent);
             }
         });

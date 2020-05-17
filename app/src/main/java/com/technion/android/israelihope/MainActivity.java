@@ -32,6 +32,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.technion.android.israelihope.Utils.uploadQuestionToFirebase;
+
 public class MainActivity extends AppCompatActivity {
 
     private int first_quiz_rights_amount;
@@ -56,8 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
         initCurrentUser();
         initToolBar();
-        loadFragment(new ChatsFragment());
+
+
+
+        //Utils.uploadQuestionToFirebase();
     }
+
+
 
 
     private void initToolBar() {
@@ -104,12 +111,31 @@ public class MainActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         mUser = document.toObject(User.class);
                     }
+
+                    if(mUser.getScore_first_quiz()>=0)
+                        loadFragment(new ChatsFragment());
+                    else
+                        loadFragment(new FirstQuizWelcomeFragment());
+
                 }
             }
         });
     }
+    public boolean addFragment(Fragment fragment) {
 
-    public User getCurrentUser() {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment, fragment.toString())
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+        return false;
+    }
+
+
+        public User getCurrentUser() {
         return mUser;
     }
 
@@ -199,7 +225,8 @@ public class MainActivity extends AppCompatActivity {
             ((ProfileFragment)getCurrentFragment()).animateOut();
             return;
         }
-
+        if(getCurrentFragment() instanceof FirstQuizFinishFragment)
+            return;
         if (count == 1) finish();
         else if (count > 1) getSupportFragmentManager().popBackStack();
         else super.onBackPressed();

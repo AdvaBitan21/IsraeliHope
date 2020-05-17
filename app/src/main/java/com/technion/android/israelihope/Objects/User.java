@@ -22,7 +22,7 @@ public class User {
         this.city = city;
         this.birth_date = birth_date;
         this.type = type;
-        this.score_first_quiz = 0;
+        this.score_first_quiz = -1;//marked as not answered
         this.num_challenges = num_challenges;
         this.status = status;
     }
@@ -31,17 +31,21 @@ public class User {
         this.email = email;
         this.user_name = user_name;
         this.city = city;
+        this.type=Utils.UserType.A;//need to change
         this.birth_date = birth_date;
         this.status = "online";
+        this.score_first_quiz=-1;
     }
 
-    public int getScoreFirstQuiz() {
+    public int getScore_first_quiz() {
         return score_first_quiz;
     }
 
-    public void setScoreFirstQuiz(int num_rights_first_quiz) {
-        this.score_first_quiz = num_rights_first_quiz;
+    public void setScore_first_quiz(int score_first_quiz) {
+        this.score_first_quiz = score_first_quiz;
     }
+
+
 
     public String getEmail() {
         return email;
@@ -51,13 +55,7 @@ public class User {
         this.email = email;
     }
 
-    public String getUserName() {
-        return user_name;
-    }
 
-    public void setUserName(String user_name) {
-        this.user_name = user_name;
-    }
 
     public String getCity() {
         return city;
@@ -67,13 +65,6 @@ public class User {
         this.city = city;
     }
 
-    public String getBirthDate() {
-        return birth_date;
-    }
-
-    public void setBirthDate(String birth_date) {
-        this.birth_date = birth_date;
-    }
 
     public Utils.UserType getType() {
         return type;
@@ -97,5 +88,21 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getBirth_date() {
+        return birth_date;
+    }
+
+    public void setBirth_date(String birth_date) {
+        this.birth_date = birth_date;
     }
 }

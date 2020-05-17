@@ -154,6 +154,7 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            intent.putExtra("sign_up","true");
                             startActivity(intent);
                             finish();
                         }

@@ -46,12 +46,12 @@ public class Utils {
         D
     }
 
-    public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 20;
+    public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 5;
     public static int OPEN_GALLERY_REQUEST = 1;
 
 
     public static void uploadQuestionToFirebase() {
-        String content = "בצום הרמאדן אסור לאכול אבל מותר לשתות";
+        String content = "שאלה 1 ";
         Utils.QuestionType questionType = QuestionType.YesNo;
         ArrayList<String> possible_answers = new ArrayList<>();
         possible_answers.add("נכון");
