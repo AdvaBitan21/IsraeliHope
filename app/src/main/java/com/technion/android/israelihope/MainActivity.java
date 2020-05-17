@@ -5,26 +5,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Objects.User;
-
-import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     onBackPressed();
                     return;
                 }
-                loadFragment(new ProfileFragment());
+                addFragment(new ProfileFragment());
             }
         });
 
@@ -148,6 +142,24 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Adds a new fragment on top of the current main fragment.
+     * The current fragment will remain at it's current state.
+     */
+    public boolean addFragment(Fragment fragment) {
+
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment, fragment.toString())
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
 
 //    private void status(String status) {
 //        firebaseUser = mAuth.getCurrentUser();
@@ -184,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         getCurrentFragment().onActivityResult(requestCode, resultCode, data);
     }
 
@@ -195,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
         // Customize onBackPressed for specific fragments //
-        if(getCurrentFragment() instanceof ProfileFragment) {
-            ((ProfileFragment)getCurrentFragment()).animateOut();
+        if (getCurrentFragment() instanceof ProfileFragment) {
+            ((ProfileFragment) getCurrentFragment()).animateOut();
             return;
         }
 
@@ -205,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
         else super.onBackPressed();
 
     }
-
 
 }
 
