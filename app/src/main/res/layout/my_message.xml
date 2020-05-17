@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingVertical="10dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"/>
+
+
+    <TextView
+        android:id="@+id/message_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/avatar"
+        android:background="@drawable/my_message"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="זה הטקסט הארוך של ההודעה ששלחתי "
+        android:textColor="#fff"
+        android:textDirection="rtl"
+        android:layout_marginTop="5dp"
+        android:textSize="18dp" />
+
+
+    <TextView
+        android:id="@+id/message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/message_body"
+        android:layout_alignLeft="@id/message_body"
+        android:layout_marginLeft="10dp"
+        android:text="11:40"
+        android:textSize="10sp" />
+
+</RelativeLayout>
