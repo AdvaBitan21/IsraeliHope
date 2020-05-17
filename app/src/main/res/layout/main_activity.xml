@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -48,7 +48,6 @@
                 android:tint="@color/Grey" />
 
 
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile"
                 android:layout_width="25dp"
@@ -58,7 +57,7 @@
                 android:elevation="5dp"
                 app:civ_border_color="@color/Grey"
                 app:civ_border_width="1dp"
-                app:civ_circle_background_color="@color/Grey"/>
+                app:civ_circle_background_color="@color/Grey" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -66,9 +65,9 @@
 
     <FrameLayout
         android:id="@+id/fragmant_container"
-        android:layout_below="@id/appBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appBar"
         android:backgroundTint="@color/lightGrey">
 
     </FrameLayout>

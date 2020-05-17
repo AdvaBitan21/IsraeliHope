@@ -1,27 +1,13 @@
 package com.technion.android.israelihope;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -34,6 +20,12 @@ import com.technion.android.israelihope.Objects.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ChatsFragment extends Fragment {
 
@@ -96,24 +88,25 @@ public class ChatsFragment extends Fragment {
 
 
     private void chatList() {
-       mUsers = new ArrayList<>();
-       CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-       requestCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-           @Override
-           public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-               mUsers.clear();
-               for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                   User user = document.toObject(User.class);
-                   for (Chatlist chatlist : usersList) {
-                       if(user.getEmail().equals(chatlist.getEmail()) && !user.getEmail().equals(firebaseUser.getEmail())){
-                           mUsers.add(user);
-                       }
-                   }
-               }
-               userAdapter = new UserAdapter(getContext(), mUsers, true);
-               recyclerView.setAdapter(userAdapter);
-           }
-       });
+        mUsers = new ArrayList<>();
+        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+        requestCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                mUsers.clear();
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    User user = document.toObject(User.class);
+                    for (Chatlist chatlist : usersList) {
+                        if (user.getEmail().equals(chatlist.getEmail()) && !user.getEmail().equals(firebaseUser.getEmail())) {
+                            mUsers.add(user);
+                        }
+                    }
+                }
+                userAdapter = new UserAdapter(getContext(), mUsers, true);
+                recyclerView.setAdapter(userAdapter);
+            }
+        });
 
     }
+
 }

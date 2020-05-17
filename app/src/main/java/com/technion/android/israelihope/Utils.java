@@ -117,17 +117,21 @@ public class Utils {
     }
 
 
-
-
 // ================================= Profile Picture Management ================================= //
 
     /**
-     * Loads a users profile picture into the desired imageView.
+     * Loads a users profile picture into the desired ImageView.
      *
-     * @param imageView the imageView to load the picture into.
+     * @param imageView the ImageView to load the picture into.
      * @param email     the email of the user
      */
     public static void loadProfileImage(final Context context, final ImageView imageView, String email) {
+
+        if (context instanceof Activity) {
+            if (((Activity) context).isDestroyed() || ((Activity) context).isFinishing())
+                return;
+        }
+
         FirebaseStorage.getInstance().getReference().child("profileImages/" + email + ".jpeg")
                 .getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
@@ -205,7 +209,7 @@ public class Utils {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);
 
-        if(firebaseUser != null)
+        if (firebaseUser != null)
             FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
     }
 

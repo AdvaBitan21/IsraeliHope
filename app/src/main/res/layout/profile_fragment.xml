@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/backLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ProfileFragment"
-    android:background="@color/transparentBlack">
+    tools:context=".ProfileFragment">
+
+    <View
+        android:id="@+id/backLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparentBlack" />
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:background="@drawable/semi_round_background">
+        android:background="@drawable/semi_round_background"
+        android:paddingBottom="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
@@ -83,12 +86,12 @@
             android:id="@+id/editUserName"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/edit"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/divider12"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:tint="@color/Grey"
-            android:layout_marginLeft="20dp"/>
+            android:src="@drawable/edit"
+            android:tint="@color/Grey" />
 
         <View
             android:id="@+id/divider15"
@@ -102,8 +105,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_below="@id/divider15"
-            android:layout_toRightOf="@id/editBirthDate"
             android:layout_margin="10dp"
+            android:layout_toRightOf="@id/editBirthDate"
             android:background="@color/transparent"
             android:clickable="true"
             android:drawableStart="@drawable/gift"
@@ -126,12 +129,12 @@
             android:id="@+id/editBirthDate"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/edit"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/divider15"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:tint="@color/Grey"
-            android:layout_marginLeft="20dp"/>
+            android:src="@drawable/edit"
+            android:tint="@color/Grey" />
 
         <View
             android:id="@+id/divider16"
@@ -275,11 +278,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/changePasswordButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:background="@color/transparent"
             android:text="@string/log_out"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/Grey"
-            android:layout_marginTop="10dp"/>
+            android:textColor="@color/Grey" />
 
 
     </RelativeLayout>
