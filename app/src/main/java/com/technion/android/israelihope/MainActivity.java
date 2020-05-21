@@ -172,19 +172,19 @@ public class MainActivity extends AppCompatActivity {
      * Adds a new fragment on top of the current main fragment.
      * The current fragment will remain at it's current state.
      */
-    public boolean addFragment(Fragment fragment) {
-
-        if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragmant_container, fragment, fragment.toString())
-                    .addToBackStack(fragment.getClass().toString())
-                    .commit();
-            return true;
-        }
-
-        return false;
-    }
+//    public boolean addFragment(Fragment fragment) {
+//
+//        if (fragment != null) {
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.fragmant_container, fragment, fragment.toString())
+//                    .addToBackStack(fragment.getClass().toString())
+//                    .commit();
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
 
 //    private void status(String status) {

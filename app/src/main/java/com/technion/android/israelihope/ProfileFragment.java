@@ -64,10 +64,10 @@ public class ProfileFragment extends Fragment {
     private void getUserDetails() {
 
         TextView userName = getView().findViewById(R.id.userName);
-        userName.setText(mUser.getUser_name());
+        userName.setText(mUser.getUserName());
 
         TextView userBirthday = getView().findViewById(R.id.birthDate);
-        userBirthday.setText(mUser.getBirth_date());
+        userBirthday.setText(mUser.getBirthDate());
 
         CircleImageView profileImage = getView().findViewById(R.id.profile_image);
         Utils.loadProfileImage(getContext(), profileImage, mUser.getEmail());
@@ -187,7 +187,7 @@ public class ProfileFragment extends Fragment {
 
 
     private void updateUserName(String name) {
-        mUser.setUser_name(name);
+        mUser.setUserName(name);
         ((MainActivity) getActivity()).setCurrentUser(mUser);
 
         FirebaseFirestore.getInstance()
@@ -197,7 +197,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateBirthDate(String birthDate) {
-        mUser.setBirth_date(birthDate);
+        mUser.setBirthDate(birthDate);
         ((MainActivity) getActivity()).setCurrentUser(mUser);
 
         FirebaseFirestore.getInstance()
