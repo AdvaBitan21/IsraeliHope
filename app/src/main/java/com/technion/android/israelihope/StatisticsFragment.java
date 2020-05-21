@@ -108,8 +108,8 @@ public class StatisticsFragment extends Fragment {
     private void setUpPieChart3() {
         // populating a list of PieEntries
         List<PieEntry> pieEntries = new ArrayList<>();
-        for (int i = 0; i < firstQuiz.length; i++) {
-            pieEntries.add(new PieEntry(firstQuiz[i], groups[i]));
+        for (int i = 0; i < questions2.length; i++) {
+            pieEntries.add(new PieEntry(questions2[i], groups[i]));
         }
 
         TextView title3 = getView().findViewById(R.id.title3);
