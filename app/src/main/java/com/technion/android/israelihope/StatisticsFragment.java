@@ -93,6 +93,8 @@ public class StatisticsFragment extends Fragment {
         title2.setText("התפלגות 2 כלשהי");
         PieDataSet dataSet = new PieDataSet(pieEntries, "");
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextSize(12f);
         PieData data = new PieData(dataSet);
 
         //Get the Chart
