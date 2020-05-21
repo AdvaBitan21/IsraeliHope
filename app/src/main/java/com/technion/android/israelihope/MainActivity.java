@@ -86,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ImageView statistics = findViewById(R.id.statistics);
+        statistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new StatisticsFragment());
+            }
+        });
+
     }
 
 
