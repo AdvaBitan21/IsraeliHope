@@ -69,17 +69,27 @@ public class StatisticsFragment extends Fragment {
         TextView title1 = getView().findViewById(R.id.title1);
         title1.setText("התפלגות 1 כלשהי");
         PieDataSet dataSet = new PieDataSet(pieEntries, "");
+        dataSet.setSliceSpace(3f);
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
         dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextSize(15f);
+        dataSet.setSelectionShift(10f);
+        dataSet.setValueLinePart1OffsetPercentage(80.f);
+        dataSet.setValueLinePart1Length(0.5f);
+        dataSet.setValueLinePart2Length(0.35f);
+        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         PieData data = new PieData(dataSet);
 
         //Get the Chart
         PieChart chart = (PieChart)getView().findViewById(R.id.chart1);
+        chart.setDrawHoleEnabled(false);
+        chart.setEntryLabelColor(Color.BLACK);
         chart.setData(data);
         chart.animateY(1000);
-        chart.invalidate();
+        chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
+
+        chart.invalidate();
     }
 
     private void setUpPieChart2() {
@@ -92,17 +102,27 @@ public class StatisticsFragment extends Fragment {
         TextView title2 = getView().findViewById(R.id.title2);
         title2.setText("התפלגות 2 כלשהי");
         PieDataSet dataSet = new PieDataSet(pieEntries, "");
+        dataSet.setSliceSpace(3f);
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
         dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextSize(15f);
+        dataSet.setSelectionShift(10f);
+        dataSet.setValueLinePart1OffsetPercentage(80.f);
+        dataSet.setValueLinePart1Length(0.5f);
+        dataSet.setValueLinePart2Length(0.35f);
+        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         PieData data = new PieData(dataSet);
 
         //Get the Chart
         PieChart chart = (PieChart)getView().findViewById(R.id.chart2);
+        chart.setDrawHoleEnabled(false);
+        chart.setEntryLabelColor(Color.BLACK);
         chart.setData(data);
         chart.animateY(1000);
-        chart.invalidate();
+        chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
+
+        chart.invalidate();
     }
 
     private void setUpPieChart3() {
@@ -115,16 +135,25 @@ public class StatisticsFragment extends Fragment {
         TextView title3 = getView().findViewById(R.id.title3);
         title3.setText("התפלגות 3 כלשהי");
         PieDataSet dataSet = new PieDataSet(pieEntries, "");
+        dataSet.setSliceSpace(3f);
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
         dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextSize(15f);
+        dataSet.setSelectionShift(10f);
+        dataSet.setValueLinePart1OffsetPercentage(80.f);
+        dataSet.setValueLinePart1Length(0.5f);
+        dataSet.setValueLinePart2Length(0.35f);
+        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         PieData data = new PieData(dataSet);
 
         //Get the Chart
         PieChart chart = (PieChart)getView().findViewById(R.id.chart3);
+        chart.setDrawHoleEnabled(false);
+        chart.setEntryLabelColor(Color.BLACK);
         chart.setData(data);
         chart.animateY(1000);
         chart.invalidate();
+        chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
     }
 
