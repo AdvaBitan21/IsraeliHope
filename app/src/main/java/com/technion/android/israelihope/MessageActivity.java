@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -126,10 +128,55 @@ public class MessageActivity extends AppCompatActivity {
 
         FirebaseFirestore.getInstance().collection("Chats").add(chat);
 
-        FirebaseFirestore.getInstance().collection("Chatlist").document(sender).set(new Chatlist(sender));
-        FirebaseFirestore.getInstance().collection("Chatlist").document(receiver).set(new Chatlist(receiver));
-
-        readMessage(sender, receiver);
+        final DocumentReference reference = FirebaseFirestore.getInstance().collection("Chatlist").document(sender);
+        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    ArrayList<String> emails = new ArrayList<String>();
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Chatlist chatlist = document.toObject(Chatlist.class);
+                        if(!chatlist.getEmails().contains(receiver)) {
+                            chatlist.addToEmails(receiver);
+                        }
+                        emails = chatlist.getEmails();
+                    } else {
+                        emails.add(receiver);
+                    }
+                    reference.set(new Chatlist(sender, emails)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            final DocumentReference reference2 = FirebaseFirestore.getInstance().collection("Chatlist").document(receiver);
+                            reference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        ArrayList<String> emails = new ArrayList<String>();
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Chatlist chatlist = document.toObject(Chatlist.class);
+                                            if (!chatlist.getEmails().contains(sender)) {
+                                                chatlist.addToEmails(sender);
+                                                emails = chatlist.getEmails();
+                                            }
+                                        } else {
+                                            emails.add(sender);
+                                        }
+                                        reference2.set(new Chatlist(receiver, emails)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                readMessage(sender, receiver);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
 
     }
 
@@ -169,5 +216,6 @@ public class MessageActivity extends AppCompatActivity {
         super.onStart();
         Utils.status("online");
     }
+
 
 }

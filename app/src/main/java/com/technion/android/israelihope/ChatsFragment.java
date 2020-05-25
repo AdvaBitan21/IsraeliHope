@@ -36,7 +36,7 @@ public class ChatsFragment extends Fragment {
 
     FirebaseUser firebaseUser;
 
-    private List<Chatlist> usersList;
+    private List<String> usersList;
 
     @Nullable
     @Override
@@ -55,7 +55,7 @@ public class ChatsFragment extends Fragment {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        usersList = new ArrayList<>();
+        usersList = new ArrayList<String>();
 
         Query query = FirebaseFirestore.getInstance().collection("Chatlist");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -64,26 +64,14 @@ public class ChatsFragment extends Fragment {
                 usersList.clear();
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     Chatlist chatlist = document.toObject(Chatlist.class);
-                    usersList.add(chatlist);
+                    if(chatlist.email.equals(firebaseUser.getEmail())){
+                        usersList = chatlist.getEmails();
+                    }
                 }
 
                 chatList();
             }
         });
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    usersList.clear();
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Chatlist chatlist = document.toObject(Chatlist.class);
-//                        usersList.add(chatlist);
-//                    }
-//
-//                    chatList();
-//                }
-//            }
-//        });
     }
 
 
@@ -96,11 +84,8 @@ public class ChatsFragment extends Fragment {
                 mUsers.clear();
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     User user = document.toObject(User.class);
-                    for (Chatlist chatlist : usersList) {
-                        if (user.getEmail().equals(chatlist.getEmail()) && !user.getEmail().equals(firebaseUser.getEmail())) {
-                            mUsers.add(user);
-                        }
-                    }
+                    if (usersList.contains(user.getEmail()))
+                        mUsers.add(user);
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, true);
                 recyclerView.setAdapter(userAdapter);
