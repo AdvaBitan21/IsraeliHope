@@ -46,12 +46,12 @@ public class Utils {
         D
     }
 
-    public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 5;
+    public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 36;
     public static int OPEN_GALLERY_REQUEST = 1;
 
 
     public static void uploadQuestionToFirebase() {
-        String content = "שאלה 1 ";
+        String content = "יותר נוח לי כשמסביבי יש אנשים דומים לי במנהגים ובתרבות ";
         Utils.QuestionType questionType = QuestionType.YesNo;
         ArrayList<String> possible_answers = new ArrayList<>();
         possible_answers.add("נכון");
@@ -61,7 +61,7 @@ public class Utils {
         right_answers.add("לא נכון");
         String from_email = "";
         String to_email = "";
-        int firstQuizIndex = 1;
+        int firstQuizIndex = 11;
         Utils.UserType subject = Utils.UserType.A;
 
         Question q = new Question("", content, questionType, possible_answers, right_answers, from_email, to_email, firstQuizIndex, subject);

@@ -73,7 +73,7 @@ public class CheckBoxQuestionFragment extends Fragment {
 
                     initUI();
                     initTimer();
-                    InitNextQuestion();
+                    InitfinishQuestion();
 
                 }
             }
@@ -209,61 +209,30 @@ public class CheckBoxQuestionFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                nextQuestion();
+                finishQuestion();
                 //can add message that time is over
             }
         }.start();
 
     }
 
-    private void nextQuestion() {
+    private void finishQuestion() {
         mCountDownTimer.cancel();
-
         Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
-        checkAnswer();
-        int index = mQuestion.getFirst_quiz_index();
-        if (index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ) {
-            //Move to FirstQuizFinishFragment
-            ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
-            return;
-        }
-        Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", index + 1);
-        questionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot doc : task.getResult()) {
-                        //Move to next question
-                        Question q = doc.toObject(Question.class);
-                        switch (q.getQuestion_type()) {
-                            case YesNo:
-                                ((MainActivity) getContext()).loadFragment(new YesNoQuestionFragment(q));
-                                break;
-                            case Close:
-                                ((MainActivity) getContext()).loadFragment(new CloseQuestionFragment(q));
-                                break;
-                            case CheckBox:
-                                ((MainActivity) getContext()).loadFragment(new CheckBoxQuestionFragment(q));
-                                break;
-                            default:
-                                break;
 
-                        }
-                    }
-                }
-            }
-        });
+        checkAnswer();
+
     }
 
 
-    private void InitNextQuestion() {
+    private void InitfinishQuestion() {
 
         next = getActivity().findViewById(R.id.next);
         next.setVisibility(View.VISIBLE);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextQuestion();
+                finishQuestion();
             }});
     }
 

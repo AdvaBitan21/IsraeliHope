@@ -117,8 +117,10 @@ public class YesNoQuestionFragment extends Fragment {
         updates.put("count_answers",mQuestion.getCount_answers()+1);
 
         if(mChosen!=null&&mQuestion.getRight_answers().contains(mChosen.getText())) {
-            if(mChosen!=null)
+            if(mChosen!=null) {
+                if(mQuestion.getFirst_quiz_index()<=0)
                 mChosen.setBackgroundColor(Color.GREEN);
+            }
 
             if(mQuestion.getFirst_quiz_index()>=0)
                 ((MainActivity)getActivity()).IncreaseFirstQuizScore();
@@ -128,8 +130,10 @@ public class YesNoQuestionFragment extends Fragment {
 
         }
         else {
-            if(mChosen!=null)
+            if(mChosen!=null) {
+                if(mQuestion.getFirst_quiz_index()<=0)
                 mChosen.setBackgroundColor(Color.RED);
+            }
 
 
 
@@ -164,6 +168,8 @@ public class YesNoQuestionFragment extends Fragment {
         Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
         checkAnswer();
         int index = mQuestion.getFirst_quiz_index();
+        if(index<=0)
+            return;
         if (index == Utils.AMOUNT_OF_QUESTIONS_FIRST_QUIZ) {
             //Move to FirstQuizFinishFragment
             ((MainActivity) getContext()).loadFragment(new FirstQuizFinishFragment());
@@ -177,20 +183,10 @@ public class YesNoQuestionFragment extends Fragment {
                     for (DocumentSnapshot doc : task.getResult()) {
                         //Move to next question
                         Question q = doc.toObject(Question.class);
-                        switch (q.getQuestion_type()) {
-                            case YesNo:
-                                ((MainActivity) getContext()).loadFragment(new YesNoQuestionFragment(q));
-                                break;
-                            case Close:
-                                ((MainActivity) getContext()).loadFragment(new CloseQuestionFragment(q));
-                                break;
-                            case CheckBox:
-                                ((MainActivity) getContext()).loadFragment(new CheckBoxQuestionFragment(q));
-                                break;
-                            default:
-                                break;
+                        ((MainActivity) getContext()).loadFragment(new YesNoQuestionFragment(q));
 
-                        }
+
+
                     }
                 }
             }
