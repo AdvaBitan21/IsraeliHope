@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.technion.android.israelihope.Utils.addFieldToUsers;
 import static com.technion.android.israelihope.Utils.uploadQuestionToFirebase;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         initToolBar();
 
 
-
+        //addFieldToUsers();
         //Utils.uploadQuestionToFirebase();
     }
 

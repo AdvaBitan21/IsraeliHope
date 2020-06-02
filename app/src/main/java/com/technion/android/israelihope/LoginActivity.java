@@ -8,16 +8,24 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         initLoginBtn();
         initBackButton();
@@ -96,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void startMainActivity() {
 
         Intent intent = new Intent(this, MainActivity.class);
+        editTokenId();
         startActivity(intent);
         finish();
     }
@@ -126,6 +136,22 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, R.anim.slide_out_down);
+    }
+
+    private void editTokenId(){
+
+        String token_id = FirebaseInstanceId.getInstance().getToken();
+        String user_email = mAuth.getCurrentUser().getEmail();
+
+        Map<String,Object> tokenMap = new HashMap<>();
+        tokenMap.put("token_id", token_id);
+        db.collection("Users").document(user_email).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
     }
 
 }

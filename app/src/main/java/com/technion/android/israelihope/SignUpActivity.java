@@ -16,17 +16,21 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.technion.android.israelihope.Objects.User;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -129,28 +133,30 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    private void signUpUser(final User user) {
+    private void signUpUser(final User user1) {
 
-        if (user == null) return;
+        if (user1 == null) return;
 
         if (profileImage == null) {
             findViewById(R.id.illegal_image).setVisibility(View.VISIBLE);
             return;
         }
+        String token_id = FirebaseInstanceId.getInstance().getToken();
+        user1.setToken_id(token_id);
 
         String password = getPassword();
         assert password != null;
 
         showProgressBar();
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(user1.getEmail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Utils.uploadProfileImage(profileImage, user.getEmail());
+                    Utils.uploadProfileImage(profileImage, user1.getEmail());
                     FirebaseFirestore.getInstance()
                             .collection("Users")
-                            .document(user.getEmail())
-                            .set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            .document(user1.getEmail())
+                            .set(user1).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
@@ -311,5 +317,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
 
 }

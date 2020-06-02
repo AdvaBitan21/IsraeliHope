@@ -18,12 +18,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -211,6 +215,25 @@ public class Utils {
 
         if (firebaseUser != null)
             FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
+    }
+
+
+    public static void addFieldToUsers() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Users");
+        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        User user = document.toObject(User.class);
+                        final DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
+                        userRef.update("token_id", "");
+                    }
+                }
+            }
+        });
     }
 
 }

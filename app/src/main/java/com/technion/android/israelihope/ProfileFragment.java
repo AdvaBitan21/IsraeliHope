@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.technion.android.israelihope.Dialogs.ChangePasswordDialog;
@@ -27,7 +28,9 @@ import com.technion.android.israelihope.Objects.User;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -176,16 +179,32 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
-                Utils.status("offline");
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), WelcomeActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                removeTokenId();
             }
         });
     }
 
 
+    private void removeTokenId() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> removeToken = new HashMap<>();
+        removeToken.put("token_id", "");
+        db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                signOut();
+            }
+        });
+    }
+
+    private void signOut(){
+        Utils.status("offline");
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
     private void updateUserName(String name) {
         mUser.setUserName(name);
         ((MainActivity) getActivity()).setCurrentUser(mUser);

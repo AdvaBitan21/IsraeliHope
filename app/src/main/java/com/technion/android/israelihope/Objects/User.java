@@ -12,6 +12,7 @@ public class User {
     private int score_first_quiz;
     private int num_challenges;
     private String status;
+    private String token_id;
 
     public User() {
     }
@@ -25,6 +26,8 @@ public class User {
         this.score_first_quiz = -1;//marked as not answered
         this.num_challenges = num_challenges;
         this.status = status;
+        this.token_id="";
+
     }
 
     public User(String email, String userName, String city, String birthDate) {
@@ -45,7 +48,13 @@ public class User {
         this.score_first_quiz = score_first_quiz;
     }
 
+    public String getToken_id() {
+        return token_id;
+    }
 
+    public void setToken_id(String token_id) {
+        this.token_id = token_id;
+    }
 
     public String getEmail() {
         return email;
