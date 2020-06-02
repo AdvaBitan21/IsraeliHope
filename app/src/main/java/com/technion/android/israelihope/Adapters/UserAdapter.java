@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +24,9 @@ import com.technion.android.israelihope.Objects.User;
 import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,15 +35,22 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<User> mUsers;
+    private ArrayList<User> mUsers;
+    private ArrayList<User> allUsers;
+    private ArrayList<User> diffUsers;
+
     private boolean isChat;
+    private ArrayList<User> original;
+
 
     String theLastMessage;
 
-    public UserAdapter(Context mContext, List<User> mUsers, boolean isChat) {
+    public UserAdapter(Context mContext, ArrayList<User> mUsers, ArrayList<User> allUsers, boolean isChat) {
         this.mContext = mContext;
         this.mUsers = mUsers;
+        this.diffUsers = mUsers;
         this.isChat = isChat;
+        this.allUsers=allUsers;
     }
 
     @NonNull
@@ -144,4 +154,61 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         });
     }
+
+
+
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final ArrayList<User> results = new ArrayList<User>();
+                if (original == null)
+                    original = allUsers;
+
+                if (constraint != null) {
+
+                    if (original != null && original.size() > 0) {
+                        for (final User user : allUsers) {
+                            if (user.getUserName().contains(constraint.toString()))
+                                results.add(user);
+                        }
+                    }
+                    oReturn.values = results;
+                }
+                return oReturn;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults results) {
+                mUsers = (ArrayList<User>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public void searchRandomDiffrentUsers(){
+        int num_of_random_results=3;
+        Random rand = new Random();
+        ArrayList<User> randList = new ArrayList<>();
+        int i=0;
+        while(i< num_of_random_results) {
+
+
+            int randomIndex = rand.nextInt(diffUsers.size());
+            User u=diffUsers.get(randomIndex);
+            if(!randList.contains(u)){
+                i++;
+                randList.add(u);
+
+            }
+        }
+        mUsers= randList;
+        notifyDataSetChanged();
+
+    }
+
 }

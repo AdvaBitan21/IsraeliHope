@@ -32,11 +32,11 @@ public class ChatsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private UserAdapter userAdapter;
-    private List<User> mUsers;
+    private ArrayList<User> mUsers;
 
     FirebaseUser firebaseUser;
 
-    private List<String> usersList;
+    private ArrayList<String> usersList;
 
     @Nullable
     @Override
@@ -87,7 +87,7 @@ public class ChatsFragment extends Fragment {
                     if (usersList.contains(user.getEmail()))
                         mUsers.add(user);
                 }
-                userAdapter = new UserAdapter(getContext(), mUsers, true);
+                userAdapter = new UserAdapter(getContext(), mUsers, new ArrayList<User>(), true);
                 recyclerView.setAdapter(userAdapter);
             }
         });
