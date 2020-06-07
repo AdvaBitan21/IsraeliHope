@@ -1,10 +1,5 @@
 package com.technion.android.israelihope.Dialogs;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDialogFragment;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -21,6 +16,10 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.technion.android.israelihope.R;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 public class ChangePasswordDialog extends AppCompatDialogFragment {
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -30,7 +29,7 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = getActivity().getLayoutInflater().inflate(R.layout.change_password_dialog, null);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_change_password, null);
         builder.setView(view);
 
         initOkButton(view);
@@ -108,7 +107,7 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View view) {
                 EditText oldPassTxt = dialogView.findViewById(R.id.old_password);
-                if(oldPassTxt.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                if (oldPassTxt.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
                     oldPassTxt.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     oldPassEye.setImageDrawable(getResources().getDrawable(R.drawable.hide_password_eye));
                 } else {
@@ -123,7 +122,7 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View view) {
                 EditText newPassTxt = dialogView.findViewById(R.id.new_password);
-                if(newPassTxt.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                if (newPassTxt.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
                     newPassTxt.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     newPassEye.setImageDrawable(getResources().getDrawable(R.drawable.hide_password_eye));
                 } else {

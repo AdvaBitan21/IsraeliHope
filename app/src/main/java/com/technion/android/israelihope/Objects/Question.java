@@ -1,48 +1,47 @@
 package com.technion.android.israelihope.Objects;
 
+import com.technion.android.israelihope.CheckBoxQuestionFragment;
+import com.technion.android.israelihope.CloseQuestionFragment;
 import com.technion.android.israelihope.Utils;
+import com.technion.android.israelihope.YesNoQuestionFragment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Question {
+import androidx.fragment.app.Fragment;
+
+public class Question implements Serializable {
     private String id;
     private String content;
     private Utils.QuestionType question_type;
-    private ArrayList<String> possible_answers; // from 2 to 4
+    private ArrayList<String> possible_answers;  // from 2 to 4
     private ArrayList<String> right_answers;
-    private String from_email;
-    private String to_email;
-    //private Religon religon_target need to add the religon the question discusses on
-    private Map<String, Integer> countRights;//firebase demands String key
+    private Map<String, Integer> countRights;   // firebase demands String key
     private int count_answers;
-    private int first_quiz_index; // if it is not first quiz it will be -1
+    private int first_quiz_index;               // if it is not first quiz it will be -1
     private Utils.UserType subject;
+    //private Religon religon_target need to add the religon the question discusses on
 
 
-    public Question(){}
-    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, String from_email, String to_email, int firstQuizIndex, Utils.UserType subject) {
+    public Question() {
+    }
+
+    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, Utils.UserType subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
         this.possible_answers = possible_answers;
         this.right_answers = right_answers;
-        this.from_email = from_email;
-        this.to_email = to_email;
         this.countRights = new HashMap<>();
-        InitCountRights();
         this.count_answers = 0;
         this.first_quiz_index = firstQuizIndex;
         this.subject = subject;
+
+        InitCountRights();
     }
 
-    private void InitCountRights() {
-        countRights.put(""+Utils.UserType.A, 0);
-        countRights.put(""+Utils.UserType.B, 0);
-        countRights.put(""+Utils.UserType.C, 0);
-        countRights.put(""+Utils.UserType.D, 0);
-    }
 
     public String getId() {
         return id;
@@ -52,6 +51,7 @@ public class Question {
         this.id = id;
     }
 
+
     public String getContent() {
         return content;
     }
@@ -59,7 +59,6 @@ public class Question {
     public void setContent(String content) {
         this.content = content;
     }
-
 
 
     public Utils.UserType getSubject() {
@@ -79,6 +78,7 @@ public class Question {
         this.question_type = question_type;
     }
 
+
     public ArrayList<String> getPossible_answers() {
         return possible_answers;
     }
@@ -86,6 +86,7 @@ public class Question {
     public void setPossible_answers(ArrayList<String> possible_answers) {
         this.possible_answers = possible_answers;
     }
+
 
     public ArrayList<String> getRight_answers() {
         return right_answers;
@@ -95,21 +96,10 @@ public class Question {
         this.right_answers = right_answers;
     }
 
-    public String getFrom_email() {
-        return from_email;
+    public void addRightAnswerByUser(Utils.UserType type) {
+        countRights.put("" + type, countRights.get("" + type) + 1);
     }
 
-    public void setFrom_email(String from_email) {
-        this.from_email = from_email;
-    }
-
-    public String getTo_email() {
-        return to_email;
-    }
-
-    public void setTo_email(String to_email) {
-        this.to_email = to_email;
-    }
 
     public Map<String, Integer> getCountRights() {
         return countRights;
@@ -119,6 +109,14 @@ public class Question {
         this.countRights = countRights;
     }
 
+    private void InitCountRights() {
+        countRights.put("" + Utils.UserType.A, 0);
+        countRights.put("" + Utils.UserType.B, 0);
+        countRights.put("" + Utils.UserType.C, 0);
+        countRights.put("" + Utils.UserType.D, 0);
+    }
+
+
     public int getCount_answers() {
         return count_answers;
     }
@@ -126,6 +124,7 @@ public class Question {
     public void setCount_answers(int count_answers) {
         this.count_answers = count_answers;
     }
+
 
     public int getFirst_quiz_index() {
         return first_quiz_index;
@@ -135,7 +134,23 @@ public class Question {
         this.first_quiz_index = first_quiz_index;
     }
 
-    public void addRightAnswerByUser(Utils.UserType type) {
-        countRights.put(""+type, countRights.get(""+type) + 1);
+
+    public Fragment getQuestionFragment() {
+
+        Fragment fragment = null;
+        switch (question_type) {
+            case YES_NO:
+                fragment = new YesNoQuestionFragment(this);
+                break;
+            case CLOSE:
+                fragment = new CloseQuestionFragment(this);
+                break;
+            case CHECKBOX:
+                fragment = new CheckBoxQuestionFragment(this);
+                break;
+            default:
+                break;
+        }
+        return fragment;
     }
 }

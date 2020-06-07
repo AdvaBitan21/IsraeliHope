@@ -1,8 +1,10 @@
 package com.technion.android.israelihope;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -18,7 +20,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +32,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.technion.android.israelihope.Utils.addFieldToUsers;
-import static com.technion.android.israelihope.Utils.uploadQuestionToFirebase;
-
 public class MainActivity extends AppCompatActivity {
 
-    private int first_quiz_rights_amount;
     private DatabaseReference reference;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -54,12 +56,8 @@ public class MainActivity extends AppCompatActivity {
         initCurrentUser();
         initToolBar();
 
-
-        //addFieldToUsers();
-        //Utils.uploadQuestionToFirebase();
+        loadFragment(new ChatsFragment());
     }
-
-
 
 
     private void initToolBar() {
@@ -115,30 +113,14 @@ public class MainActivity extends AppCompatActivity {
                         mUser = document.toObject(User.class);
                     }
 
-                    if(mUser.getScore_first_quiz()>=0)
-                        loadFragment(new ChatsFragment());
-                    else
-                        loadFragment(new FirstQuizWelcomeFragment());
-
+                    if (mUser.getScore_first_quiz() < 0)
+                        throw new AssertionError("Current user didnt do the first quiz.");
                 }
             }
         });
     }
-    public boolean addFragment(Fragment fragment) {
 
-        if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragmant_container, fragment, fragment.toString())
-                    .addToBackStack(fragment.getClass().toString())
-                    .commit();
-            return true;
-        }
-        return false;
-    }
-
-
-        public User getCurrentUser() {
+    public User getCurrentUser() {
         return mUser;
     }
 
@@ -146,19 +128,6 @@ public class MainActivity extends AppCompatActivity {
         this.mUser = user;
     }
 
-
-    public int getFirstQuizRightsAmount() {
-        return first_quiz_rights_amount;
-    }
-
-    public void setFirstQuizRightsAmount(int first_quiz_rights_amount) {
-        this.first_quiz_rights_amount = first_quiz_rights_amount;
-    }
-
-
-    public void IncreaseFirstQuizScore() {
-        first_quiz_rights_amount++;
-    }
 
     /**
      * Replaces the current main fragment.
@@ -181,28 +150,20 @@ public class MainActivity extends AppCompatActivity {
      * Adds a new fragment on top of the current main fragment.
      * The current fragment will remain at it's current state.
      */
-//    public boolean addFragment(Fragment fragment) {
-//
-//        if (fragment != null) {
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .add(R.id.fragmant_container, fragment, fragment.toString())
-//                    .addToBackStack(fragment.getClass().toString())
-//                    .commit();
-//            return true;
-//        }
-//
-//        return false;
-//    }
+    public boolean addFragment(Fragment fragment) {
 
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment, fragment.toString())
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
 
-//    private void status(String status) {
-//        firebaseUser = mAuth.getCurrentUser();
-//        HashMap<String, Object> hashMap = new HashMap<>();
-//        hashMap.put("status", status);
-//
-//        FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
-//    }
+        return false;
+    }
+
 
     @Override
     protected void onResume() {
@@ -222,11 +183,6 @@ public class MainActivity extends AppCompatActivity {
         Utils.status("online");
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        status("offline");
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -245,12 +201,13 @@ public class MainActivity extends AppCompatActivity {
             ((ProfileFragment) getCurrentFragment()).animateOut();
             return;
         }
-        if(getCurrentFragment() instanceof FirstQuizFinishFragment)
+        if (getCurrentFragment() instanceof FirstQuizFinishFragment) {
             return;
+        }
+
         if (count == 1) finish();
         else if (count > 1) getSupportFragmentManager().popBackStack();
         else super.onBackPressed();
-
     }
 
 }

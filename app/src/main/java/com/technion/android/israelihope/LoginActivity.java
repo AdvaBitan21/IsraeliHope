@@ -1,19 +1,31 @@
 package com.technion.android.israelihope;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,21 +44,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Make status bar transparent
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
+        FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null)
+            startMainActivity();
+
+        setUpSignUpBtn();
         initLoginBtn();
-        initBackButton();
     }
 
-    private void initBackButton() {
-        findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-    }
 
     private void initLoginBtn() {
 
@@ -82,11 +96,10 @@ public class LoginActivity extends AppCompatActivity {
                                 default:
                                     Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
-
-                            hideProgressBar();
-                            Utils.enableDisableClicks(LoginActivity.this, (ViewGroup) findViewById(android.R.id.content).getRootView(), true);
-
                         }
+
+                        hideProgressBar();
+                        Utils.enableDisableClicks(LoginActivity.this, (ViewGroup) findViewById(android.R.id.content).getRootView(), true);
                     }
                 });
             }
@@ -113,16 +126,88 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showProgressBar() {
 
-        Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
-        findViewById(R.id.login).setVisibility(View.INVISIBLE);
-        findViewById(R.id.progressBarLayout).setVisibility(View.VISIBLE);
         disappearErrorMsgs();
+        Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+
+        final Button login = findViewById(R.id.login);
+        ValueAnimator shrink = ValueAnimator.ofInt(login.getMeasuredWidth(), Utils.dpToPx(this, 40));
+
+        shrink.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = login.getLayoutParams();
+                layoutParams.width = val;
+                login.setLayoutParams(layoutParams);
+            }
+        });
+
+        shrink.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                login.setText("");
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                login.setVisibility(View.INVISIBLE);
+                findViewById(R.id.progressBarLayout).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        shrink.setDuration(400);
+        shrink.start();
     }
 
     private void hideProgressBar() {
 
-        findViewById(R.id.login).setVisibility(View.VISIBLE);
-        findViewById(R.id.progressBarLayout).setVisibility(View.GONE);
+        final Button login = findViewById(R.id.login);
+        ValueAnimator expand = ValueAnimator.ofInt(login.getMeasuredWidth(), Utils.dpToPx(this, 250));
+
+        expand.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = login.getLayoutParams();
+                layoutParams.width = val;
+                login.setLayoutParams(layoutParams);
+            }
+        });
+
+        expand.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                findViewById(R.id.progressBarLayout).setVisibility(View.INVISIBLE);
+                findViewById(R.id.login).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                login.setText(getString(R.string.login));
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        expand.setDuration(400);
+        expand.setStartDelay(400);
+        expand.start();
     }
 
     private void disappearErrorMsgs() {
@@ -132,10 +217,40 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    private void setUpSignUpBtn() {
+        findViewById(R.id.signupButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fadeOutAll();
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_up, 0);
+            }
+        });
+    }
+
+    private void fadeOutAll() {
+        Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+        findViewById(R.id.logo).startAnimation(fadeOut);
+        findViewById(R.id.login).startAnimation(fadeOut);
+        findViewById(R.id.password).startAnimation(fadeOut);
+        findViewById(R.id.email).startAnimation(fadeOut);
+        findViewById(R.id.signupButton).startAnimation(fadeOut);
+    }
+
+    private void fadeInAll() {
+        Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        findViewById(R.id.logo).startAnimation(fadeIn);
+        findViewById(R.id.login).startAnimation(fadeIn);
+        findViewById(R.id.password).startAnimation(fadeIn);
+        findViewById(R.id.email).startAnimation(fadeIn);
+        findViewById(R.id.signupButton).startAnimation(fadeIn);
+    }
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, R.anim.slide_out_down);
+    protected void onResume() {
+        super.onResume();
+        fadeInAll();
     }
 
     private void editTokenId(){

@@ -3,6 +3,7 @@ package com.technion.android.israelihope.Objects;
 import java.util.ArrayList;
 
 public class Chatlist {
+
     public String email;
     public ArrayList<String> emails;
 

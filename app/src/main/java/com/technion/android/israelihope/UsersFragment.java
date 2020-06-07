@@ -10,18 +10,10 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -32,8 +24,13 @@ import com.technion.android.israelihope.Adapters.UserAdapter;
 import com.technion.android.israelihope.Objects.User;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -55,20 +52,20 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.users_fragment, null);
+        return inflater.inflate(R.layout.fragment_users, null);
     }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        searchView = ((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView));
+        searchView = ((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView));
         recyclerView = getView().findViewById(R.id.my_user_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-         db = FirebaseFirestore.getInstance();
-        b=(Button) getActivity().findViewById(R.id.diffrent_user_btn);
+        db = FirebaseFirestore.getInstance();
+        b = (Button) getActivity().findViewById(R.id.diffrent_user_btn);
         initBackButton();
         initSearchView();
         initSpeechButton();
@@ -76,7 +73,7 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
 
     }
 
-    private void getUsersToSearch(){
+    private void getUsersToSearch() {
         diffusersList = new ArrayList<>();
         allUsersList = new ArrayList<>();
 
@@ -97,16 +94,16 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
                             allUsersList.clear();
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 User user = document.toObject(User.class);
-                                if(user.getEmail().equals(mUser.getEmail()))
+                                if (user.getEmail().equals(mUser.getEmail()))
                                     continue;
                                 if (!user.getType().equals(mUser.getType()))
                                     diffusersList.add(user);
                                 allUsersList.add(user);
                             }
-                            userAdapter = new UserAdapter(getContext(), diffusersList, allUsersList,false);
+                            userAdapter = new UserAdapter(getContext(), diffusersList, allUsersList, false);
                             recyclerView.setAdapter(userAdapter);
                             recyclerView.setVisibility(View.INVISIBLE);
-                            initRandomDiffrentUsers();
+                            initRandomDifferentUsers();
 
 
                             //onQueryTextChange(searchView.getQuery().toString());
@@ -120,10 +117,9 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     }
 
 
-
     @Override
     public boolean onQueryTextSubmit(String string) {
-        if(userAdapter == null) return false;
+        if (userAdapter == null) return false;
         b.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
 
         Filter filter = userAdapter.getFilter();
@@ -136,7 +132,7 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     public boolean onQueryTextChange(String string) {
 
 
-        if(userAdapter == null) return false;
+        if (userAdapter == null) return false;
         b.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
 
         Filter filter = userAdapter.getFilter();
@@ -144,6 +140,7 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
         filter.filter(string);
         return true;
     }
+
     private void initSearchView() {
 
         searchView.setIconifiedByDefault(false);
@@ -155,14 +152,12 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
 
         //remove search icon
         ImageView searchViewIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
-        ((ViewGroup)searchViewIcon.getParent()).removeView(searchViewIcon);
+        ((ViewGroup) searchViewIcon.getParent()).removeView(searchViewIcon);
 
         searchView.setOnQueryTextListener(this);
     }
 
-    private void initRandomDiffrentUsers() {
-
-
+    private void initRandomDifferentUsers() {
 
         //remove underline
         b.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
@@ -171,12 +166,10 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
             public void onClick(View view) {
                 b.setBackgroundColor(getActivity().getResources().getColor(R.color.lightGrey));
 
-                userAdapter.searchRandomDiffrentUsers();
-                    recyclerView.setVisibility(View.VISIBLE);
-
-
-
-            }});
+                userAdapter.searchRandomDifferentUsers();
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        });
 
 
     }
@@ -202,10 +195,10 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,("ניתן לומר שם של ספר או חבר"));
-                startActivityForResult(intent,1000);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, ("ניתן לומר שם של ספר או חבר"));
+                startActivityForResult(intent, 1000);
             }
         });
     }
@@ -213,23 +206,15 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 1000: {
-                if(resultCode == RESULT_OK && data!=null){
-                    ArrayList<String> res =data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> res = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     searchView.setQuery(res.get(0), false);
                 }
             }
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

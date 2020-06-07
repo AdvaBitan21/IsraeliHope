@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00B2EE</color>
-    <color name="colorPrimaryDark">#50A6C2	</color>
+    <color name="colorPrimaryDark">#50A6C2</color>
+    <color name="colorPrimaryDarker">#5FA1C2</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="green">#21B160</color>
+    <color name="colorGreen">#05DF29</color>
+    <color name="messageGreen">#DCF8C6</color>
+
+    <color name="colorRed">#CC1100</color>
+    <color name="lightRed">#FFBDB4</color>
+
+    <color name="black">#000000</color>
+    <color name="darkGrey">#7A7A7A</color>
+    <color name="Grey">#BFBFBF</color>
     <color name="colorGrey">#C9C9C9</color>
     <color name="colorLightGrey">#F5F5F5</color>
-    <color name="colorGreen">#05DF29</color>
-    <color name="colorRed">#05DF29</color>
-
-    <color name="white">#FFFFFE</color>
-    <color name="black">#000000</color>
-
     <color name="lightGrey">#F7FAFB</color>
-    <color name="Grey">#BFBFBF</color>
-    <color name="darkGrey">#7A7A7A</color>
-    <color name="transparentGrey">#66BFBFBF</color>
+    <color name="white">#FFFFFE</color>
+
     <color name="transparentBlack">#77000000</color>
-
-
+    <color name="transparentGrey">#66BFBFBF</color>
+    <color name="transparentWhite">#77FFFFFF</color>
     <color name="transparent">#00ff0000</color>
-    <color name="green">#21B160</color>
 
 </resources>

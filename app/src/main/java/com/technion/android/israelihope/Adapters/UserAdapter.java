@@ -1,6 +1,5 @@
 package com.technion.android.israelihope.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.MainActivity;
 import com.technion.android.israelihope.MessageActivity;
 import com.technion.android.israelihope.Objects.Chat;
 import com.technion.android.israelihope.Objects.User;
@@ -25,7 +25,6 @@ import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
@@ -50,13 +49,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         this.mUsers = mUsers;
         this.diffUsers = mUsers;
         this.isChat = isChat;
-        this.allUsers=allUsers;
+        this.allUsers = allUsers;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.user_chat_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_user_chat, parent, false);
         return new UserAdapter.ViewHolder(view);
     }
 
@@ -90,8 +89,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                intent.putExtra("userEmail", user.getEmail());
-                intent.putExtra("userName", user.getUserName());
+                intent.putExtra("receiver", user);
+                intent.putExtra("sender", ((MainActivity)mContext).getCurrentUser());
                 mContext.startActivity(intent);
             }
         });
@@ -124,6 +123,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     private void lastMessage(final String userEmail, final TextView last_msg) {
+
         theLastMessage = "";
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null)
@@ -138,6 +138,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     if ((chat.getReceiver().equals(firebaseUser.getEmail()) && chat.getSender().equals(userEmail)) ||
                             (chat.getReceiver().equals(userEmail) && chat.getSender().equals(firebaseUser.getEmail()))) {
                         theLastMessage = chat.getMessage();
+                        if (theLastMessage == null)
+                            theLastMessage = "";
                     }
 
                     switch (theLastMessage) {
@@ -154,7 +156,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         });
     }
-
 
 
     public Filter getFilter() {
@@ -190,23 +191,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         };
     }
 
-    public void searchRandomDiffrentUsers(){
-        int num_of_random_results=3;
+
+    public void searchRandomDifferentUsers() {
+        int num_of_random_results = 3;
         Random rand = new Random();
         ArrayList<User> randList = new ArrayList<>();
-        int i=0;
-        while(i< num_of_random_results) {
+        int i = 0;
+        while (i < num_of_random_results) {
 
 
             int randomIndex = rand.nextInt(diffUsers.size());
-            User u=diffUsers.get(randomIndex);
-            if(!randList.contains(u)){
+            User u = diffUsers.get(randomIndex);
+            if (!randList.contains(u)) {
                 i++;
                 randList.add(u);
 
             }
         }
-        mUsers= randList;
+        mUsers = randList;
         notifyDataSetChanged();
 
     }

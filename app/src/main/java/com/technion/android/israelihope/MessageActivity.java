@@ -1,24 +1,20 @@
 package com.technion.android.israelihope;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -26,189 +22,201 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Adapters.MessageAdapter;
+import com.technion.android.israelihope.Dialogs.AddContentToChatDialog;
+import com.technion.android.israelihope.Objects.Challenge;
 import com.technion.android.israelihope.Objects.Chat;
 import com.technion.android.israelihope.Objects.Chatlist;
+import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends AppCompatActivity implements Serializable {
 
-    FirebaseUser firebaseUser;
-
-    ImageButton btn_send;
-    Button btn_challenge;
-    EditText txt_send;
-    TextView user_name;
-
-    MessageAdapter messageAdapter;
-    List<Chat> mchat;
+    User senderUser;
+    User receiverUser;
 
     RecyclerView recyclerView;
-    String userEmail;
-
-    Intent intent;
+    MessageAdapter messageAdapter;
+    List<Chat> mChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        recyclerView = findViewById(R.id.messages_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //Change statusBar color
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
 
-        btn_send = findViewById(R.id.btn_send);
-        btn_challenge = findViewById(R.id.btn_challenge);
-        txt_send = findViewById(R.id.message_editText);
-        user_name = findViewById(R.id.user_name);
+        Intent intent = getIntent();
+        receiverUser = (User) intent.getSerializableExtra("receiver");
+        senderUser = (User) intent.getSerializableExtra("sender");
+
+        ((TextView) findViewById(R.id.user_name)).setText(receiverUser.getUserName());
+
+        initSendMessageComponents();
+        initAddContentButton();
+        initChat();
+    }
 
 
-        intent = getIntent();
-        userEmail = intent.getStringExtra("userEmail");
-        String userName = intent.getStringExtra("userName");
-        user_name.setText(userName);
+    private void initAddContentButton() {
+        findViewById(R.id.btn_challenge).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MessageActivity.this, AddContentToChatDialog.class);
+                startActivityForResult(intent, Utils.SEND_CHALLENGE_REQUEST);
+            }
+        });
+    }
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private void initSendMessageComponents() {
+
+        final ImageButton btn_send = findViewById(R.id.btn_send);
+        final EditText txt_send = findViewById(R.id.message_editText);
+
+        txt_send.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (txt_send.getText().toString().trim().isEmpty()) {
+                    btn_send.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Grey)));
+                    btn_send.setEnabled(false);
+                } else {
+                    btn_send.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    btn_send.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String msg = txt_send.getText().toString();
-                sendMessage(firebaseUser.getEmail(), userEmail, msg);
+                sendMessage(senderUser.getEmail(), receiverUser.getEmail(), msg);
                 txt_send.setText("");
             }
         });
-
-
-
-
-
-        //TODO challenge page
-//        btn_challenge.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-
-        FirebaseFirestore.getInstance().collection("Users").document(userEmail)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()){
-                        User user = document.toObject(User.class);
-                        readMessage(firebaseUser.getEmail(), user.getEmail());
-                    }
-                }
-            }
-        });
     }
 
+    private void initChat() {
 
-    private void sendMessage(final String sender, final String receiver, String message){
-        if(message.isEmpty())
-            return;
+        recyclerView = findViewById(R.id.messages_view);
+        recyclerView.setHasFixedSize(true);
 
-        HashMap<String, Object> chat = new HashMap<>();
-        chat.put("sender", sender);
-        chat.put("receiver", receiver);
-        chat.put("message", message);
+        //start messages from bottom
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
 
-        FieldValue timestamp = FieldValue.serverTimestamp();
-        chat.put("messageTime", timestamp);
-
-        FirebaseFirestore.getInstance().collection("Chats").add(chat);
-
-        final DocumentReference reference = FirebaseFirestore.getInstance().collection("Chatlist").document(sender);
-        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        //scroll when keyboard is shown
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    ArrayList<String> emails = new ArrayList<String>();
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Chatlist chatlist = document.toObject(Chatlist.class);
-                        if(!chatlist.getEmails().contains(receiver)) {
-                            chatlist.addToEmails(receiver);
-                        }
-                        emails = chatlist.getEmails();
-                    } else {
-                        emails.add(receiver);
-                    }
-                    reference.set(new Chatlist(sender, emails)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    recyclerView.postDelayed(new Runnable() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            final DocumentReference reference2 = FirebaseFirestore.getInstance().collection("Chatlist").document(receiver);
-                            reference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        ArrayList<String> emails = new ArrayList<String>();
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            Chatlist chatlist = document.toObject(Chatlist.class);
-                                            if (!chatlist.getEmails().contains(sender)) {
-                                                chatlist.addToEmails(sender);
-                                                emails = chatlist.getEmails();
-                                            }
-                                        } else {
-                                            emails.add(sender);
-                                        }
-                                        reference2.set(new Chatlist(receiver, emails)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                readMessage(sender, receiver);
-                                            }
-                                        });
-                                    }
-                                }
-                            });
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
                         }
-                    });
+                    }, 100);
                 }
             }
         });
 
+        readMessages();
     }
 
-    private void readMessage(final String myEmail, final String userEmail){
-        mchat = new ArrayList<>();
-        final ArrayList<String> isSender = new ArrayList<>();
+    private void readMessages() {
 
+        //initial setup of the adapter
+        mChat = new ArrayList<>();
+        final ArrayList<DocumentReference> mDocuments = new ArrayList<>();
+        messageAdapter = new MessageAdapter(MessageActivity.this, mChat, mDocuments);
+        recyclerView.setAdapter(messageAdapter);
+        recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
+
+        //listening to message additions
         FirebaseFirestore.getInstance().collection("Chats")
                 .orderBy("messageTime", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        mchat.clear();
-                        isSender.clear();
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Chat chat = document.toObject(Chat.class);
-                            if (chat.getReceiver().equals(myEmail) && chat.getSender().equals(userEmail)) {
-                                mchat.add(chat);
-                                isSender.add(userEmail);
-                            }
-                            if (chat.getReceiver().equals(userEmail) && chat.getSender().equals(myEmail)) {
-                                mchat.add(chat);
-                                isSender.add(myEmail);
+                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                            if (dc.getType().equals(DocumentChange.Type.ADDED)) {
+                                Chat chat = dc.getDocument().toObject(Chat.class);
+                                if (chatBelongsToConversation(chat)) {
+                                    mChat.add(chat);
+                                    mDocuments.add(dc.getDocument().getReference());
+                                    messageAdapter.notifyItemInserted(mChat.size() - 1);
+                                    recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
+                                }
                             }
                         }
-                        messageAdapter = new MessageAdapter(MessageActivity.this, mchat, isSender);
-//                        messageAdapter.notifyDataSetChanged();
-                        recyclerView.setAdapter(messageAdapter);
-                        recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
-
                     }
                 });
+    }
+
+
+    public void sendChallenge(Question question) {
+        if (question == null)
+            return;
+
+        final String sender = senderUser.getEmail();
+        final String receiver = receiverUser.getEmail();
+
+        Chat chat = new Chat(sender, receiver, Timestamp.now(), new Challenge(question.getId()));
+        FirebaseFirestore.getInstance().collection("Chats").add(chat);
+
+        updateUsersChatlists();
+    }
+
+    private void sendMessage(final String sender, final String receiver, String message) {
+        if (message.isEmpty())
+            return;
+
+        Chat chat = new Chat(sender, receiver, Timestamp.now(), message);
+        FirebaseFirestore.getInstance().collection("Chats").add(chat);
+
+        updateUsersChatlists();
+    }
+
+    private void updateUsersChatlists() {
+
+        final DocumentReference senderReference = FirebaseFirestore.getInstance().collection("Chatlist").document(senderUser.getEmail());
+        senderReference.update("emails", FieldValue.arrayRemove(receiverUser.getEmail()));
+        senderReference.update("emails", FieldValue.arrayUnion(receiverUser.getEmail()));
+
+        final DocumentReference receiverReference = FirebaseFirestore.getInstance().collection("Chatlist").document(receiverUser.getEmail());
+        receiverReference.update("emails", FieldValue.arrayRemove(senderUser.getEmail()));
+        receiverReference.update("emails", FieldValue.arrayUnion(senderUser.getEmail()));
+    }
+
+
+    private boolean chatBelongsToConversation(Chat chat) {
+        return (chat.getReceiver().equals(senderUser.getEmail()) && chat.getSender().equals(receiverUser.getEmail())) ||
+                (chat.getReceiver().equals(receiverUser.getEmail()) && chat.getSender().equals(senderUser.getEmail()));
     }
 
     @Override
@@ -217,5 +225,14 @@ public class MessageActivity extends AppCompatActivity {
         Utils.status("online");
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == Utils.SEND_CHALLENGE_REQUEST && data != null) {
+            Question question = (Question) data.getSerializableExtra("question");
+            if (question != null)
+                sendChallenge(question);
+        }
+    }
 }

@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/backLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparentBlack"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:id="@+id/timer_layout"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@id/layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-40dp"
+        android:elevation="10dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/circle"
+            android:tint="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="30000"
+            android:progress="0"
+            android:progressDrawable="@drawable/circle_determinate_progressbar" />
+
+        <TextView
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="30"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/background_white_soft_corners"
+        android:elevation="5dp"
+        android:layoutDirection="rtl">
+
+        <nl.dionsegijn.konfetti.KonfettiView
+            android:id="@+id/viewConfetti"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="45dp">
+
+            <TextView
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="25dp"
+                android:drawablePadding="7dp"
+                android:text="איזה חג חוגגים המרוקאים אחריי הפסח?"
+                android:textColor="@color/cardview_dark_background"
+                android:textDirection="rtl"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/answers_multichoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/multichoice_choice1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/answer_background"
+                    android:drawablePadding="7dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="12dp"
+                    android:text="סוכות"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/multichoice_choice2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/answer_background"
+                    android:drawablePadding="7dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="12dp"
+                    android:text="רמדאן"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/multichoice_choice3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/answer_background"
+                    android:drawablePadding="7dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="12dp"
+                    android:text="מימונה"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/multichoice_choice4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/answer_background"
+                    android:drawablePadding="7dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="12dp"
+                    android:text="יום העצמאות של מרוקו"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/answers_yesno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/yesno_choice1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/answer_background"
+                    android:drawablePadding="7dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="12dp"
+                    android:text="סוכות"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textSize="14sp"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:id="@+id/yesno_choice2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/answer_background"
+                    android:drawablePadding="7dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="12dp"
+                    android:text="רמדאן"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textSize="14sp"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/send_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/answer_background"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:text="@string/ok"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/correctLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:alpha="0"
+        android:elevation="10dp"
+        android:layoutDirection="rtl">
+
+        <TextView
+            android:id="@+id/congrats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="כל הכבוד, אליאנה תדהר!"
+            android:textColor="@color/Grey"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/points_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/congrats"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/youWon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/you_won"
+                android:textColor="@color/darkGrey"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/coin"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="8dp"
+                app:srcCompat="@drawable/coin" />
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@id/points_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_white_rounded_border"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="@string/ok"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/wrongLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:alpha="0"
+        android:elevation="10dp"
+        android:layoutDirection="rtl"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/wrong_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/your_answer_is_wrong"
+            android:textColor="@color/Grey"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/no_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wrong_answer"
+            android:layout_centerHorizontal="true"
+            android:text="@string/not_getting_points"
+            android:textColor="@color/darkGrey"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/dismiss2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@id/no_points"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_white_rounded_border"
+            android:backgroundTint="@color/Grey"
+            android:text="@string/ok"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/timesUpLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:alpha="0"
+        android:elevation="10dp"
+        android:layoutDirection="rtl"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/timesUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/times_up"
+            android:textColor="@color/Grey"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/no_points3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timesUp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/not_getting_points"
+            android:textColor="@color/darkGrey"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/dismiss3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@id/no_points3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_white_rounded_border"
+            android:backgroundTint="@color/Grey"
+            android:text="@string/ok"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

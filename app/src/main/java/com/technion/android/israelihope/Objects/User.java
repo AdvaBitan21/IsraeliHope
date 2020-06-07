@@ -2,7 +2,9 @@ package com.technion.android.israelihope.Objects;
 
 import com.technion.android.israelihope.Utils;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String email;
     private String userName;

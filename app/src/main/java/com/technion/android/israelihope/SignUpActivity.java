@@ -159,8 +159,8 @@ public class SignUpActivity extends AppCompatActivity {
                             .set(user1).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                            intent.putExtra("sign_up","true");
+
+                            Intent intent = new Intent(SignUpActivity.this, FirstQuizActivity.class);
                             startActivity(intent);
                             finish();
                         }

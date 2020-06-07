@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/cardview_compat_inset_shadow">
-
+    android:paddingVertical="20dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignParentRight="true"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="25dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
         android:src="@mipmap/ic_launcher" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_on"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_below="@id/name_layout"
-        android:layout_marginTop="-8dp"
-        android:layout_marginRight="-25dp"
+    <ImageView
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_below="@id/profile_image"
         android:layout_toLeftOf="@id/profile_image"
-        android:src="@mipmap/ic_launcher"
-        app:civ_border_color="@color/colorGreen"
-        android:visibility="gone"
-        app:civ_border_width="10dp" />
+        android:layout_marginTop="-11dp"
+        android:layout_marginRight="-31dp"
+        android:src="@drawable/circle"
+        android:tint="@color/white"
+        android:visibility="visible" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_off"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_below="@id/name_layout"
-        android:layout_marginTop="-8dp"
-        android:layout_marginRight="-25dp"
+
+    <ImageView
+        android:id="@+id/img_on"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_below="@id/profile_image"
         android:layout_toLeftOf="@id/profile_image"
-        android:src="@mipmap/ic_launcher"
-        app:civ_border_color="@color/colorGrey"
-        android:visibility="gone"
-        app:civ_border_width="10dp" />
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="-30dp"
+        android:src="@drawable/circle"
+        android:tint="@color/colorGreen"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/img_off"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_below="@id/profile_image"
+        android:layout_toLeftOf="@id/profile_image"
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="-30dp"
+        android:src="@drawable/circle"
+        android:tint="@color/Grey"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/name_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="false"
-        android:layout_marginTop="10dp"
         android:layout_toLeftOf="@id/profile_image"
         android:layoutDirection="rtl"
         android:orientation="vertical"
@@ -60,18 +65,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="20dp"
             android:text="דניאל קופיטמן"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
             android:textDirection="rtl"
-            android:textSize="18sp" />
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/last_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/username"
-            android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/profile_image"
             android:maxLines="1"
             android:text="שלחת אתגר לגל ואדווה"
@@ -82,36 +86,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:orientation="vertical">
+        android:layout_marginHorizontal="20dp"
+        android:orientation="vertical"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/num_challenges"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="10dp"
             android:text="10"
             android:textSize="24sp"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-
-            android:layout_marginLeft="20dp"
-            android:text="אתגרים"
+            android:text="@string/challenges"
             android:textSize="10sp"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold"/>
 
     </LinearLayout>
-
 
 </RelativeLayout>

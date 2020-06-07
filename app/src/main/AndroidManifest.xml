@@ -12,19 +12,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:windowSoftInputMode="adjustPan">
+        <activity android:name=".FirstQuizActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".ChatsFragment" />
+        <activity android:name=".Dialogs.ChangePasswordDialog" />
+        <activity android:name=".ProfileFragment" />
         <activity
-            android:name=".MessageActivity">
+            android:name=".Dialogs.ChallengeDialog"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".Dialogs.AddContentToChatDialog"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".SendChallengeActivity"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".MessageActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="int.ISRAELI_HOPE.TARGETNOTIFICATIONS" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ChatsFragment" />
-        <activity android:name=".Dialogs.ChangePasswordDialog" />
-        <activity android:name=".ProfileFragment" />
         <activity
             android:name=".SignUpActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
@@ -32,14 +42,13 @@
         <activity
             android:name=".LoginActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".WelcomeActivity">
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <service
             android:name=".FirebaseMessagingService"

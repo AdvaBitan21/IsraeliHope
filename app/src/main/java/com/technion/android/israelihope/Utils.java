@@ -1,10 +1,13 @@
 package com.technion.android.israelihope;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -21,13 +24,14 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.technion.android.israelihope.Objects.Chat;
 import com.technion.android.israelihope.Objects.Question;
-import com.technion.android.israelihope.Objects.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -38,54 +42,27 @@ import androidx.annotation.NonNull;
 public class Utils {
 
     public enum QuestionType {
-        YesNo,
-        Close,
-        CheckBox
+        YES_NO,
+        CLOSE,
+        CHECKBOX
     }
 
     public enum UserType {
         A,
         B,
         C,
-        D
+        D,
+        E,
+        F,
+        G,
+        H,
+        I,
+        J
     }
 
     public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 36;
     public static int OPEN_GALLERY_REQUEST = 1;
-
-
-    public static void uploadQuestionToFirebase() {
-        String content = "יותר נוח לי כשמסביבי יש אנשים דומים לי במנהגים ובתרבות ";
-        Utils.QuestionType questionType = QuestionType.YesNo;
-        ArrayList<String> possible_answers = new ArrayList<>();
-        possible_answers.add("נכון");
-        possible_answers.add("לא נכון");
-
-        ArrayList<String> right_answers = new ArrayList<>();
-        right_answers.add("לא נכון");
-        String from_email = "";
-        String to_email = "";
-        int firstQuizIndex = 11;
-        Utils.UserType subject = Utils.UserType.A;
-
-        Question q = new Question("", content, questionType, possible_answers, right_answers, from_email, to_email, firstQuizIndex, subject);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference newQuestion = db.collection("Questions").document();
-        q.setId(newQuestion.getId());
-        newQuestion.set(q).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    //Log.d("Utils", "Uploaded book: ".concat(t));
-                    //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                } else {
-                    //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-    }
+    public static int SEND_CHALLENGE_REQUEST = 2;
 
 
     public static void closeKeyboard(Context context) {
@@ -97,11 +74,13 @@ public class Utils {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
     public static void openKeyboard(Context context, EditText editText) {
 
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, 0);
     }
+
 
     /**
      * Enables/Disables all child views in a view group.
@@ -118,6 +97,20 @@ public class Utils {
                 enableDisableClicks(activity, (ViewGroup) view, enabled);
             }
         }
+    }
+
+
+    public static void animateClick(View view) {
+        ObjectAnimator.ofPropertyValuesHolder(view,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 0.97f, 1),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 0.97f, 1))
+                .setDuration(200)
+                .start();
+    }
+
+
+    public static int dpToPx(Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
 
@@ -206,7 +199,102 @@ public class Utils {
         user.updateProfile(request);
     }
 
-// ============================================================================================== //
+
+// ===================================== Firebase Functions ===================================== //
+
+
+    public static void uploadQuestionsToFirebase(Context context) {
+
+        ArrayList<Question> questions = getQuestions();
+        for (Question question : questions) {
+            DocumentReference newQuestionDoc = FirebaseFirestore.getInstance().collection("Questions").document();
+            question.setId(newQuestionDoc.getId());
+            newQuestionDoc.set(question);
+        }
+
+    }
+
+
+    public static ArrayList<Question> getQuestions() {
+
+        ArrayList<Question> questions = new ArrayList<>();
+
+        ArrayList<String> possibleAnswers1 = new ArrayList<String>();
+        possibleAnswers1.add("א");
+        possibleAnswers1.add("ב");
+        possibleAnswers1.add("ג");
+        possibleAnswers1.add("ד");
+
+        ArrayList<String> rightAnswers1 = new ArrayList<String>();
+        rightAnswers1.add("ג");
+
+        questions.add(new Question("", "שאלת רב ברירה 1", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
+        questions.add(new Question("", "שאלת רב ברירה 2", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
+        questions.add(new Question("", "שאלת רב ברירה 3", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
+        questions.add(new Question("", "שאלת רב ברירה 4", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.D));
+        questions.add(new Question("", "שאלת רב ברירה 5", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
+        questions.add(new Question("", "שאלת רב ברירה 6", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
+        questions.add(new Question("", "שאלת רב ברירה 7", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
+
+        possibleAnswers1.clear();
+        possibleAnswers1.add("נכון");
+        possibleAnswers1.add("לא נכון");
+
+        rightAnswers1.clear();
+        rightAnswers1.add("נכון");
+
+        questions.add(new Question("", "שאלת נכון/לא נכון 1", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
+        questions.add(new Question("", "שאלת נכון/לא נכון 2", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
+        questions.add(new Question("", "שאלת נכון/לא נכון 3", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
+        questions.add(new Question("", "שאלת נכון/לא נכון 4", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.D));
+        questions.add(new Question("", "שאלת נכון/לא נכון 5", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
+        questions.add(new Question("", "שאלת נכון/לא נכון 6", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
+        questions.add(new Question("", "שאלת נכון/לא נכון 7", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
+
+        return questions;
+    }
+
+
+    /**
+     * Deletes specific fields from all documents in a specific collection.
+     *
+     * @param collectionName the collection to iterate through.
+     * @param fieldNames     names of all fields to delete
+     */
+    public static void deleteFieldsFromFirebase(String collectionName, final ArrayList<String> fieldNames) {
+
+        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection(collectionName);
+        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+
+                        for (String field : fieldNames) {
+                            document.getReference().update(field, FieldValue.delete());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    public static void addFieldsToFirebase() {
+
+        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("collection_name");
+        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        document.getReference().update("field_name", "value");
+                    }
+                }
+            }
+        });
+    }
+
 
     public static void status(String status) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -218,22 +306,6 @@ public class Utils {
     }
 
 
-    public static void addFieldToUsers() {
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference requestCollectionRef = db.collection("Users");
-        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        User user = document.toObject(User.class);
-                        final DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-                        userRef.update("token_id", "");
-                    }
-                }
-            }
-        });
-    }
+// ============================================================================================== //
 
 }

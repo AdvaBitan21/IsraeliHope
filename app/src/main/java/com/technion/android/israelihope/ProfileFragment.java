@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mUser = ((MainActivity) getActivity()).getCurrentUser();
-        return inflater.inflate(R.layout.profile_fragment, null);
+        return inflater.inflate(R.layout.fragment_profile, null);
     }
 
     @Override
@@ -201,10 +201,12 @@ public class ProfileFragment extends Fragment {
     private void signOut(){
         Utils.status("offline");
         FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
         getActivity().finish();
     }
+
+
     private void updateUserName(String name) {
         mUser.setUserName(name);
         ((MainActivity) getActivity()).setCurrentUser(mUser);

@@ -68,8 +68,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appBar"
-        android:backgroundTint="@color/lightGrey">
-
-    </FrameLayout>
+        android:backgroundTint="@color/lightGrey"/>
 
 </RelativeLayout>
