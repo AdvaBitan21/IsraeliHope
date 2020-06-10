@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparentBlack"
-    tools:context=".Dialogs.AddContentToChatDialog">
+    tools:context=".Dialogs.AddContentToChatDialog"
+    android:layoutDirection="rtl">
 
     <RelativeLayout
         android:id="@+id/layout"
@@ -36,7 +37,6 @@
                 android:textAlignment="viewStart" />
 
             <View
-                android:id="@+id/divider4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorLightGrey" />
@@ -50,6 +50,23 @@
                 android:drawablePadding="10dp"
                 android:paddingHorizontal="15dp"
                 android:text="@string/yesno_question"
+                android:textColor="@color/black"
+                android:textAlignment="viewStart" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey" />
+
+            <Button
+                android:id="@+id/picture"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/transparent"
+                android:drawableRight="@drawable/camera"
+                android:drawablePadding="10dp"
+                android:paddingHorizontal="15dp"
+                android:text="@string/picture"
                 android:textColor="@color/black"
                 android:textAlignment="viewStart" />
 

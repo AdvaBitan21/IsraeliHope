@@ -1,10 +1,8 @@
 package com.technion.android.israelihope;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -14,17 +12,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,10 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseReference reference;
-    private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
-
     private User mUser;
 
     @Override
@@ -132,7 +122,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Replaces the current main fragment.
      */
-    public boolean loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
+
+        if (fragment == null)
+            throw new AssertionError("Attempt to load a null fragment.");
 
         if (fragment != null) {
             getSupportFragmentManager()
@@ -140,17 +133,17 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.fragmant_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
-            return true;
         }
-
-        return false;
     }
 
     /**
      * Adds a new fragment on top of the current main fragment.
      * The current fragment will remain at it's current state.
      */
-    public boolean addFragment(Fragment fragment) {
+    public void addFragment(Fragment fragment) {
+
+        if (fragment == null)
+            throw new AssertionError("Attempt to load a null fragment.");
 
         if (fragment != null) {
             getSupportFragmentManager()
@@ -158,10 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fragmant_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
-            return true;
         }
-
-        return false;
     }
 
 

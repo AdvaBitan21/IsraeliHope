@@ -170,8 +170,6 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
                 recyclerView.setVisibility(View.VISIBLE);
             }
         });
-
-
     }
 
 

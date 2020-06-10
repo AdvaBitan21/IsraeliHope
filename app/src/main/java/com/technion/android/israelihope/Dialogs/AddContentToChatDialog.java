@@ -1,5 +1,6 @@
 package com.technion.android.israelihope.Dialogs;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.technion.android.israelihope.MessageActivity;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.SendChallengeActivity;
@@ -16,7 +18,11 @@ import com.technion.android.israelihope.Utils;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class AddContentToChatDialog extends AppCompatActivity {
+
+    private String contentType = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class AddContentToChatDialog extends AppCompatActivity {
         setupAnimations();
         initCancelButton();
         initChallengeButtons();
+        initCameraButton();
     }
 
 
@@ -42,10 +49,10 @@ public class AddContentToChatDialog extends AppCompatActivity {
     }
 
     private void initChallengeButtons() {
-
         findViewById(R.id.multichoice_question).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                contentType = "CHALLENGE";
                 Intent intent = new Intent(AddContentToChatDialog.this, SendChallengeActivity.class);
                 intent.putExtra("question_type", Utils.QuestionType.CLOSE);
                 startActivityForResult(intent, Utils.SEND_CHALLENGE_REQUEST);
@@ -55,10 +62,21 @@ public class AddContentToChatDialog extends AppCompatActivity {
         findViewById(R.id.yesno_question).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                contentType = "CHALLENGE";
                 Intent intent = new Intent(AddContentToChatDialog.this, SendChallengeActivity.class);
                 intent.putExtra("question_type", Utils.QuestionType.YES_NO);
                 startActivityForResult(intent, Utils.SEND_CHALLENGE_REQUEST);
                 animateOut();
+            }
+        });
+    }
+
+    private void initCameraButton() {
+        findViewById(R.id.picture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contentType = "PICTURE";
+                Utils.openImageChooser(AddContentToChatDialog.this);
             }
         });
     }
@@ -82,7 +100,7 @@ public class AddContentToChatDialog extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         animateOut();
-        finish();
+        super.onBackPressed();
     }
 
     @Override
@@ -92,8 +110,18 @@ public class AddContentToChatDialog extends AppCompatActivity {
         if (requestCode == Utils.SEND_CHALLENGE_REQUEST && data != null) {
             Question question = (Question) data.getSerializableExtra("question");
             Intent intent = new Intent();
+            intent.putExtra("contentType", contentType);
             intent.putExtra("question", question);
-            setResult(Utils.SEND_CHALLENGE_REQUEST, intent);
+            setResult(RESULT_OK, intent);
+        }
+
+        if (requestCode == Utils.OPEN_GALLERY_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            Intent intent = new Intent();
+            intent.putExtra("contentType", contentType);
+            intent.setData(data.getData());
+            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+            setResult(RESULT_OK, intent);
         }
 
         finish();

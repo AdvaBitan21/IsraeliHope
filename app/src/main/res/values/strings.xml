@@ -74,5 +74,6 @@
     <string name="challenge_answered_wrong">האתגר נענה לא נכון</string>
     <string name="challenge_answered_correct">האתגר נענה נכון</string>
     <string name="challenge_out_of_time">האתגר לא נענה בזמן</string>
+    <string name="picture">תמונה</string>
 
 </resources>

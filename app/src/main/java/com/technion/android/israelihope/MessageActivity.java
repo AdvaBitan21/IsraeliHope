@@ -2,7 +2,10 @@ package com.technion.android.israelihope;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -12,25 +15,28 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Adapters.MessageAdapter;
 import com.technion.android.israelihope.Dialogs.AddContentToChatDialog;
 import com.technion.android.israelihope.Objects.Challenge;
 import com.technion.android.israelihope.Objects.Chat;
-import com.technion.android.israelihope.Objects.Chatlist;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +83,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MessageActivity.this, AddContentToChatDialog.class);
-                startActivityForResult(intent, Utils.SEND_CHALLENGE_REQUEST);
+                startActivityForResult(intent, Utils.ADD_CONTENT_REQUEST);
             }
         });
     }
@@ -179,6 +185,19 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
     }
 
 
+    public void sendPicture(final Uri uri) {
+        if (uri == null)
+            return;
+
+        final String sender = senderUser.getEmail();
+        final String receiver = receiverUser.getEmail();
+
+        Chat chat = new Chat(sender, receiver, Timestamp.now(), getPictureString(uri));
+        FirebaseFirestore.getInstance().collection("Chats").add(chat);
+
+        updateUsersChatlists();
+    }
+
     public void sendChallenge(Question question) {
         if (question == null)
             return;
@@ -196,7 +215,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         if (message.isEmpty())
             return;
 
-        Chat chat = new Chat(sender, receiver, Timestamp.now(), message);
+        Chat chat = new Chat(sender, receiver, Timestamp.now(), getMessageString(message));
         FirebaseFirestore.getInstance().collection("Chats").add(chat);
 
         updateUsersChatlists();
@@ -214,10 +233,19 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
     }
 
 
+    private String getMessageString(String message) {
+        return "MESSAGE:" + message;
+    }
+
+    private String getPictureString(Uri uri) {
+        return "PICTURE:" + uri.toString();
+    }
+
     private boolean chatBelongsToConversation(Chat chat) {
         return (chat.getReceiver().equals(senderUser.getEmail()) && chat.getSender().equals(receiverUser.getEmail())) ||
                 (chat.getReceiver().equals(receiverUser.getEmail()) && chat.getSender().equals(senderUser.getEmail()));
     }
+
 
     @Override
     protected void onStart() {
@@ -229,10 +257,20 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Utils.SEND_CHALLENGE_REQUEST && data != null) {
-            Question question = (Question) data.getSerializableExtra("question");
-            if (question != null)
-                sendChallenge(question);
+        if (requestCode == Utils.ADD_CONTENT_REQUEST && data != null) {
+            String contentType = data.getStringExtra("contentType");
+
+            if (contentType.equals("CHALLENGE")) {
+                Question question = (Question) data.getSerializableExtra("question");
+                if (question != null)
+                    sendChallenge(question);
+            }
+
+            if (contentType.equals("PICTURE")) {
+                Uri imageUri = data.getData();
+                if (imageUri != null)
+                    sendPicture(imageUri);
+            }
         }
     }
 }

@@ -2,45 +2,78 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clipToPadding="false"
-    android:paddingTop="10dp"
     android:paddingLeft="15dp"
+    android:paddingTop="10dp"
     android:paddingRight="15dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@mipmap/ic_launcher"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:elevation="2dp"/>
+        android:layout_marginRight="5dp"
+        android:elevation="2dp"
+        android:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/message_body"
+    <RelativeLayout
+        android:id="@+id/content_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/avatar"
         android:background="@drawable/their_message"
-        android:layout_marginTop="5dp"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
-        android:text="זה הטקסט שענו לי בתגובה להודעה שלי"
-        android:textDirection="rtl"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:id="@+id/message_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/white"
+            android:textDirection="rtl"
+            android:textSize="14dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/transparent">
+
+            <ImageView
+                android:id="@+id/picture_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="150dp"
+                android:visibility="invisible" />
+
+        </androidx.cardview.widget.CardView>
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/white"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/message_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/message_body"
-        android:layout_alignRight="@id/message_body"
-        android:layout_marginRight="5dp"
+        android:layout_below="@id/content_layout"
+        android:layout_alignRight="@id/content_layout"
         android:layout_marginTop="3dp"
-        android:textColor="@color/Grey"
+        android:layout_marginRight="5dp"
         android:text="11:41"
+        android:textColor="@color/Grey"
         android:textSize="10sp" />
 
 </RelativeLayout>

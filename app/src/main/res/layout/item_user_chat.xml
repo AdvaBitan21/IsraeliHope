@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="20dp">
+    android:paddingTop="15dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
@@ -106,5 +106,13 @@
             android:textStyle="bold"/>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/profile_image"
+        android:background="@color/lightGrey"
+        android:layout_marginTop="15dp"/>
 
 </RelativeLayout>

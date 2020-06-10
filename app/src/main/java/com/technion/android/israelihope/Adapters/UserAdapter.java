@@ -88,7 +88,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MessageActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.putExtra("receiver", user);
                 intent.putExtra("sender", ((MainActivity)mContext).getCurrentUser());
                 mContext.startActivity(intent);
@@ -129,7 +128,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         if (firebaseUser == null)
             return;
 
-        Query query = FirebaseFirestore.getInstance().collection("Chats").orderBy("messageTime", Query.Direction.ASCENDING);
+        Query query = FirebaseFirestore.getInstance().collection("Chats")
+                .orderBy("messageTime", Query.Direction.ASCENDING);
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {

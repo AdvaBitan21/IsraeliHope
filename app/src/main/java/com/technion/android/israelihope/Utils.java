@@ -30,7 +30,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.technion.android.israelihope.Objects.Chat;
 import com.technion.android.israelihope.Objects.Question;
 
 import java.io.ByteArrayOutputStream;
@@ -61,6 +60,7 @@ public class Utils {
     }
 
     public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 36;
+    public static int ADD_CONTENT_REQUEST = 110;
     public static int OPEN_GALLERY_REQUEST = 1;
     public static int SEND_CHALLENGE_REQUEST = 2;
 
@@ -148,7 +148,6 @@ public class Utils {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         if (context instanceof Activity)
             ((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), OPEN_GALLERY_REQUEST);
-
     }
 
 
