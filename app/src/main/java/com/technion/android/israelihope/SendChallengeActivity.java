@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SendChallengeActivity extends AppCompatActivity {
 
-    private Utils.QuestionType questionType;
+    private Question.QuestionType questionType;
     private QuestionsAdapter questionsAdapter;
     private UserTypeFilterAdapter userTypeFilterAdapter;
 
@@ -58,7 +58,7 @@ public class SendChallengeActivity extends AppCompatActivity {
 
     private void getQuestionType() {
         Intent intent = getIntent();
-        questionType = (Utils.QuestionType) intent.getSerializableExtra("question_type");
+        questionType = (Question.QuestionType) intent.getSerializableExtra("question_type");
         if (questionType == null)
             throw new AssertionError("Empty question type");
     }

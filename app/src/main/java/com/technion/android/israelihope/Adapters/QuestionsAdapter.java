@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.SendChallengeActivity;
 import com.technion.android.israelihope.Utils;
@@ -93,7 +94,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
     }
 
 
-    public void applyUserTypesFilter(ArrayList<Utils.UserType> userTypes) {
+    public void applyUserTypesFilter(ArrayList<User.UserType> userTypes) {
 
         mFilteredQuestion.clear();
         for (Question question : mQuestions) {

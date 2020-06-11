@@ -2,10 +2,8 @@ package com.technion.android.israelihope;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -14,9 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,8 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Adapters.MessageAdapter;
 import com.technion.android.israelihope.Dialogs.AddContentToChatDialog;
 import com.technion.android.israelihope.Objects.Challenge;
@@ -35,13 +28,10 @@ import com.technion.android.israelihope.Objects.Chat;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -64,7 +54,9 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         //Change statusBar color
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.lightGrey));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
 
         Intent intent = getIntent();
         receiverUser = (User) intent.getSerializableExtra("receiver");
@@ -72,6 +64,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
 
         ((TextView) findViewById(R.id.user_name)).setText(receiverUser.getUserName());
 
+        initBackButton();
         initSendMessageComponents();
         initAddContentButton();
         initChat();
@@ -126,6 +119,15 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         });
     }
 
+    private void initBackButton() {
+        findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
+
     private void initChat() {
 
         recyclerView = findViewById(R.id.messages_view);
@@ -144,7 +146,9 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
                     recyclerView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+                            if (recyclerView.getAdapter().getItemCount() > 0) {
+                                recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+                            }
                         }
                     }, 100);
                 }
@@ -246,6 +250,18 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
                 (chat.getReceiver().equals(receiverUser.getEmail()) && chat.getSender().equals(senderUser.getEmail()));
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Utils.status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utils.status("offline");
+    }
 
     @Override
     protected void onStart() {

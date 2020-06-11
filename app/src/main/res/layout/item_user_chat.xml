@@ -11,28 +11,28 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:src="@mipmap/ic_launcher" />
+        android:background="@drawable/round_user"
+        android:backgroundTint="@color/transparentGrey"/>
 
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_below="@id/profile_image"
-        android:layout_toLeftOf="@id/profile_image"
         android:layout_marginTop="-11dp"
         android:layout_marginRight="-31dp"
+        android:layout_toLeftOf="@id/profile_image"
         android:src="@drawable/circle"
         android:tint="@color/white"
         android:visibility="visible" />
-
 
     <ImageView
         android:id="@+id/img_on"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_below="@id/profile_image"
-        android:layout_toLeftOf="@id/profile_image"
         android:layout_marginTop="-10dp"
         android:layout_marginRight="-30dp"
+        android:layout_toLeftOf="@id/profile_image"
         android:src="@drawable/circle"
         android:tint="@color/colorGreen"
         android:visibility="gone" />
@@ -42,21 +42,21 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_below="@id/profile_image"
-        android:layout_toLeftOf="@id/profile_image"
         android:layout_marginTop="-10dp"
         android:layout_marginRight="-30dp"
+        android:layout_toLeftOf="@id/profile_image"
         android:src="@drawable/circle"
         android:tint="@color/Grey"
         android:visibility="visible" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/name_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="false"
         android:layout_toLeftOf="@id/profile_image"
+        android:layout_marginLeft="15dp"
         android:layoutDirection="rtl"
-        android:orientation="vertical"
         android:textDirection="rtl">
 
         <TextView
@@ -64,55 +64,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="דניאל קופיטמן"
+            android:layout_marginBottom="3dp"
             android:textColor="@color/colorPrimaryDark"
             android:textDirection="rtl"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/last_msg_icon"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/username"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/camera_filled"
+            android:tint="@color/darkGrey"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/last_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/username"
-            android:layout_toLeftOf="@id/profile_image"
+            android:layout_toLeftOf="@id/last_msg_icon"
             android:maxLines="1"
-            android:text="שלחת אתגר לגל ואדווה"
             android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginHorizontal="20dp"
-        android:orientation="vertical"
-        android:gravity="center">
 
         <TextView
-            android:id="@+id/num_challenges"
+            android:id="@+id/last_mag_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="12sp"
+            android:textColor="@color/colorGrey"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/challenges"
-            android:textSize="10sp"
-            android:textStyle="bold"/>
 
-    </LinearLayout>
+    </RelativeLayout>
+
 
     <View
         android:id="@+id/divider5"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/profile_image"
-        android:background="@color/lightGrey"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:background="@color/lightGrey" />
 
 </RelativeLayout>

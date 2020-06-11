@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -19,7 +20,6 @@ import com.technion.android.israelihope.Objects.Chatlist;
 import com.technion.android.israelihope.Objects.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,11 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ChatsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-
     private UserAdapter userAdapter;
     private ArrayList<User> mUsers;
-
-    FirebaseUser firebaseUser;
 
     private ArrayList<String> usersList;
 
@@ -53,8 +50,6 @@ public class ChatsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         usersList = new ArrayList<String>();
 
         Query query = FirebaseFirestore.getInstance().collection("Chatlist");
@@ -64,31 +59,44 @@ public class ChatsFragment extends Fragment {
                 usersList.clear();
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     Chatlist chatlist = document.toObject(Chatlist.class);
-                    if(chatlist.email.equals(firebaseUser.getEmail())){
+                    if (chatlist.email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                         usersList = chatlist.getEmails();
                     }
                 }
-
-                chatList();
             }
         });
+
+        chatList();
     }
 
 
     private void chatList() {
         mUsers = new ArrayList<>();
+        userAdapter = new UserAdapter(getContext(), mUsers, new ArrayList<User>(), true);
+        recyclerView.setAdapter(userAdapter);
+
         CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
         requestCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                mUsers.clear();
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    User user = document.toObject(User.class);
-                    if (usersList.contains(user.getEmail()))
-                        mUsers.add(user);
+
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    if (dc.getType().equals(DocumentChange.Type.MODIFIED)) {
+                        User user = dc.getDocument().toObject(User.class);
+                        if (mUsers.contains(user)) {
+                            int index = mUsers.indexOf(user);
+                            mUsers.remove(user);
+                            mUsers.add(index, user);
+                            userAdapter.notifyItemChanged(mUsers.indexOf(user), Utils.STATUS_CHANGE_PAYLOAD);
+                        }
+                    }
+                    if (dc.getType().equals(DocumentChange.Type.ADDED)) {
+                        User user = dc.getDocument().toObject(User.class);
+                        if (usersList.contains(user.getEmail()))
+                            mUsers.add(user);
+                        userAdapter.notifyItemInserted(mUsers.size() - 1);
+                    }
                 }
-                userAdapter = new UserAdapter(getContext(), mUsers, new ArrayList<User>(), true);
-                recyclerView.setAdapter(userAdapter);
             }
         });
 

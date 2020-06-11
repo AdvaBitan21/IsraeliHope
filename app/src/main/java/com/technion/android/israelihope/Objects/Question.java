@@ -13,22 +13,29 @@ import java.util.Map;
 import androidx.fragment.app.Fragment;
 
 public class Question implements Serializable {
+
+    public enum QuestionType {
+        YES_NO,
+        CLOSE,
+        CHECKBOX
+    }
+
     private String id;
     private String content;
-    private Utils.QuestionType question_type;
+    private QuestionType question_type;
     private ArrayList<String> possible_answers;  // from 2 to 4
     private ArrayList<String> right_answers;
     private Map<String, Integer> countRights;   // firebase demands String key
     private int count_answers;
     private int first_quiz_index;               // if it is not first quiz it will be -1
-    private Utils.UserType subject;
+    private User.UserType subject;
     //private Religon religon_target need to add the religon the question discusses on
 
 
     public Question() {
     }
 
-    public Question(String id, String content, Utils.QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, Utils.UserType subject) {
+    public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, User.UserType subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
@@ -61,20 +68,20 @@ public class Question implements Serializable {
     }
 
 
-    public Utils.UserType getSubject() {
+    public User.UserType getSubject() {
         return subject;
     }
 
-    public void setSubject(Utils.UserType subject) {
+    public void setSubject(User.UserType subject) {
         this.subject = subject;
     }
 
 
-    public Utils.QuestionType getQuestion_type() {
+    public QuestionType getQuestion_type() {
         return question_type;
     }
 
-    public void setQuestion_type(Utils.QuestionType question_type) {
+    public void setQuestion_type(QuestionType question_type) {
         this.question_type = question_type;
     }
 
@@ -96,7 +103,7 @@ public class Question implements Serializable {
         this.right_answers = right_answers;
     }
 
-    public void addRightAnswerByUser(Utils.UserType type) {
+    public void addRightAnswerByUser(User.UserType type) {
         countRights.put("" + type, countRights.get("" + type) + 1);
     }
 
@@ -110,10 +117,10 @@ public class Question implements Serializable {
     }
 
     private void InitCountRights() {
-        countRights.put("" + Utils.UserType.A, 0);
-        countRights.put("" + Utils.UserType.B, 0);
-        countRights.put("" + Utils.UserType.C, 0);
-        countRights.put("" + Utils.UserType.D, 0);
+        countRights.put("" + User.UserType.A, 0);
+        countRights.put("" + User.UserType.B, 0);
+        countRights.put("" + User.UserType.C, 0);
+        countRights.put("" + User.UserType.D, 0);
     }
 
 

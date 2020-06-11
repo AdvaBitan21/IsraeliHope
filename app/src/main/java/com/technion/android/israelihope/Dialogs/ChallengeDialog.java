@@ -94,9 +94,9 @@ public class ChallengeDialog extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 question = task.getResult().toObject(Question.class);
-                if (question.getQuestion_type().equals(Utils.QuestionType.YES_NO))
+                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO))
                     setupYesNoQuestionUI();
-                if (question.getQuestion_type().equals(Utils.QuestionType.CLOSE))
+                if (question.getQuestion_type().equals(Question.QuestionType.CLOSE))
                     setupMultichoiceQuestionUI();
 
                 initAnswerButtons();
@@ -124,7 +124,7 @@ public class ChallengeDialog extends AppCompatActivity {
 
     private void initAnswerButtons() {
 
-        if (question.getQuestion_type().equals(Utils.QuestionType.CLOSE)) {
+        if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
             multichoice_texts[0].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -155,7 +155,7 @@ public class ChallengeDialog extends AppCompatActivity {
             });
         }
 
-        if (question.getQuestion_type().equals(Utils.QuestionType.YES_NO)) {
+        if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
             yesno_texts[0].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -282,13 +282,13 @@ public class ChallengeDialog extends AppCompatActivity {
 
         String right_answer = question.getRight_answers().get(0);
 
-        if (question.getQuestion_type().equals(Utils.QuestionType.CLOSE)) {
+        if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
             for (TextView textView : multichoice_texts)
                 if (textView.getText().toString().equals(right_answer))
                     return textView;
         }
 
-        if (question.getQuestion_type().equals(Utils.QuestionType.YES_NO)) {
+        if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
             for (TextView textView : yesno_texts)
                 if (textView.getText().toString().equals(right_answer))
                     return textView;
@@ -299,13 +299,13 @@ public class ChallengeDialog extends AppCompatActivity {
 
     private TextView getSelectedAnswerTextView() {
 
-        if (question.getQuestion_type().equals(Utils.QuestionType.CLOSE)) {
+        if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
             for (TextView textView : multichoice_texts)
                 if (textView.getText().toString().equals(selected_answer))
                     return textView;
         }
 
-        if (question.getQuestion_type().equals(Utils.QuestionType.YES_NO)) {
+        if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
             for (TextView textView : yesno_texts)
                 if (textView.getText().toString().equals(selected_answer))
                     return textView;
@@ -355,7 +355,7 @@ public class ChallengeDialog extends AppCompatActivity {
             public void onAnimationEnd(Animator animator) {
                 int delay = 100;
 
-                TextView[] array = question.getQuestion_type().equals(Utils.QuestionType.CLOSE) ? multichoice_texts : yesno_texts;
+                TextView[] array = question.getQuestion_type().equals(Question.QuestionType.CLOSE) ? multichoice_texts : yesno_texts;
                 for (TextView answer : array) {
 
                     final Animator move = ObjectAnimator.ofPropertyValuesHolder(answer,
@@ -445,7 +445,7 @@ public class ChallengeDialog extends AppCompatActivity {
 
                 int delay = 100;
 
-                TextView[] array = question.getQuestion_type().equals(Utils.QuestionType.CLOSE) ? multichoice_texts : yesno_texts;
+                TextView[] array = question.getQuestion_type().equals(Question.QuestionType.CLOSE) ? multichoice_texts : yesno_texts;
                 for (TextView answer : array) {
 
                     final Animator move = ObjectAnimator.ofPropertyValuesHolder(answer,
@@ -489,7 +489,7 @@ public class ChallengeDialog extends AppCompatActivity {
 
         int delay = 1200;
         Animator move = null;
-        TextView[] array = question.getQuestion_type().equals(Utils.QuestionType.CLOSE) ? multichoice_texts : yesno_texts;
+        TextView[] array = question.getQuestion_type().equals(Question.QuestionType.CLOSE) ? multichoice_texts : yesno_texts;
         for (TextView answer : array) {
 
             answer.setEnabled(false);

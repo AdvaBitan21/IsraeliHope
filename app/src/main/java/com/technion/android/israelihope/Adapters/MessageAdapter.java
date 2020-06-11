@@ -20,12 +20,8 @@ import android.widget.TextView;
 import com.agrawalsuneet.dotsloader.loaders.LazyLoader;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterInside;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +48,7 @@ import com.technion.android.israelihope.Utils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -68,9 +65,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int PICTURE_TYPE_RIGHT = 4;
     private static final int PICTURE_TYPE_LEFT = 5;
 
-    private static final int PICTURE_CHANGE = 10;
-
-
     private Context mContext;
     private List<Chat> mChat;
     private List<DocumentReference> mDocuments;
@@ -82,7 +76,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.mDocuments = mDocuments;
     }
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -91,27 +84,26 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (viewType) {
             case MSG_TYPE_RIGHT:
                 view = LayoutInflater.from(mContext).inflate(R.layout.my_message, parent, false);
-                return new MessageAdapter.MessageViewHolder(view);
+                return new MessageViewHolder(view);
             case MSG_TYPE_LEFT:
                 view = LayoutInflater.from(mContext).inflate(R.layout.their_message, parent, false);
-                return new MessageAdapter.MessageViewHolder(view);
+                return new MessageViewHolder(view);
             case CHALLENGE_TYPE_RIGHT:
                 view = LayoutInflater.from(mContext).inflate(R.layout.my_challenge, parent, false);
-                return new MessageAdapter.MyChallengeViewHolder(view);
+                return new MyChallengeViewHolder(view);
             case CHALLENGE_TYPE_LEFT:
                 view = LayoutInflater.from(mContext).inflate(R.layout.their_challenge, parent, false);
-                return new MessageAdapter.TheirChallengeViewHolder(view);
+                return new TheirChallengeViewHolder(view);
             case PICTURE_TYPE_RIGHT:
                 view = LayoutInflater.from(mContext).inflate(R.layout.my_message, parent, false);
-                return new MessageAdapter.PictureViewHolder(view);
+                return new PictureViewHolder(view);
             case PICTURE_TYPE_LEFT:
                 view = LayoutInflater.from(mContext).inflate(R.layout.their_message, parent, false);
-                return new MessageAdapter.PictureViewHolder(view);
+                return new PictureViewHolder(view);
         }
 
         return null;
     }
-
 
     @Override
     public int getItemCount() {
@@ -149,12 +141,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         Utils.loadProfileImage(mContext, chatViewHolder.profile_image, chat.getSender());
 
-        SimpleDateFormat simple_format = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat hour_format = new SimpleDateFormat("HH:mm");
         Timestamp time = chat.getMessageTime();
         if (time == null)
             return;
-        chatViewHolder.message_time.setText(simple_format.format(time.toDate()));
+        chatViewHolder.message_time.setText(hour_format.format(time.toDate()));
 
+        bindDateLayout(chatViewHolder, position);
 
         if (holder instanceof MessageViewHolder)
             onBindMessageViewHolder((MessageViewHolder) holder, position);
@@ -166,6 +159,28 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             onBindPictureViewHolder((PictureViewHolder) holder, position);
     }
 
+    private void bindDateLayout(ChatViewHolder holder, int position) {
+
+        holder.date_title_layout.setVisibility(View.GONE);
+
+        Chat currentChat = mChat.get(position);
+        Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.setTime(currentChat.getMessageTime().toDate());
+
+        if (position > 0) {
+            Chat previousChat = mChat.get(position - 1);
+            Calendar previousCalendar = Calendar.getInstance();
+            previousCalendar.setTime(previousChat.getMessageTime().toDate());
+
+            if (currentCalendar.get(Calendar.DAY_OF_YEAR) > previousCalendar.get(Calendar.DAY_OF_YEAR)) {
+                holder.date.setText(Utils.getDateStringForChat(mContext, currentCalendar));
+                holder.date_title_layout.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.date.setText(Utils.getDateStringForChat(mContext, currentCalendar));
+            holder.date_title_layout.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
@@ -173,11 +188,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         Chat chat = mChat.get(position);
         if (!payloads.isEmpty()) {
-            if (payloads.get(0).equals(PICTURE_CHANGE)) {
+            if (payloads.get(0).equals(Utils.PICTURE_CHANGE_PAYLOAD)) {
                 loadPictureToImageView((PictureViewHolder) holder, Uri.parse(chat.getPictureUri()));
             }
         }
     }
+
 
     private void onBindMessageViewHolder(@NonNull final MessageViewHolder holder, int position) {
         Chat chat = mChat.get(position);
@@ -213,7 +229,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         mDocuments.get(position).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                notifyItemChanged(position, PICTURE_CHANGE);
+                                notifyItemChanged(position, Utils.PICTURE_CHANGE_PAYLOAD);
                             }
                         });
                         return;
@@ -267,7 +283,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Question question = task.getResult().toObject(Question.class);
-                if (question.getQuestion_type().equals(Utils.QuestionType.YES_NO)) {
+                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
                     holder.yesno_question_layout.setVisibility(View.VISIBLE);
                     holder.yesno_question.setText(question.getContent());
                 }
@@ -339,7 +355,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Question question = task.getResult().toObject(Question.class);
-                if (question.getQuestion_type().equals(Utils.QuestionType.YES_NO)) {
+                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
                     holder.yesno_question_layout.setVisibility(View.VISIBLE);
                     holder.yesno_question.setText(question.getContent());
                 }
@@ -382,14 +398,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public ImageView profile_image;
         public TextView message_time;
+        public RelativeLayout date_title_layout;
+        public TextView date;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             profile_image = itemView.findViewById(R.id.avatar);
             message_time = itemView.findViewById(R.id.message_time);
+            date_title_layout = itemView.findViewById(R.id.date_title_layout);
+            date = itemView.findViewById(R.id.date);
         }
     }
-
 
     private static class MessageViewHolder extends ChatViewHolder {
         public TextView message;
@@ -399,7 +418,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             message = itemView.findViewById(R.id.message_body);
         }
     }
-
 
     private static class PictureViewHolder extends ChatViewHolder {
         public ImageView picture;
@@ -411,7 +429,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             progressbar = itemView.findViewById(R.id.progressbar);
         }
     }
-
 
     private static class MyChallengeViewHolder extends ChatViewHolder {
 
@@ -436,7 +453,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             status = itemView.findViewById(R.id.status);
         }
     }
-
 
     private static class TheirChallengeViewHolder extends ChatViewHolder {
 

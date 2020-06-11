@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -31,87 +32,28 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 
 public class Utils {
 
-    public enum QuestionType {
-        YES_NO,
-        CLOSE,
-        CHECKBOX
-    }
-
-    public enum UserType {
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H,
-        I,
-        J
-    }
+// ========================================== Constants ========================================= //
 
     public static int AMOUNT_OF_QUESTIONS_FIRST_QUIZ = 36;
-    public static int ADD_CONTENT_REQUEST = 110;
-    public static int OPEN_GALLERY_REQUEST = 1;
-    public static int SEND_CHALLENGE_REQUEST = 2;
 
+    public static int ADD_CONTENT_REQUEST = 10;
+    public static int OPEN_GALLERY_REQUEST = 12;
+    public static int SEND_CHALLENGE_REQUEST = 13;
 
-    public static void closeKeyboard(Context context) {
-
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        View view = ((Activity) context).getCurrentFocus();
-        if (view == null)
-            view = new View((Activity) context);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-
-    public static void openKeyboard(Context context, EditText editText) {
-
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, 0);
-    }
-
-
-    /**
-     * Enables/Disables all child views in a view group.
-     *
-     * @param viewGroup the view group
-     * @param enabled   true to enable, false to disable
-     */
-    public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
-        int childCount = viewGroup.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View view = viewGroup.getChildAt(i);
-            view.setEnabled(enabled);
-            if (view instanceof ViewGroup) {
-                enableDisableClicks(activity, (ViewGroup) view, enabled);
-            }
-        }
-    }
-
-
-    public static void animateClick(View view) {
-        ObjectAnimator.ofPropertyValuesHolder(view,
-                PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 0.97f, 1),
-                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 0.97f, 1))
-                .setDuration(200)
-                .start();
-    }
-
-
-    public static int dpToPx(Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
+    public static int STATUS_CHANGE_PAYLOAD = 20;
+    public static int PICTURE_CHANGE_PAYLOAD = 21;
 
 
 // ================================= Profile Picture Management ================================= //
@@ -138,7 +80,6 @@ public class Utils {
         });
     }
 
-
     /**
      * Opens image gallery in order to choose a picture.
      */
@@ -149,7 +90,6 @@ public class Utils {
         if (context instanceof Activity)
             ((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), OPEN_GALLERY_REQUEST);
     }
-
 
     /**
      * Uploads a users profile image to firebase storage.
@@ -175,7 +115,6 @@ public class Utils {
                 });
     }
 
-
     private static void getDownloadUrl(StorageReference reference) {
         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -184,7 +123,6 @@ public class Utils {
             }
         });
     }
-
 
     private static void setUserProfileUri(Uri uri) {
 
@@ -198,9 +136,7 @@ public class Utils {
         user.updateProfile(request);
     }
 
-
 // ===================================== Firebase Functions ===================================== //
-
 
     public static void uploadQuestionsToFirebase(Context context) {
 
@@ -212,7 +148,6 @@ public class Utils {
         }
 
     }
-
 
     public static ArrayList<Question> getQuestions() {
 
@@ -227,13 +162,13 @@ public class Utils {
         ArrayList<String> rightAnswers1 = new ArrayList<String>();
         rightAnswers1.add("ג");
 
-        questions.add(new Question("", "שאלת רב ברירה 1", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
-        questions.add(new Question("", "שאלת רב ברירה 2", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
-        questions.add(new Question("", "שאלת רב ברירה 3", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
-        questions.add(new Question("", "שאלת רב ברירה 4", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.D));
-        questions.add(new Question("", "שאלת רב ברירה 5", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
-        questions.add(new Question("", "שאלת רב ברירה 6", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
-        questions.add(new Question("", "שאלת רב ברירה 7", QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
+        questions.add(new Question("", "שאלת רב ברירה 1", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
+        questions.add(new Question("", "שאלת רב ברירה 2", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
+        questions.add(new Question("", "שאלת רב ברירה 3", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
+        questions.add(new Question("", "שאלת רב ברירה 4", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.D));
+        questions.add(new Question("", "שאלת רב ברירה 5", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
+        questions.add(new Question("", "שאלת רב ברירה 6", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
+        questions.add(new Question("", "שאלת רב ברירה 7", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
 
         possibleAnswers1.clear();
         possibleAnswers1.add("נכון");
@@ -242,17 +177,16 @@ public class Utils {
         rightAnswers1.clear();
         rightAnswers1.add("נכון");
 
-        questions.add(new Question("", "שאלת נכון/לא נכון 1", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
-        questions.add(new Question("", "שאלת נכון/לא נכון 2", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
-        questions.add(new Question("", "שאלת נכון/לא נכון 3", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
-        questions.add(new Question("", "שאלת נכון/לא נכון 4", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.D));
-        questions.add(new Question("", "שאלת נכון/לא נכון 5", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.A));
-        questions.add(new Question("", "שאלת נכון/לא נכון 6", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.B));
-        questions.add(new Question("", "שאלת נכון/לא נכון 7", QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, UserType.C));
+        questions.add(new Question("", "שאלת נכון/לא נכון 1", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
+        questions.add(new Question("", "שאלת נכון/לא נכון 2", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
+        questions.add(new Question("", "שאלת נכון/לא נכון 3", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
+        questions.add(new Question("", "שאלת נכון/לא נכון 4", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.D));
+        questions.add(new Question("", "שאלת נכון/לא נכון 5", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
+        questions.add(new Question("", "שאלת נכון/לא נכון 6", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
+        questions.add(new Question("", "שאלת נכון/לא נכון 7", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
 
         return questions;
     }
-
 
     /**
      * Deletes specific fields from all documents in a specific collection.
@@ -278,7 +212,6 @@ public class Utils {
         });
     }
 
-
     public static void addFieldsToFirebase() {
 
         final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("collection_name");
@@ -294,7 +227,6 @@ public class Utils {
         });
     }
 
-
     public static void status(String status) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -304,7 +236,187 @@ public class Utils {
             FirebaseFirestore.getInstance().collection("Users").document(firebaseUser.getEmail()).update(hashMap);
     }
 
+// ================================== Various Utility Functions ================================= //
 
-// ============================================================================================== //
+    public static void closeKeyboard(Context context) {
+
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        View view = ((Activity) context).getCurrentFocus();
+        if (view == null)
+            view = new View((Activity) context);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void openKeyboard(Context context, EditText editText) {
+
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, 0);
+    }
+
+    /**
+     * Enables/Disables all child views in a view group.
+     *
+     * @param viewGroup the view group
+     * @param enabled   true to enable, false to disable
+     */
+    public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = viewGroup.getChildAt(i);
+            view.setEnabled(enabled);
+            if (view instanceof ViewGroup) {
+                enableDisableClicks(activity, (ViewGroup) view, enabled);
+            }
+        }
+    }
+
+    public static void animateClick(View view) {
+        ObjectAnimator.ofPropertyValuesHolder(view,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 0.97f, 1),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 0.97f, 1))
+                .setDuration(200)
+                .start();
+    }
+
+    public static int dpToPx(Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+    public static String getDateStringForChat(Context context, Calendar calendar) {
+
+        Calendar now = Calendar.getInstance();
+
+        String day = "";
+        String month = "";
+
+        if (calendar.get(Calendar.YEAR) == now.get(Calendar.YEAR)) {
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR))
+                return context.getString(R.string.today);
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR) - 1)
+                return context.getString(R.string.yesterday);
+
+            switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+                case Calendar.SUNDAY:
+                    day = context.getString(R.string.sunday);
+                    break;
+                case Calendar.MONDAY:
+                    day = context.getString(R.string.monday);
+                    break;
+                case Calendar.TUESDAY:
+                    day = context.getString(R.string.tuesday);
+                    break;
+                case Calendar.WEDNESDAY:
+                    day = context.getString(R.string.wednesday);
+                    break;
+                case Calendar.THURSDAY:
+                    day = context.getString(R.string.thursday);
+                    break;
+                case Calendar.FRIDAY:
+                    day = context.getString(R.string.friday);
+                    break;
+                case Calendar.SATURDAY:
+                    day = context.getString(R.string.saturday);
+                    break;
+            }
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) > now.get(Calendar.DAY_OF_YEAR) - 7) {
+                return day;
+            }
+
+            switch (calendar.get(Calendar.MONTH)) {
+                case Calendar.JANUARY:
+                    month = context.getString(R.string.in_january);
+                    break;
+                case Calendar.FEBRUARY:
+                    month = context.getString(R.string.in_february);
+                    break;
+                case Calendar.MARCH:
+                    month = context.getString(R.string.in_march);
+                    break;
+                case Calendar.APRIL:
+                    month = context.getString(R.string.in_april);
+                    break;
+                case Calendar.MAY:
+                    month = context.getString(R.string.in_may);
+                    break;
+                case Calendar.JUNE:
+                    month = context.getString(R.string.in_june);
+                    break;
+                case Calendar.JULY:
+                    month = context.getString(R.string.in_july);
+                    break;
+                case Calendar.AUGUST:
+                    month = context.getString(R.string.in_august);
+                    break;
+                case Calendar.SEPTEMBER:
+                    month = context.getString(R.string.in_september);
+                    break;
+                case Calendar.OCTOBER:
+                    month = context.getString(R.string.in_october);
+                    break;
+                case Calendar.NOVEMBER:
+                    month = context.getString(R.string.in_november);
+                    break;
+                case Calendar.DECEMBER:
+                    month = context.getString(R.string.in_december);
+                    break;
+            }
+
+            return day + ", " + calendar.get(Calendar.DAY_OF_MONTH) + " " + month;
+        }
+
+        return calendar.get(Calendar.DAY_OF_MONTH) + " " + month + ", " + calendar.get(Calendar.YEAR);
+    }
+
+    public static String getTimeStringForChat(Context context, Calendar calendar) {
+
+        Calendar now = Calendar.getInstance();
+
+        String day = "";
+
+        if (calendar.get(Calendar.YEAR) == now.get(Calendar.YEAR)) {
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR)) {
+                SimpleDateFormat hour_format = new SimpleDateFormat("HH:mm");
+                return hour_format.format(calendar.getTime());
+            }
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR) - 1)
+                return context.getString(R.string.yesterday);
+
+            switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+                case Calendar.SUNDAY:
+                    day = context.getString(R.string.sunday);
+                    break;
+                case Calendar.MONDAY:
+                    day = context.getString(R.string.monday);
+                    break;
+                case Calendar.TUESDAY:
+                    day = context.getString(R.string.tuesday);
+                    break;
+                case Calendar.WEDNESDAY:
+                    day = context.getString(R.string.wednesday);
+                    break;
+                case Calendar.THURSDAY:
+                    day = context.getString(R.string.thursday);
+                    break;
+                case Calendar.FRIDAY:
+                    day = context.getString(R.string.friday);
+                    break;
+                case Calendar.SATURDAY:
+                    day = context.getString(R.string.saturday);
+                    break;
+            }
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) > now.get(Calendar.DAY_OF_YEAR) - 7) {
+                return day;
+            }
+        }
+
+        SimpleDateFormat date_format = new SimpleDateFormat("d.M.yyyy");
+        return date_format.format(calendar.getTime());
+    }
 
 }

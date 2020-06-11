@@ -250,7 +250,7 @@
                 android:id="@+id/youWon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/you_won"
+                android:text="@string/you_got"
                 android:textColor="@color/darkGrey"
                 android:textSize="22sp"
                 android:textStyle="bold" />

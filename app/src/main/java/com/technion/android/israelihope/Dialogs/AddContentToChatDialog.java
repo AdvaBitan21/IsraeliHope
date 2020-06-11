@@ -1,6 +1,5 @@
 package com.technion.android.israelihope.Dialogs;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.technion.android.israelihope.MessageActivity;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.SendChallengeActivity;
@@ -43,7 +41,7 @@ public class AddContentToChatDialog extends AppCompatActivity {
         findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                animateOut();
+                onBackPressed();
             }
         });
     }
@@ -54,7 +52,7 @@ public class AddContentToChatDialog extends AppCompatActivity {
             public void onClick(View view) {
                 contentType = "CHALLENGE";
                 Intent intent = new Intent(AddContentToChatDialog.this, SendChallengeActivity.class);
-                intent.putExtra("question_type", Utils.QuestionType.CLOSE);
+                intent.putExtra("question_type", Question.QuestionType.CLOSE);
                 startActivityForResult(intent, Utils.SEND_CHALLENGE_REQUEST);
                 animateOut();
             }
@@ -64,7 +62,7 @@ public class AddContentToChatDialog extends AppCompatActivity {
             public void onClick(View view) {
                 contentType = "CHALLENGE";
                 Intent intent = new Intent(AddContentToChatDialog.this, SendChallengeActivity.class);
-                intent.putExtra("question_type", Utils.QuestionType.YES_NO);
+                intent.putExtra("question_type", Question.QuestionType.YES_NO);
                 startActivityForResult(intent, Utils.SEND_CHALLENGE_REQUEST);
                 animateOut();
             }

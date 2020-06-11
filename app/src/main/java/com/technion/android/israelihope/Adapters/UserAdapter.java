@@ -25,6 +25,8 @@ import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.Utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
@@ -41,8 +43,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private boolean isChat;
     private ArrayList<User> original;
 
-
-    String theLastMessage;
 
     public UserAdapter(Context mContext, ArrayList<User> mUsers, ArrayList<User> allUsers, boolean isChat) {
         this.mContext = mContext;
@@ -64,20 +64,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         final User user = mUsers.get(position);
         holder.username.setText(user.getUserName());
-        holder.num_challenges.setText(String.valueOf(user.getNum_challenges()));
 
         Utils.loadProfileImage(mContext, holder.profile_image, user.getEmail());
 
         if (isChat) {
-            lastMessage(user.getEmail(), holder.last_msg);
-
-            if (user.getStatus().equals("online")) {
-                holder.img_on.setVisibility(View.VISIBLE);
-                holder.img_off.setVisibility(View.GONE);
-            } else {
-                holder.img_on.setVisibility(View.GONE);
-                holder.img_off.setVisibility(View.VISIBLE);
-            }
+            bindLastMessage(holder, position);
+            bindUserStatus(holder, position);
         } else {
             holder.img_on.setVisibility(View.GONE);
             holder.img_off.setVisibility(View.GONE);
@@ -89,10 +81,32 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.putExtra("receiver", user);
-                intent.putExtra("sender", ((MainActivity)mContext).getCurrentUser());
+                intent.putExtra("sender", ((MainActivity) mContext).getCurrentUser());
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    private void bindUserStatus(@NonNull ViewHolder holder, int position) {
+        User user = mUsers.get(position);
+        if (user.getStatus().equals("online")) {
+            holder.img_on.setVisibility(View.VISIBLE);
+            holder.img_off.setVisibility(View.GONE);
+        } else {
+            holder.img_on.setVisibility(View.GONE);
+            holder.img_off.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+
+        if (!payloads.isEmpty()) {
+            if (payloads.get(0).equals(Utils.STATUS_CHANGE_PAYLOAD)) {
+                bindUserStatus(holder, position);
+            }
+        }
     }
 
     @Override
@@ -100,61 +114,65 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return mUsers.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView username;
-        public ImageView profile_image;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView username;
+        private ImageView profile_image;
         private ImageView img_on;
         private ImageView img_off;
-        private TextView num_challenges;
         private TextView last_msg;
-
+        private TextView last_msg_time;
+        private ImageView last_msg_icon;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             username = itemView.findViewById(R.id.username);
             profile_image = itemView.findViewById(R.id.profile_image);
             img_on = itemView.findViewById(R.id.img_on);
             img_off = itemView.findViewById(R.id.img_off);
-            num_challenges = itemView.findViewById(R.id.num_challenges);
             last_msg = itemView.findViewById(R.id.last_msg);
+            last_msg_icon = itemView.findViewById(R.id.last_msg_icon);
+            last_msg_time = itemView.findViewById(R.id.last_mag_time);
         }
     }
 
-    private void lastMessage(final String userEmail, final TextView last_msg) {
+    private void bindLastMessage(final ViewHolder holder, int position) {
 
-        theLastMessage = "";
+        final User user = mUsers.get(position);
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null)
-            return;
 
-        Query query = FirebaseFirestore.getInstance().collection("Chats")
-                .orderBy("messageTime", Query.Direction.ASCENDING);
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    Chat chat = document.toObject(Chat.class);
-                    if ((chat.getReceiver().equals(firebaseUser.getEmail()) && chat.getSender().equals(userEmail)) ||
-                            (chat.getReceiver().equals(userEmail) && chat.getSender().equals(firebaseUser.getEmail()))) {
-                        theLastMessage = chat.getMessage();
-                        if (theLastMessage == null)
-                            theLastMessage = "";
+        FirebaseFirestore.getInstance()
+                .collection("Chats")
+                .orderBy("messageTime", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            Chat chat = document.toObject(Chat.class);
+                            if (chatBelongsToConversation(chat, user.getEmail(), firebaseUser.getEmail())) {
+                                switch (chat.getType()) {
+                                    case TEXT:
+                                        holder.last_msg.setText(chat.getMessage());
+                                        holder.last_msg_icon.setVisibility(View.GONE);
+                                        break;
+                                    case CHALLENGE:
+                                        holder.last_msg.setText(mContext.getString(R.string.challenge));
+                                        holder.last_msg_icon.setVisibility(View.VISIBLE);
+                                        holder.last_msg_icon.setImageDrawable(mContext.getDrawable(R.drawable.question_filled));
+                                        break;
+                                    case PICTURE:
+                                        holder.last_msg.setText(mContext.getString(R.string.picture));
+                                        holder.last_msg_icon.setVisibility(View.VISIBLE);
+                                        holder.last_msg_icon.setImageDrawable(mContext.getDrawable(R.drawable.camera_filled));
+                                        break;
+                                }
+
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(chat.getMessageTime().toDate());
+                                holder.last_msg_time.setText(Utils.getTimeStringForChat(mContext, calendar));
+                            }
+                        }
                     }
-
-                    switch (theLastMessage) {
-                        case "":
-                            break;
-
-                        default:
-                            last_msg.setText(theLastMessage);
-                            break;
-                    }
-
-                    theLastMessage = "";
-                }
-            }
-        });
+                });
     }
 
 
@@ -212,5 +230,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         notifyDataSetChanged();
 
     }
+
+
+    private boolean chatBelongsToConversation(Chat chat, String email1, String email2) {
+        return (chat.getReceiver().equals(email1) && chat.getSender().equals(email2)) ||
+                (chat.getReceiver().equals(email2) && chat.getSender().equals(email1));
+    }
+
+    private boolean currentUserIsSender(Chat chat) {
+        return chat.getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+    }
+
 
 }

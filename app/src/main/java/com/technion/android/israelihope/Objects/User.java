@@ -1,16 +1,27 @@
 package com.technion.android.israelihope.Objects;
 
-import com.technion.android.israelihope.Utils;
-
 import java.io.Serializable;
 
 public class User implements Serializable {
+
+    public enum UserType {
+        A,
+        B,
+        C,
+        D,
+        E,
+        F,
+        G,
+        H,
+        I,
+        J
+    }
 
     private String email;
     private String userName;
     private String city;
     private String birthDate;
-    private Utils.UserType type;
+    private UserType type;
     private int score_first_quiz;
     private int num_challenges;
     private String status;
@@ -19,7 +30,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String email, String userName, String city, String birthDate, Utils.UserType type, int num_challenges, String status) {
+    public User(String email, String userName, String city, String birthDate, UserType type, int num_challenges, String status) {
         this.email = email;
         this.userName = userName;
         this.city = city;
@@ -28,7 +39,7 @@ public class User implements Serializable {
         this.score_first_quiz = -1;//marked as not answered
         this.num_challenges = num_challenges;
         this.status = status;
-        this.token_id="";
+        this.token_id = "";
 
     }
 
@@ -36,10 +47,10 @@ public class User implements Serializable {
         this.email = email;
         this.userName = userName;
         this.city = city;
-        this.type=Utils.UserType.A;//need to change
+        this.type = UserType.A;//need to change
         this.birthDate = birthDate;
         this.status = "online";
-        this.score_first_quiz=-1;
+        this.score_first_quiz = -1;
     }
 
     public int getScore_first_quiz() {
@@ -67,7 +78,6 @@ public class User implements Serializable {
     }
 
 
-
     public String getCity() {
         return city;
     }
@@ -77,11 +87,11 @@ public class User implements Serializable {
     }
 
 
-    public Utils.UserType getType() {
+    public UserType getType() {
         return type;
     }
 
-    public void setType(Utils.UserType type) {
+    public void setType(UserType type) {
         this.type = type;
     }
 
@@ -115,5 +125,13 @@ public class User implements Serializable {
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return email.equals(user.email);
     }
 }

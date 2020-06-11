@@ -5,14 +5,13 @@
     <string name="cancel">ביטול</string>
     <string name="ok">אישור</string>
 
-
-    <!--Welcome Activity-->
+    <!-- Welcome Activity -->
     <string name="login">התחברות</string>
     <string name="signup">הרשמה</string>
     <string name="signup_title">פתיחת חשבון</string>
     <string name="login_title">כניסה לחשבון</string>
 
-    <!--Signup + Login-->
+    <!-- Signup + Login -->
     <string name="user_name">שם משתמש</string>
     <string name="email">אימייל</string>
     <string name="password">סיסמה</string>
@@ -23,7 +22,7 @@
     <string name="not_registerd_yet">עדיין לא רשום?</string>
     <string name="create_account">הצטרף לקהילה</string>
 
-    <!--Error Messages-->
+    <!-- Error Messages -->
     <string name="enter_details">הכנס פרטים</string>
     <string name="wrong_details">פרטי התחברות שגויים</string>
     <string name="wrong_password">סיסמה שגויה</string>
@@ -37,27 +36,35 @@
     <string name="illegal_city">יש לבחור עיר מגורים מהרשימה</string>
     <string name="try_again">משהו השתבש, נסה שוב</string>
 
-    <!--Change Password Dialog-->
+    <!-- Change Password Dialog -->
     <string name="change_password">שינוי סיסמה</string>
     <string name="old_password">סיסמה נוכחית</string>
     <string name="new_password">סיסמה חדשה</string>
     <string name="password_change_success">הסיסמה שונתה בהצלחה</string>
     <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
 
-    <!--First Quiz-->
+    <!-- First Quiz -->
     <string name="welcome">ברוכים הבאים</string>
     <string name="welcome_title">בשאלון הבא נלמד להכיר אותך כדי להבין כמה אתה מכיר את האחר</string>
     <string name="question_number">שאלה מספר</string>
 
-    <!--Challenges-->
-    <string name="you_won">קיבלת</string>
+    <!-- Search and Filters -->
+    <string name="search_hint">חפש שם של סחבק</string>
+    <string name="apply">החל</string>
+    <string name="reset">אפס מסננים</string>
+
+    <!-- Challenges -->
+    <string name="you_got">קיבלת</string>
     <string name="good_job">כל הכבוד</string>
     <string name="your_answer_is_wrong">ענית תשובה לא נכונה,</string>
     <string name="not_getting_points">לא הרווחת נקודות הפעם…</string>
     <string name="times_up">נגמר הזמן!</string>
-
-
-    <string name="search_hint">חפש שם של סחבק</string>
+    <string name="challenge_sent">האתגר נשלח</string>
+    <string name="start_challenge">התחל אתגר</string>
+    <string name="challenge_answered_wrong">האתגר נענה לא נכון</string>
+    <string name="challenge_answered_correct">האתגר נענה נכון</string>
+    <string name="challenge_out_of_time">האתגר לא נענה בזמן</string>
+    <string name="challenge">אתגר</string>
     <string name="challenges">אתגרים</string>
     <string name="multichoice_questions">רב ברירה</string>
     <string name="yesno_questions">נכון / לא נכון</string>
@@ -65,15 +72,34 @@
     <string name="multichoice_question">שאלת רב ברירה</string>
     <string name="yesno_question">שאלת נכון / לא נכון</string>
     <string name="choose_question">בחירת שאלה</string>
-    <string name="apply">החל</string>
-    <string name="reset">אפס מסננים</string>
     <string name="send_question">שלח שאלה</string>
-    <string name="you_sent_challenge">שלחת אתגר ל</string>
-    <string name="challenge_sent">האתגר נשלח</string>
-    <string name="start_challenge">התחל אתגר</string>
-    <string name="challenge_answered_wrong">האתגר נענה לא נכון</string>
-    <string name="challenge_answered_correct">האתגר נענה נכון</string>
-    <string name="challenge_out_of_time">האתגר לא נענה בזמן</string>
+    <string name="you_got_challenge">קיבלת אתגר</string>
+    <string name="you_sent_challenge">שלחת אתגר</string>
+
+    <!-- Chat -->
     <string name="picture">תמונה</string>
+
+    <!-- Days and Months -->
+    <string name="today">היום</string>
+    <string name="yesterday">אתמול</string>
+    <string name="sunday">יום ראשון</string>
+    <string name="monday">יום שני</string>
+    <string name="tuesday">יום שלישי</string>
+    <string name="wednesday">יום רביעי</string>
+    <string name="thursday">יום חמישי</string>
+    <string name="friday">יום שישי</string>
+    <string name="saturday">יום שבת</string>
+    <string name="in_january">בינואר</string>
+    <string name="in_february">בפברואר</string>
+    <string name="in_march">במרץ</string>
+    <string name="in_april">באפריל</string>
+    <string name="in_may">במאי</string>
+    <string name="in_june">ביוני</string>
+    <string name="in_july">ביולי</string>
+    <string name="in_august">באוגוסט</string>
+    <string name="in_september">בספטמבר</string>
+    <string name="in_october">באוקטובר</string>
+    <string name="in_november">בנובמבר</string>
+    <string name="in_december">בדצמבר</string>
 
 </resources>

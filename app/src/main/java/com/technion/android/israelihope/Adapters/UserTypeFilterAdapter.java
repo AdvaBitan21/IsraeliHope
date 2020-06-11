@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.technion.android.israelihope.Objects.User;
 import com.technion.android.israelihope.R;
 import com.technion.android.israelihope.Utils;
 
@@ -21,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UserTypeFilterAdapter extends RecyclerView.Adapter<UserTypeFilterAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Utils.UserType> chosenTypes;      // Filters already applied by the user
-    private ArrayList<Utils.UserType> tempChosenTypes;  // Filters that are currently chosen but not necessarily applied yet
+    private ArrayList<User.UserType> chosenTypes;      // Filters already applied by the user
+    private ArrayList<User.UserType> tempChosenTypes;  // Filters that are currently chosen but not necessarily applied yet
 
     public UserTypeFilterAdapter(Context context) {
         this.mContext = context;
@@ -39,7 +40,7 @@ public class UserTypeFilterAdapter extends RecyclerView.Adapter<UserTypeFilterAd
 
     @Override
     public void onBindViewHolder(@NonNull final UserTypeFilterAdapter.ViewHolder holder, final int position) {
-        final Utils.UserType userType = Utils.UserType.values()[position];
+        final User.UserType userType = User.UserType.values()[position];
         holder.user_type.setText(userType.name());
 
         updateItemChosen(holder, position);
@@ -67,24 +68,12 @@ public class UserTypeFilterAdapter extends RecyclerView.Adapter<UserTypeFilterAd
 
     @Override
     public int getItemCount() {
-        return Utils.UserType.values().length;
+        return User.UserType.values().length;
     }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView user_type;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            user_type = itemView.findViewById(R.id.user_type);
-        }
-    }
-
 
     private void updateItemChosen(@NonNull final UserTypeFilterAdapter.ViewHolder holder, int position) {
 
-        final Utils.UserType userType = Utils.UserType.values()[position];
+        final User.UserType userType = User.UserType.values()[position];
 
         if (tempChosenTypes.contains(userType)) {
             holder.user_type.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorPrimaryDark)));
@@ -101,9 +90,9 @@ public class UserTypeFilterAdapter extends RecyclerView.Adapter<UserTypeFilterAd
         tempChosenTypes.clear();
     }
 
-    public ArrayList<Utils.UserType> getChosenTypes() {
+    public ArrayList<User.UserType> getChosenTypes() {
         if (chosenTypes.isEmpty())
-            return new ArrayList<>(Arrays.asList(Utils.UserType.values()));
+            return new ArrayList<>(Arrays.asList(User.UserType.values()));
 
         return chosenTypes;
     }
@@ -116,6 +105,16 @@ public class UserTypeFilterAdapter extends RecyclerView.Adapter<UserTypeFilterAd
     public void clearTempChosen() {
         tempChosenTypes.clear();
         tempChosenTypes.addAll(chosenTypes);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView user_type;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            user_type = itemView.findViewById(R.id.user_type);
+        }
     }
 
 }
