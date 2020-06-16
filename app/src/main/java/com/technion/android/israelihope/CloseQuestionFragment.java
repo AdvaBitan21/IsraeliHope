@@ -33,7 +33,7 @@ public class CloseQuestionFragment extends Fragment {
     private Question mQuestion;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private User mUser;
+    public User mUser;
     private Button mChosen;
     private boolean isChosen = false;
 

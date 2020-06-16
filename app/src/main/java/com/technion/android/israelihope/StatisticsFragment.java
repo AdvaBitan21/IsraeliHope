@@ -16,8 +16,10 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.technion.android.israelihope.Objects.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class StatisticsFragment extends Fragment {
@@ -29,7 +31,25 @@ public class StatisticsFragment extends Fragment {
     int questions2[] = {70, 20, 10, 15};
     String groups[] = {"בדואים", "דרוזים", "אתיופים", "צרקסים"};
 
+    //HI Dani, use this class for the object you get from firebase, so you can get the hist
+    public class HistogramObject{
+        HashMap<String,Integer>hist;
 
+        public HistogramObject() {
+        }
+
+        public HashMap<String, Integer> getHist() {
+            return hist;
+        }
+
+        public void setHist(HashMap<String, Integer> hist) {
+            this.hist = hist;
+        }
+
+        public void addToHistByUser(String type) {
+            hist.put( type, hist.get(type) + 1);
+        }
+    }
 
     @Nullable
     @Override

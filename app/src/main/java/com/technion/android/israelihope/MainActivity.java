@@ -28,7 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private User mUser;
+    public User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

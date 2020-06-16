@@ -162,14 +162,14 @@ public class Utils {
         ArrayList<String> rightAnswers1 = new ArrayList<String>();
         rightAnswers1.add("ג");
 
-        questions.add(new Question("", "שאלת רב ברירה 1", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
+       /* questions.add(new Question("", "שאלת רב ברירה 1", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
         questions.add(new Question("", "שאלת רב ברירה 2", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
         questions.add(new Question("", "שאלת רב ברירה 3", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
         questions.add(new Question("", "שאלת רב ברירה 4", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.D));
         questions.add(new Question("", "שאלת רב ברירה 5", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
         questions.add(new Question("", "שאלת רב ברירה 6", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
         questions.add(new Question("", "שאלת רב ברירה 7", Question.QuestionType.CLOSE, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
-
+*/
         possibleAnswers1.clear();
         possibleAnswers1.add("נכון");
         possibleAnswers1.add("לא נכון");
@@ -177,14 +177,14 @@ public class Utils {
         rightAnswers1.clear();
         rightAnswers1.add("נכון");
 
-        questions.add(new Question("", "שאלת נכון/לא נכון 1", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
+  /*      questions.add(new Question("", "שאלת נכון/לא נכון 1", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
         questions.add(new Question("", "שאלת נכון/לא נכון 2", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
         questions.add(new Question("", "שאלת נכון/לא נכון 3", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
         questions.add(new Question("", "שאלת נכון/לא נכון 4", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.D));
         questions.add(new Question("", "שאלת נכון/לא נכון 5", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
         questions.add(new Question("", "שאלת נכון/לא נכון 6", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
         questions.add(new Question("", "שאלת נכון/לא נכון 7", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
-
+*/
         return questions;
     }
 
@@ -418,5 +418,72 @@ public class Utils {
         SimpleDateFormat date_format = new SimpleDateFormat("d.M.yyyy");
         return date_format.format(calendar.getTime());
     }
+    public static void INITHistogram(){
+        HashMap<String,Integer>counts = new HashMap<>();
 
+        counts.put("Jewish1",0);
+        counts.put("Jewish2",0);
+        counts.put("Jewish3",0);
+        counts.put("Christian1",0);
+        counts.put("Christian2",0);
+        counts.put("Christian3",0);
+        counts.put("Muslim1",0);
+        counts.put("Muslim2",0);
+        counts.put("Muslim3",0);
+        counts.put("Druze",0);
+        counts.put("Bedouin",0);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference questionRef = db.collection("Statistics").document("CountUsers");
+        questionRef.update("hist",counts);
+
+        HashMap<String,Integer>hist = new HashMap<>();
+        hist.put("0-9",0);
+        hist.put("10-19",0);
+        hist.put("20-29",0);
+        hist.put("30-39",0);
+        hist.put("40-49",0);
+        hist.put("50-59",0);
+        hist.put("60-69",0);
+        hist.put("70-79",0);
+        hist.put("80-89",0);
+        hist.put("90-100",0);
+
+
+
+
+        DocumentReference questionRef1 = db.collection("Statistics").document("FirstQuizHistogram_Students");
+        questionRef1.update("hist",hist);
+        DocumentReference questionRef2 = db.collection("Statistics").document("FirstQuizHistogram_AcademicStaff");
+        questionRef2.update("hist",hist);
+        DocumentReference questionRef3 = db.collection("Statistics").document("FirstQuizHistogram_AdministrativeStaff");
+        questionRef3.update("hist",hist);
+    }
+
+    public static String gradeRange(int num){
+        if(num>=0&&num<=9)
+            return "0-9";
+        if(num>=10&&num<=19)
+            return "10-19";
+        if(num>=20&&num<=29)
+            return "20-29";
+
+        if(num>=30&&num<=39)
+            return "30-39";
+
+        if(num>=40&&num<=49)
+            return "40-49";
+        if(num>=50&&num<=59)
+            return "50-59";
+        if(num>=60&&num<=69)
+            return "60-69";
+
+
+        if(num>=70&&num<=79)
+            return "70-79";
+
+        if(num>=80&&num<=89)
+            return "80-89";
+        return "90-100";
+    }
 }
