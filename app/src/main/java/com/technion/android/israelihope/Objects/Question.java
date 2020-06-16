@@ -20,6 +20,25 @@ public class Question implements Serializable {
         CHECKBOX
     }
 
+
+    //for subject type
+    public enum QuestionSubjectType {
+        Jewish1,
+        Jewish2,
+        Jewish3,
+        Christian1,
+        Christian2,
+        Christian3,
+        Muslim1,
+        Muslim2,
+        Muslim3,
+        Druze,
+        Bedouin,
+        Ethiopian,
+        Moroccan
+
+    }
+
     private String id;
     private String content;
     private QuestionType question_type;
@@ -28,14 +47,14 @@ public class Question implements Serializable {
     private Map<String, Integer> countRights;   // firebase demands String key
     private int count_answers;
     private int first_quiz_index;               // if it is not first quiz it will be -1
-    private User.UserType subject;
+    private QuestionSubjectType subject;
     //private Religon religon_target need to add the religon the question discusses on
 
 
     public Question() {
     }
 
-    public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, User.UserType subject) {
+    public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, QuestionSubjectType subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
@@ -68,11 +87,11 @@ public class Question implements Serializable {
     }
 
 
-    public User.UserType getSubject() {
+    public QuestionSubjectType getSubject() {
         return subject;
     }
 
-    public void setSubject(User.UserType subject) {
+    public void setSubject(QuestionSubjectType subject) {
         this.subject = subject;
     }
 
@@ -117,10 +136,24 @@ public class Question implements Serializable {
     }
 
     private void InitCountRights() {
-        countRights.put("" + User.UserType.A, 0);
-        countRights.put("" + User.UserType.B, 0);
-        countRights.put("" + User.UserType.C, 0);
-        countRights.put("" + User.UserType.D, 0);
+
+
+        countRights.put("" + QuestionSubjectType.Jewish1, 0);
+        countRights.put("" + QuestionSubjectType.Jewish2, 0);
+        countRights.put("" + QuestionSubjectType.Jewish3, 0);
+        countRights.put("" + QuestionSubjectType.Christian1, 0);
+        countRights.put("" + QuestionSubjectType.Christian2, 0);
+        countRights.put("" + QuestionSubjectType.Christian3, 0);
+        countRights.put("" + QuestionSubjectType.Muslim1, 0);
+        countRights.put("" + QuestionSubjectType.Muslim2, 0);
+        countRights.put("" + QuestionSubjectType.Muslim3, 0);
+        countRights.put("" + QuestionSubjectType.Druze, 0);
+        countRights.put("" + QuestionSubjectType.Bedouin, 0);
+        countRights.put("" + QuestionSubjectType.Ethiopian, 0);
+        countRights.put("" + QuestionSubjectType.Moroccan, 0);
+
+
+
     }
 
 

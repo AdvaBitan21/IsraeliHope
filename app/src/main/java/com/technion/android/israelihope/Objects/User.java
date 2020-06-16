@@ -4,17 +4,24 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
+    //for sign up
     public enum UserType {
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H,
-        I,
-        J
+        Jewish1,
+        Jewish2,
+        Jewish3,
+        Christian1,
+        Christian2,
+        Christian3,
+        Muslim1,
+        Muslim2,
+        Muslim3,
+        Druze,
+        Bedouin
+    }
+    public enum AcademicRole{
+        Student,
+        Academic_Staff,
+        Administrative_Staff
     }
 
     private String email;
@@ -26,6 +33,7 @@ public class User implements Serializable {
     private int num_challenges;
     private String status;
     private String token_id;
+    private AcademicRole academicRole;
 
     public User() {
     }
@@ -40,6 +48,7 @@ public class User implements Serializable {
         this.num_challenges = num_challenges;
         this.status = status;
         this.token_id = "";
+        this.academicRole = AcademicRole.Student;
 
     }
 
@@ -47,10 +56,19 @@ public class User implements Serializable {
         this.email = email;
         this.userName = userName;
         this.city = city;
-        this.type = UserType.A;//need to change
+        this.type = UserType.Jewish1;//need to change
         this.birthDate = birthDate;
         this.status = "online";
         this.score_first_quiz = -1;
+    }
+
+
+    public AcademicRole getAcademicRole() {
+        return academicRole;
+    }
+
+    public void setAcademicRole(AcademicRole academicRole) {
+        this.academicRole = academicRole;
     }
 
     public int getScore_first_quiz() {
