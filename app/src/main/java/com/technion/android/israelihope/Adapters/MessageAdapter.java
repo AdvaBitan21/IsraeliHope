@@ -139,7 +139,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Chat chat = mChat.get(position);
         ChatViewHolder chatViewHolder = (ChatViewHolder) holder;
 
-        if(!currentUserIsSender(chat)) {
+        if (!currentUserIsSender(chat)) {
             mDocuments.get(position).update("seen", true);
         }
         Utils.loadProfileImage(mContext, chatViewHolder.profile_image, chat.getSender());

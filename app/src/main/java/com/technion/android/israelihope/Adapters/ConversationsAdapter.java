@@ -94,7 +94,6 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
                                 intent.putExtra("receiver", user);
                                 intent.putExtra("sender", ((MainActivity) mContext).getCurrentUser());
                                 mContext.startActivity(intent);
-                                conversation.clearUnseen();
                                 holder.unseenCount.setVisibility(View.GONE);
                             }
                         });

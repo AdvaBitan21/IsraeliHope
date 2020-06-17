@@ -10,7 +10,6 @@ public class Conversation {
     private String email;
     private Timestamp lastMessageTime;
     private String lastMessageId;
-    private int unseenCount;
 
     public Conversation() {
     }
@@ -19,7 +18,6 @@ public class Conversation {
         this.email = email;
         this.lastMessageTime = lastMessageTime;
         this.lastMessageId = lastMessageId;
-        this.unseenCount = 0;
     }
 
     public String getEmail() {
@@ -36,23 +34,6 @@ public class Conversation {
 
     public void setLastMessageTime(Timestamp lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
-    }
-
-    public int getUnseenCount() {
-        return unseenCount;
-    }
-
-    public void incrementUnseen() {
-        this.unseenCount++;
-    }
-
-    public void decreaseUnseenCount() {
-        this.unseenCount--;
-    }
-
-
-    public void clearUnseen() {
-        this.unseenCount = 0;
     }
 
     public String getLastMessageId() {
