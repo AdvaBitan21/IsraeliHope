@@ -20,8 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.Adapters.QuestionSubjectFilterAdapter;
 import com.technion.android.israelihope.Adapters.QuestionsAdapter;
-import com.technion.android.israelihope.Adapters.UserTypeFilterAdapter;
 import com.technion.android.israelihope.Objects.Question;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class SendChallengeActivity extends AppCompatActivity {
 
     private Question.QuestionType questionType;
     private QuestionsAdapter questionsAdapter;
-    private UserTypeFilterAdapter userTypeFilterAdapter;
+    private QuestionSubjectFilterAdapter questionSubjectFilterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +101,8 @@ public class SendChallengeActivity extends AppCompatActivity {
 
         RecyclerView userTypeRV = findViewById(R.id.user_types_RV);
         userTypeRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        userTypeFilterAdapter = new UserTypeFilterAdapter(this);
-        userTypeRV.setAdapter(userTypeFilterAdapter);
+        questionSubjectFilterAdapter = new QuestionSubjectFilterAdapter(this);
+        userTypeRV.setAdapter(questionSubjectFilterAdapter);
     }
 
     private void updateFilterLayoutUI(boolean toExpand) {
@@ -144,7 +144,7 @@ public class SendChallengeActivity extends AppCompatActivity {
                 .setDuration(200)
                 .start();
 
-        userTypeFilterAdapter.notifyDataSetChanged(); // for items animation
+        questionSubjectFilterAdapter.notifyDataSetChanged(); // for items animation
     }
 
     private void hideFilterOptionsLayout() {
@@ -190,7 +190,7 @@ public class SendChallengeActivity extends AppCompatActivity {
                 .setDuration(200)
                 .start();
 
-        userTypeFilterAdapter.clearTempChosen();
+        questionSubjectFilterAdapter.clearTempChosen();
     }
 
     private void initFilterButton() {
@@ -210,8 +210,8 @@ public class SendChallengeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Utils.animateClick(view);
-                userTypeFilterAdapter.applyChosenFilters();
-                questionsAdapter.applyUserTypesFilter(userTypeFilterAdapter.getChosenTypes());
+                questionSubjectFilterAdapter.applyChosenFilters();
+                questionsAdapter.applyUserTypesFilter(questionSubjectFilterAdapter.getChosenSubjects());
                 updateFilterLayoutUI(false);
             }
         });
@@ -223,9 +223,9 @@ public class SendChallengeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Utils.animateClick(view);
                 updateFilterLayoutUI(false);
-                userTypeFilterAdapter.clearChosen();
-                userTypeFilterAdapter.clearTempChosen();
-                questionsAdapter.applyUserTypesFilter(userTypeFilterAdapter.getChosenTypes());
+                questionSubjectFilterAdapter.clearChosen();
+                questionSubjectFilterAdapter.clearTempChosen();
+                questionsAdapter.applyUserTypesFilter(questionSubjectFilterAdapter.getChosenSubjects());
             }
         });
     }
