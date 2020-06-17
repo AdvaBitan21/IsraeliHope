@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="15dp">
@@ -91,21 +92,40 @@
             android:maxLines="1"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/last_mag_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:textSize="12sp"
-            android:textColor="@color/colorGrey"/>
+            <TextView
+                android:id="@+id/unseenCount"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toRightOf="@id/last_mag_time"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="7dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:paddingHorizontal="2dp"
+                android:paddingVertical="2dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="14sp"
+                android:autoSizeStepGranularity="1sp"
+                android:text="0"
+                android:visibility="gone"/>
 
+            <TextView
+                android:id="@+id/last_mag_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textSize="12sp"
+                android:textColor="@color/colorGrey"
+                android:text="12:22"/>
 
     </RelativeLayout>
 
-
     <View
-        android:id="@+id/divider5"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/profile_image"

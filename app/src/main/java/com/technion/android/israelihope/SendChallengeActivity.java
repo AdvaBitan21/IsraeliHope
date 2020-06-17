@@ -73,6 +73,7 @@ public class SendChallengeActivity extends AppCompatActivity {
         FirebaseFirestore.getInstance()
                 .collection("Questions")
                 .whereEqualTo("question_type", questionType.name())
+                .whereEqualTo("first_quiz_index", -1)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -102,18 +103,6 @@ public class SendChallengeActivity extends AppCompatActivity {
         userTypeRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         userTypeFilterAdapter = new UserTypeFilterAdapter(this);
         userTypeRV.setAdapter(userTypeFilterAdapter);
-    }
-
-    private void initFilterButton() {
-        final ImageButton filter = findViewById(R.id.filter);
-        filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.animateClick(view);
-                boolean toExpand = (findViewById(R.id.user_types_filter_layout).getVisibility() == View.GONE);
-                updateFilterLayoutUI(toExpand);
-            }
-        });
     }
 
     private void updateFilterLayoutUI(boolean toExpand) {
@@ -202,6 +191,18 @@ public class SendChallengeActivity extends AppCompatActivity {
                 .start();
 
         userTypeFilterAdapter.clearTempChosen();
+    }
+
+    private void initFilterButton() {
+        final ImageButton filter = findViewById(R.id.filter);
+        filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.animateClick(view);
+                boolean toExpand = (findViewById(R.id.user_types_filter_layout).getVisibility() == View.GONE);
+                updateFilterLayoutUI(toExpand);
+            }
+        });
     }
 
     private void initApplyFilterButton() {

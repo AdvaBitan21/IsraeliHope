@@ -100,15 +100,10 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
                                     diffusersList.add(user);
                                 allUsersList.add(user);
                             }
-                            userAdapter = new UserAdapter(getContext(), diffusersList, allUsersList, false);
+                            userAdapter = new UserAdapter(getContext(), diffusersList, allUsersList);
                             recyclerView.setAdapter(userAdapter);
                             recyclerView.setVisibility(View.INVISIBLE);
                             initRandomDifferentUsers();
-
-
-                            //onQueryTextChange(searchView.getQuery().toString());
-
-
                         }
                     });
                 }

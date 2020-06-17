@@ -39,23 +39,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private ArrayList<User> mUsers;
     private ArrayList<User> allUsers;
     private ArrayList<User> diffUsers;
-
-    private boolean isChat;
     private ArrayList<User> original;
 
 
-    public UserAdapter(Context mContext, ArrayList<User> mUsers, ArrayList<User> allUsers, boolean isChat) {
+    public UserAdapter(Context mContext, ArrayList<User> mUsers, ArrayList<User> allUsers) {
         this.mContext = mContext;
         this.mUsers = mUsers;
         this.diffUsers = mUsers;
-        this.isChat = isChat;
         this.allUsers = allUsers;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_user_chat, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_conversation, parent, false);
         return new UserAdapter.ViewHolder(view);
     }
 
@@ -67,14 +64,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         Utils.loadProfileImage(mContext, holder.profile_image, user.getEmail());
 
-        if (isChat) {
-            bindLastMessage(holder, position);
-            bindUserStatus(holder, position);
-        } else {
-            holder.img_on.setVisibility(View.GONE);
-            holder.img_off.setVisibility(View.GONE);
-            holder.last_msg.setVisibility(View.GONE);
-        }
+        holder.img_on.setVisibility(View.GONE);
+        holder.img_off.setVisibility(View.GONE);
+        holder.last_msg.setVisibility(View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,27 +104,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return mUsers.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView username;
-        private ImageView profile_image;
-        private ImageView img_on;
-        private ImageView img_off;
-        private TextView last_msg;
-        private TextView last_msg_time;
-        private ImageView last_msg_icon;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            username = itemView.findViewById(R.id.username);
-            profile_image = itemView.findViewById(R.id.profile_image);
-            img_on = itemView.findViewById(R.id.img_on);
-            img_off = itemView.findViewById(R.id.img_off);
-            last_msg = itemView.findViewById(R.id.last_msg);
-            last_msg_icon = itemView.findViewById(R.id.last_msg_icon);
-            last_msg_time = itemView.findViewById(R.id.last_mag_time);
-        }
     }
 
     private void bindLastMessage(final ViewHolder holder, int position) {
@@ -175,7 +146,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 });
     }
 
-
     public Filter getFilter() {
         return new Filter() {
 
@@ -209,7 +179,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         };
     }
 
-
     public void searchRandomDifferentUsers() {
         int num_of_random_results = 3;
         Random rand = new Random();
@@ -231,7 +200,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     }
 
-
     private boolean chatBelongsToConversation(Chat chat, String email1, String email2) {
         return (chat.getReceiver().equals(email1) && chat.getSender().equals(email2)) ||
                 (chat.getReceiver().equals(email2) && chat.getSender().equals(email1));
@@ -239,6 +207,27 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private boolean currentUserIsSender(Chat chat) {
         return chat.getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView username;
+        private ImageView profile_image;
+        private ImageView img_on;
+        private ImageView img_off;
+        private TextView last_msg;
+        private TextView last_msg_time;
+        private ImageView last_msg_icon;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            username = itemView.findViewById(R.id.username);
+            profile_image = itemView.findViewById(R.id.profile_image);
+            img_on = itemView.findViewById(R.id.img_on);
+            img_off = itemView.findViewById(R.id.img_off);
+            last_msg = itemView.findViewById(R.id.last_msg);
+            last_msg_icon = itemView.findViewById(R.id.last_msg_icon);
+            last_msg_time = itemView.findViewById(R.id.last_mag_time);
+        }
     }
 
 

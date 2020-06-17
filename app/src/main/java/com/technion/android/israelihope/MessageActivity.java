@@ -12,19 +12,24 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.technion.android.israelihope.Adapters.MessageAdapter;
 import com.technion.android.israelihope.Dialogs.AddContentToChatDialog;
 import com.technion.android.israelihope.Objects.Challenge;
 import com.technion.android.israelihope.Objects.Chat;
+import com.technion.android.israelihope.Objects.Conversation;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
 
@@ -32,6 +37,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,12 +45,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MessageActivity extends AppCompatActivity implements Serializable {
 
-    User senderUser;
-    User receiverUser;
-
-    RecyclerView recyclerView;
-    MessageAdapter messageAdapter;
-    List<Chat> mChat;
+    private User senderUser;
+    private User receiverUser;
+    private RecyclerView recyclerView;
+    private MessageAdapter messageAdapter;
+    private List<Chat> mChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +61,6 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(getResources().getColor(R.color.lightGrey));
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
 
         Intent intent = getIntent();
         receiverUser = (User) intent.getSerializableExtra("receiver");
@@ -181,6 +185,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
                                     mDocuments.add(dc.getDocument().getReference());
                                     messageAdapter.notifyItemInserted(mChat.size() - 1);
                                     recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
+                                    clearUnseenCountInConversation();
                                 }
                             }
                         }
@@ -196,10 +201,13 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         final String sender = senderUser.getEmail();
         final String receiver = receiverUser.getEmail();
 
-        Chat chat = new Chat(sender, receiver, Timestamp.now(), getPictureString(uri));
-        FirebaseFirestore.getInstance().collection("Chats").add(chat);
-
-        updateUsersChatlists();
+        final Chat chat = new Chat(sender, receiver, Timestamp.now(), getPictureString(uri));
+        FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                addChatToUsersConversations(chat, task.getResult().getId());
+            }
+        });
     }
 
     public void sendChallenge(Question question) {
@@ -209,31 +217,57 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         final String sender = senderUser.getEmail();
         final String receiver = receiverUser.getEmail();
 
-        Chat chat = new Chat(sender, receiver, Timestamp.now(), new Challenge(question.getId()));
-        FirebaseFirestore.getInstance().collection("Chats").add(chat);
-
-        updateUsersChatlists();
+        final Chat chat = new Chat(sender, receiver, Timestamp.now(), new Challenge(question.getId()));
+        FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                addChatToUsersConversations(chat, task.getResult().getId());
+            }
+        });
     }
 
     private void sendMessage(final String sender, final String receiver, String message) {
         if (message.isEmpty())
             return;
 
-        Chat chat = new Chat(sender, receiver, Timestamp.now(), getMessageString(message));
-        FirebaseFirestore.getInstance().collection("Chats").add(chat);
-
-        updateUsersChatlists();
+        final Chat chat = new Chat(sender, receiver, Timestamp.now(), getMessageString(message));
+        FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                addChatToUsersConversations(chat, task.getResult().getId());
+            }
+        });
     }
 
-    private void updateUsersChatlists() {
+    private void addChatToUsersConversations(final Chat chat, final String chatId) {
 
-        final DocumentReference senderReference = FirebaseFirestore.getInstance().collection("Chatlist").document(senderUser.getEmail());
-        senderReference.update("emails", FieldValue.arrayRemove(receiverUser.getEmail()));
-        senderReference.update("emails", FieldValue.arrayUnion(receiverUser.getEmail()));
+        //Sender - current chat is the last message, all messages seen.
+        Conversation senderConversation = new Conversation(receiverUser.getEmail(), chat.getMessageTime(), chatId);
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(senderUser.getEmail())
+                .collection("Conversations")
+                .document(receiverUser.getEmail())
+                .set(senderConversation);
 
-        final DocumentReference receiverReference = FirebaseFirestore.getInstance().collection("Chatlist").document(receiverUser.getEmail());
-        receiverReference.update("emails", FieldValue.arrayRemove(senderUser.getEmail()));
-        receiverReference.update("emails", FieldValue.arrayUnion(senderUser.getEmail()));
+        //Receiver - current chat is the last message, increment unseenCount.
+        final Conversation receiverConversation = new Conversation(senderUser.getEmail(), chat.getMessageTime(), chatId);
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(receiverUser.getEmail())
+                .collection("Conversations")
+                .document(senderUser.getEmail())
+                .set(receiverConversation);
+    }
+
+    private void clearUnseenCountInConversation() {
+
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(senderUser.getEmail())
+                .collection("Conversations")
+                .document(receiverUser.getEmail())
+                .update("unseenCount", 0);
     }
 
 
@@ -260,6 +294,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onPause() {
         super.onPause();
+        clearUnseenCountInConversation();
         Utils.status("offline");
     }
 

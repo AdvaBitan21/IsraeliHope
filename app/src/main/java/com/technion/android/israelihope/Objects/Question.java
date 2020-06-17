@@ -2,7 +2,6 @@ package com.technion.android.israelihope.Objects;
 
 import com.technion.android.israelihope.CheckBoxQuestionFragment;
 import com.technion.android.israelihope.CloseQuestionFragment;
-import com.technion.android.israelihope.Utils;
 import com.technion.android.israelihope.YesNoQuestionFragment;
 
 import java.io.Serializable;
@@ -175,7 +174,7 @@ public class Question implements Serializable {
     }
 
 
-    public Fragment getQuestionFragment() {
+    public Fragment createQuestionFragment() {
 
         Fragment fragment = null;
         switch (question_type) {
