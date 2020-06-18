@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Adapters.AllQuestionsListAdapter;
 import com.technion.android.israelihope.Adapters.QuestionsAdapter;
-import com.technion.android.israelihope.Objects.Chatlist;
 import com.technion.android.israelihope.Objects.Question;
 
 import java.util.ArrayList;

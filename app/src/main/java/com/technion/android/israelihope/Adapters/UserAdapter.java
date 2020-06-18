@@ -180,7 +180,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     public void searchRandomDifferentUsers() {
-        int num_of_random_results = 3;
+        int num_of_random_results = Math.min(3,diffUsers.size());
         Random rand = new Random();
         ArrayList<User> randList = new ArrayList<>();
         int i = 0;

@@ -162,7 +162,7 @@ public class StatisticsFragment extends Fragment {
     private void setUpBarChart(HashMap<String, Integer> hist, int title_id, String role, int chart_id) {
         List<BarEntry> barEntries = new ArrayList<>();
 
-        ArrayList<String> labels = new ArrayList<>(hist.keySet());
+       final ArrayList<String> labels = new ArrayList<>(hist.keySet());
         Collections.sort(labels);
 
         for (int i = 0; i < labels.size(); i++){
