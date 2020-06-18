@@ -45,8 +45,20 @@ public class MainActivity extends AppCompatActivity {
 
         initCurrentUser();
         initToolBar();
+        if(mAuth.getCurrentUser().getEmail().equals("admin@gmail.com")) {
+            adminUIMode();
+            loadFragment(new AdminMainFragment());
+        }
+        else
+            loadFragment(new ChatsFragment());
+    }
 
-        loadFragment(new ChatsFragment());
+    private void adminUIMode(){
+        findViewById(R.id.statistics).setVisibility(View.GONE);
+        findViewById(R.id.add_users).setVisibility(View.GONE);
+        findViewById(R.id.profile).setVisibility(View.GONE);
+
+
     }
 
 
@@ -101,10 +113,11 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         mUser = document.toObject(User.class);
+                        if (mUser.getScore_first_quiz() < 0)
+                            throw new AssertionError("Current user didnt do the first quiz.");
                     }
 
-                    if (mUser.getScore_first_quiz() < 0)
-                        throw new AssertionError("Current user didnt do the first quiz.");
+
                 }
             }
         });

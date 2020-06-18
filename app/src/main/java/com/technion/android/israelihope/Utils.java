@@ -177,8 +177,8 @@ public class Utils {
         rightAnswers1.clear();
         rightAnswers1.add("נכון");
 
-  /*      questions.add(new Question("", "שאלת נכון/לא נכון 1", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));
-        questions.add(new Question("", "שאלת נכון/לא נכון 2", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
+       questions.add(new Question("", "שאלת נכון/לא נכון 1", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, Question.QuestionSubjectType.Moroccan));
+    /*    questions.add(new Question("", "שאלת נכון/לא נכון 2", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.B));
         questions.add(new Question("", "שאלת נכון/לא נכון 3", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.C));
         questions.add(new Question("", "שאלת נכון/לא נכון 4", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.D));
         questions.add(new Question("", "שאלת נכון/לא נכון 5", Question.QuestionType.YES_NO, new ArrayList<String>(possibleAnswers1), new ArrayList<String>(rightAnswers1), -1, User.UserType.A));

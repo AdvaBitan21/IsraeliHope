@@ -1,8 +1,6 @@
 package com.technion.android.israelihope;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Build;
@@ -14,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -72,6 +69,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 String email = ((EditText) findViewById(R.id.email)).getText().toString();
                 String password = ((EditText) findViewById(R.id.password)).getText().toString();
+
+                if(email.equals("admin@gmail.com")&&password.equals("admin123"))
                 if (!checkEnteredDetails(email, password))
                     return;
 
@@ -268,5 +267,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
 
 }

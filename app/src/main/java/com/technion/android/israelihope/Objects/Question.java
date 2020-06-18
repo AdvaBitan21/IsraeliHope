@@ -52,6 +52,24 @@ public class Question implements Serializable {
 
 
     public Question() {
+        this.id = "";
+        this.content = "";
+        this.question_type = QuestionType.CLOSE;
+        this.possible_answers = new ArrayList<>();
+        possible_answers.add("");
+        possible_answers.add("");
+        possible_answers.add("");
+        possible_answers.add("");
+        possible_answers.add("");
+
+        this.right_answers = new ArrayList<>();
+        right_answers.add("dummy");
+        this.countRights = new HashMap<>();
+        this.count_answers = 0;
+        this.first_quiz_index = -1;
+        this.subject = QuestionSubjectType.Bedouin;
+
+        InitCountRights();
     }
 
     public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, QuestionSubjectType subject) {
@@ -175,7 +193,7 @@ public class Question implements Serializable {
     }
 
 
-    public Fragment getQuestionFragment() {
+    public Fragment createQuestionFragment() {
 
         Fragment fragment = null;
         switch (question_type) {
