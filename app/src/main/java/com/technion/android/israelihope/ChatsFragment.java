@@ -5,20 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.util.Util;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.technion.android.israelihope.Adapters.UserAdapter;
-import com.technion.android.israelihope.Objects.Chatlist;
-import com.technion.android.israelihope.Objects.User;
+import com.technion.android.israelihope.Adapters.ConversationsAdapter;
+import com.technion.android.israelihope.Objects.Conversation;
 
 import java.util.ArrayList;
 
@@ -30,11 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ChatsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
-    private ArrayList<User> mUsers;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ConversationsAdapter adapter;
+    private ArrayList<Conversation> mConversations;
 
-    private ArrayList<String> usersList;
 
     @Nullable
     @Override
@@ -42,65 +36,53 @@ public class ChatsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_chats, null);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = getView().findViewById(R.id.my_recycler_view);
+        mConversations = new ArrayList<>();
+        adapter = new ConversationsAdapter(getContext(), mConversations);
+
+        RecyclerView recyclerView = getView().findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
 
-        usersList = new ArrayList<String>();
+        Query query = db.collection("Users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .collection("Conversations")
+                .orderBy("lastMessageTime", Query.Direction.ASCENDING);
 
-        Query query = FirebaseFirestore.getInstance().collection("Chatlist");
+        //Listening to conversations updates in order to get the latest conversations on top
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                usersList.clear();
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    Chatlist chatlist = document.toObject(Chatlist.class);
-                    if (chatlist.email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-                        usersList = chatlist.getEmails();
-                    }
-                }
-            }
-        });
-
-        chatList();
-    }
-
-
-    private void chatList() {
-        mUsers = new ArrayList<>();
-        userAdapter = new UserAdapter(getContext(), mUsers, new ArrayList<User>(), true);
-        recyclerView.setAdapter(userAdapter);
-
-        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-        requestCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                    if (dc.getType().equals(DocumentChange.Type.MODIFIED)) {
-                        User user = dc.getDocument().toObject(User.class);
-                        if (mUsers.contains(user)) {
-                            int index = mUsers.indexOf(user);
-                            mUsers.remove(user);
-                            mUsers.add(index, user);
-                            userAdapter.notifyItemChanged(mUsers.indexOf(user), Utils.STATUS_CHANGE_PAYLOAD);
-                        }
-                    }
+
+                    //On conversation addition - add it to the top
                     if (dc.getType().equals(DocumentChange.Type.ADDED)) {
-                        User user = dc.getDocument().toObject(User.class);
-                        if (usersList.contains(user.getEmail()))
-                            mUsers.add(user);
-                        userAdapter.notifyItemInserted(mUsers.size() - 1);
+                        Conversation conversation = dc.getDocument().toObject(Conversation.class);
+                        mConversations.add(0, conversation);
+                        adapter.notifyItemInserted(0);
+                    }
+
+                    //On conversation change - move it to the top
+                    if (dc.getType().equals(DocumentChange.Type.MODIFIED)) {
+                        Conversation conversation = dc.getDocument().toObject(Conversation.class);
+                        int index = mConversations.indexOf(conversation);
+                        if (index == 0) {
+                            mConversations.set(0, conversation);
+                            adapter.notifyItemChanged(0, Utils.LAST_MESSAGE_CHANGE_PAYLOAD);
+                            return;
+                        }
+                        mConversations.remove(conversation);
+                        mConversations.add(0, conversation);
+                        adapter.notifyItemMoved(index, 0);
+                        adapter.notifyItemChanged(0, Utils.LAST_MESSAGE_CHANGE_PAYLOAD);
                     }
                 }
             }
         });
-
     }
 
 }

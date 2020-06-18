@@ -139,6 +139,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Chat chat = mChat.get(position);
         ChatViewHolder chatViewHolder = (ChatViewHolder) holder;
 
+        if (!currentUserIsSender(chat)) {
+            mDocuments.get(position).update("seen", true);
+        }
         Utils.loadProfileImage(mContext, chatViewHolder.profile_image, chat.getSender());
 
         SimpleDateFormat hour_format = new SimpleDateFormat("HH:mm");
@@ -277,7 +280,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void onBindMyChallengeViewHolder(@NonNull final MyChallengeViewHolder holder, int position) {
 
-        String questionId = mChat.get(position).getChallenge().getQuestionId();
+        final String questionId = mChat.get(position).getChallenge().getQuestionId();
         FirebaseFirestore.getInstance().collection("Questions").document(questionId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -286,6 +289,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
                     holder.yesno_question_layout.setVisibility(View.VISIBLE);
                     holder.yesno_question.setText(question.getContent());
+                }
+                if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
+                    holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+                    holder.multichoice_question.setText(question.getContent());
+                    holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
+                    holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
+                    holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
+                    holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
                 }
             }
         });
@@ -358,6 +369,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
                     holder.yesno_question_layout.setVisibility(View.VISIBLE);
                     holder.yesno_question.setText(question.getContent());
+                }
+                if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
+                    holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+                    holder.multichoice_question.setText(question.getContent());
+                    holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
+                    holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
+                    holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
+                    holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
                 }
             }
         });
@@ -442,13 +461,22 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public RelativeLayout multichoice_question_layout;
         public TextView multichoice_question;
-
+        public Button multichoice_choice1;
+        public Button multichoice_choice2;
+        public Button multichoice_choice3;
+        public Button multichoice_choice4;
 
         public MyChallengeViewHolder(@NonNull View itemView) {
             super(itemView);
             challenge_layout = itemView.findViewById(R.id.challenge_layout);
             yesno_question_layout = itemView.findViewById(R.id.yesno_question_container);
             yesno_question = itemView.findViewById(R.id.yesno_question);
+            multichoice_question_layout = itemView.findViewById(R.id.multichoice_question_container);
+            multichoice_question = itemView.findViewById(R.id.multichoice_question);
+            multichoice_choice1 = itemView.findViewById(R.id.multichoice_choice1);
+            multichoice_choice2 = itemView.findViewById(R.id.multichoice_choice2);
+            multichoice_choice3 = itemView.findViewById(R.id.multichoice_choice3);
+            multichoice_choice4 = itemView.findViewById(R.id.multichoice_choice4);
             dots = itemView.findViewById(R.id.dots);
             status = itemView.findViewById(R.id.status);
         }
@@ -467,6 +495,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public RelativeLayout multichoice_question_layout;
         public TextView multichoice_question;
+        public Button multichoice_choice1;
+        public Button multichoice_choice2;
+        public Button multichoice_choice3;
+        public Button multichoice_choice4;
 
 
         public TheirChallengeViewHolder(@NonNull View itemView) {
@@ -474,6 +506,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             challenge_layout = itemView.findViewById(R.id.challenge_layout);
             yesno_question_layout = itemView.findViewById(R.id.yesno_question_container);
             yesno_question = itemView.findViewById(R.id.yesno_question);
+            multichoice_question_layout = itemView.findViewById(R.id.multichoice_question_container);
+            multichoice_question = itemView.findViewById(R.id.multichoice_question);
+            multichoice_choice1 = itemView.findViewById(R.id.multichoice_choice1);
+            multichoice_choice2 = itemView.findViewById(R.id.multichoice_choice2);
+            multichoice_choice3 = itemView.findViewById(R.id.multichoice_choice3);
+            multichoice_choice4 = itemView.findViewById(R.id.multichoice_choice4);
             start_challenge = itemView.findViewById(R.id.start_challenge);
             empty_question_layout = itemView.findViewById(R.id.empty_question_container);
         }

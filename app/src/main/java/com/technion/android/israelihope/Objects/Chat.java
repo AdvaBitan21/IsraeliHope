@@ -1,21 +1,14 @@
 package com.technion.android.israelihope.Objects;
 
-import android.net.Uri;
-
 import com.google.firebase.Timestamp;
 
 public class Chat {
-
-    public enum ChatType {
-        TEXT,
-        CHALLENGE,
-        PICTURE
-    }
 
     private ChatType type;
     private String sender;
     private String receiver;
     private Timestamp messageTime;
+    private boolean seen;
 
     private String message;         //type TEXT
     private Challenge challenge;    //type CHALLENGE
@@ -29,16 +22,17 @@ public class Chat {
         this.receiver = receiver;
         this.messageTime = messageTime;
         this.challenge = null;
+        this.seen = false;
 
         //type TEXT
-        if(stringContent.startsWith("MESSAGE:")){
+        if (stringContent.startsWith("MESSAGE:")) {
             this.type = ChatType.TEXT;
             this.message = stringContent.substring(8);
             this.pictureUri = "";
         }
 
         //type PICTURE
-        if(stringContent.startsWith("PICTURE:")){
+        if (stringContent.startsWith("PICTURE:")) {
             this.type = ChatType.PICTURE;
             this.message = "";
             this.pictureUri = stringContent.substring(8);
@@ -52,6 +46,7 @@ public class Chat {
         this.sender = sender;
         this.receiver = receiver;
         this.messageTime = messageTime;
+        this.seen = false;
         this.message = "";
         this.challenge = challenge;
         this.pictureUri = null;
@@ -79,6 +74,14 @@ public class Chat {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
     public String getMessage() {
@@ -111,5 +114,11 @@ public class Chat {
 
     public void setPictureUri(String pictureUri) {
         this.pictureUri = pictureUri;
+    }
+
+    public enum ChatType {
+        TEXT,
+        CHALLENGE,
+        PICTURE
     }
 }

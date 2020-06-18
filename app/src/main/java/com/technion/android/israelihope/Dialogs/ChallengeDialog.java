@@ -23,13 +23,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.technion.android.israelihope.Objects.Challenge;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.R;
-import com.technion.android.israelihope.Utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -329,7 +327,7 @@ public class ChallengeDialog extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(!isDone)
+        if (!isDone)
             return;
         super.onBackPressed();
     }
@@ -483,8 +481,8 @@ public class ChallengeDialog extends AppCompatActivity {
     private void startTimesUpAnimations() {
 
         animateTimesUpTimer();
-        ((Button) findViewById(R.id.send_answer)).setEnabled(false);
-        ((Button) findViewById(R.id.send_answer)).setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Grey)));
+        findViewById(R.id.send_answer).setEnabled(false);
+        findViewById(R.id.send_answer).setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Grey)));
         ((TextView) findViewById(R.id.question)).setTextColor(getResources().getColor(R.color.Grey));
 
         int delay = 1200;
@@ -639,7 +637,6 @@ public class ChallengeDialog extends AppCompatActivity {
         RelativeLayout layout = findViewById(R.id.layout);
         RelativeLayout correctLayout = findViewById(R.id.correctLayout);
         RelativeLayout wrongLayout = findViewById(R.id.wrongLayout);
-
 
         final Animator scale_out_correct = ObjectAnimator
                 .ofPropertyValuesHolder(correctLayout,

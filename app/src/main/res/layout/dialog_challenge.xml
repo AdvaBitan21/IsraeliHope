@@ -57,7 +57,9 @@
         <nl.dionsegijn.konfetti.KonfettiView
             android:id="@+id/viewConfetti"
             android:layout_width="match_parent"
-            android:layout_height="250dp"/>
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/linear_layout"
+            android:layout_alignParentTop="true" />
 
         <LinearLayout
             android:id="@+id/linear_layout"
@@ -162,17 +164,17 @@
                 android:id="@+id/answers_yesno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/yesno_choice1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
                     android:background="@drawable/answer_background"
                     android:drawablePadding="7dp"
                     android:paddingLeft="20dp"
@@ -180,16 +182,16 @@
                     android:paddingRight="20dp"
                     android:paddingBottom="12dp"
                     android:text="סוכות"
+                    android:textAlignment="center"
                     android:textColor="@color/cardview_dark_background"
-                    android:textSize="14sp"
-                    android:textAlignment="center"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/yesno_choice2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:background="@drawable/answer_background"
                     android:drawablePadding="7dp"
                     android:paddingLeft="20dp"
@@ -197,9 +199,9 @@
                     android:paddingRight="20dp"
                     android:paddingBottom="12dp"
                     android:text="רמדאן"
+                    android:textAlignment="center"
                     android:textColor="@color/cardview_dark_background"
-                    android:textSize="14sp"
-                    android:textAlignment="center"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -226,7 +228,8 @@
         android:layout_marginRight="30dp"
         android:alpha="0"
         android:elevation="10dp"
-        android:layoutDirection="rtl">
+        android:layoutDirection="rtl"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/congrats"

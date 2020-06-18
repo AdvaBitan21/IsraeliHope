@@ -48,7 +48,7 @@ public class FirstQuizWelcomeFragment extends Fragment {
                     for (DocumentSnapshot doc : task.getResult()) {
                         //Move to next question
                         Question q = doc.toObject(Question.class);
-                        ((FirstQuizActivity) getActivity()).loadFragment(q.getQuestionFragment());
+                        ((FirstQuizActivity) getActivity()).loadFragment(q.createQuestionFragment());
                     }
                 }
             }

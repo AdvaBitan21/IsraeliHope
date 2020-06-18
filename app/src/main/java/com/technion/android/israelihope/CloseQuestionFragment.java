@@ -210,7 +210,7 @@ public class CloseQuestionFragment extends Fragment {
                         //Move to next question
                         Question q = doc.toObject(Question.class);
                         ((FirstQuizActivity) getActivity()).increaseQuizProgress();
-                        ((FirstQuizActivity) getActivity()).loadFragment(q.getQuestionFragment());
+                        ((FirstQuizActivity) getActivity()).loadFragment(q.createQuestionFragment());
                     }
                 }
             }

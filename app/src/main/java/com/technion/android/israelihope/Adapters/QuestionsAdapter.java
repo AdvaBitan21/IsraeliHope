@@ -94,11 +94,11 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
     }
 
 
-    public void applyUserTypesFilter(ArrayList<User.UserType> userTypes) {
+    public void applyUserTypesFilter(ArrayList<Question.QuestionSubject> questionSubjects) {
 
         mFilteredQuestion.clear();
         for (Question question : mQuestions) {
-            if (userTypes.contains(question.getSubject()))
+            if (questionSubjects.contains(question.getSubject()))
                 mFilteredQuestion.add(question);
         }
 

@@ -185,6 +185,82 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/multichoice_question_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_margin="15dp"
+                android:background="@drawable/background_white_soft_corners"
+                android:elevation="5dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/multichoice_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/multichoice_question"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="20dp">
+
+                    <Button
+                        android:id="@+id/multichoice_choice1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/answer_background"
+                        android:backgroundTint="@color/lightGrey"
+                        android:enabled="false"
+                        android:textColor="@color/Grey" />
+
+                    <Button
+                        android:id="@+id/multichoice_choice2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/answer_background"
+                        android:backgroundTint="@color/lightGrey"
+                        android:enabled="false"
+                        android:textColor="@color/Grey" />
+
+                    <Button
+                        android:id="@+id/multichoice_choice3"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/answer_background"
+                        android:backgroundTint="@color/lightGrey"
+                        android:enabled="false"
+                        android:textColor="@color/Grey" />
+
+                    <Button
+                        android:id="@+id/multichoice_choice4"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/answer_background"
+                        android:backgroundTint="@color/lightGrey"
+                        android:enabled="false"
+                        android:textColor="@color/Grey" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </LinearLayout>
 
         <TextView

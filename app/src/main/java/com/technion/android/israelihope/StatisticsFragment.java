@@ -11,32 +11,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Objects.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StatisticsFragment extends Fragment {
 
-    //TODO: change when we will have actual data
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    int firstQuiz[] = {100, 50, 40, 70};
-    int questions[] = {60, 80, 100, 50};
-    int questions2[] = {70, 20, 10, 15};
-    String groups[] = {"בדואים", "דרוזים", "אתיופים", "צרקסים"};
+    public static class HistogramObject{
+        private HashMap<String, Integer> hist;
 
-    //HI Dani, use this class for the object you get from firebase, so you can get the hist
-    public class HistogramObject{
-        HashMap<String,Integer>hist;
-
-        public HistogramObject() {
-        }
+        public HistogramObject() { }
 
         public HashMap<String, Integer> getHist() {
             return hist;
@@ -72,34 +80,62 @@ public class StatisticsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setUpPieChart1();
-        setUpPieChart2();
-        setUpPieChart3();
+        db.collection("Statistics").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for( QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                    setUp(documentSnapshot);
+                }
+            }
+        });
+
     }
 
-    private void setUpPieChart1() {
-        // populating a list of PieEntries
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (int i = 0; i < firstQuiz.length; i++) {
-            pieEntries.add(new PieEntry(firstQuiz[i], groups[i]));
+    private void setUp(QueryDocumentSnapshot dc) {
+        HistogramObject histogramObject = dc.toObject(HistogramObject.class);
+        switch (dc.getId()){
+            case "CountUsers":
+                setUpAllUsersStatistics(histogramObject.getHist());
+                break;
+            case "FirstQuizHistogram_AcademicStaff":
+                setUpBarChart(histogramObject.getHist(), R.id.titleBar1,"הסגל האקדמי", R.id.chartBar1);
+                break;
+            case "FirstQuizHistogram_AdministrativeStaff":
+                setUpBarChart(histogramObject.getHist(), R.id.titleBar2,"הסגל המנהלי", R.id.chartBar2);
+                break;
+            case "FirstQuizHistogram_Students":
+                setUpBarChart(histogramObject.getHist(), R.id.titleBar3,"הסטודנטים", R.id.chartBar3);
+                break;
+
+        }
+    }
+
+    private void setUpAllUsersStatistics(Map<String, Integer> hist) {
+        final List<PieEntry> pieEntries = new ArrayList<>();
+        for ( HashMap.Entry<String, Integer> entry : hist.entrySet()) {
+            String key = updateTitle(entry.getKey());
+            Integer value = entry.getValue();
+            if (value > 0)
+                pieEntries.add(new PieEntry(value, key));
         }
 
-        TextView title1 = getView().findViewById(R.id.title1);
-        title1.setText("התפלגות 1 כלשהי");
+        TextView title1 = getView().findViewById(R.id.title0);
+        title1.setText("התפלגות המשתתפים לפי דתות");
         PieDataSet dataSet = new PieDataSet(pieEntries, "");
         dataSet.setSliceSpace(3f);
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
         dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(15f);
+        dataSet.setValueTextSize(10f);
         dataSet.setSelectionShift(10f);
         dataSet.setValueLinePart1OffsetPercentage(80.f);
         dataSet.setValueLinePart1Length(0.5f);
         dataSet.setValueLinePart2Length(0.35f);
         dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         PieData data = new PieData(dataSet);
+        data.setDrawValues(false);
 
         //Get the Chart
-        PieChart chart = (PieChart)getView().findViewById(R.id.chart1);
+        PieChart chart = (PieChart)getView().findViewById(R.id.chart0);
         chart.setDrawHoleEnabled(false);
         chart.setEntryLabelColor(Color.BLACK);
         chart.setData(data);
@@ -110,70 +146,96 @@ public class StatisticsFragment extends Fragment {
         chart.invalidate();
     }
 
-    private void setUpPieChart2() {
-        // populating a list of PieEntries
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (int i = 0; i < questions.length; i++) {
-            pieEntries.add(new PieEntry(questions[i], groups[i]));
+    private static String updateTitle(String name){
+        switch (name) {
+            case "Jewish":
+                return "יהודים";
+            case "Christian":
+                return "נוצרים";
+            case "Muslim":
+                return "מוסלמים";
+            default:
+                return "דרוזים";
+        }
+    }
+
+    private void setUpBarChart(HashMap<String, Integer> hist, int title_id, String role, int chart_id) {
+        List<BarEntry> barEntries = new ArrayList<>();
+
+        ArrayList<String> labels = new ArrayList<>(hist.keySet());
+        Collections.sort(labels);
+
+        for (int i = 0; i < labels.size(); i++){
+            int label = getLabel(labels.get(i));
+            int value = hist.get(labels.get(i));
+            if (value > 0 ){
+                barEntries.add(new BarEntry(label, value, label));
+            }
         }
 
-        TextView title2 = getView().findViewById(R.id.title2);
-        title2.setText("התפלגות 2 כלשהי");
-        PieDataSet dataSet = new PieDataSet(pieEntries, "");
-        dataSet.setSliceSpace(3f);
+
+        TextView title = getView().findViewById(title_id);
+        title.setText("אחוז התשובות הנכונות בקרב "+ role);
+        BarDataSet dataSet = new BarDataSet(barEntries, "אחוזים");
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+//        dataSet.setStackLabels(labels.toArray(new String[labels.size()]));
         dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(15f);
-        dataSet.setSelectionShift(10f);
-        dataSet.setValueLinePart1OffsetPercentage(80.f);
-        dataSet.setValueLinePart1Length(0.5f);
-        dataSet.setValueLinePart2Length(0.35f);
-        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        PieData data = new PieData(dataSet);
+        dataSet.setValueTextSize(8f);
+
+        BarData data = new BarData(dataSet);
+        data.setBarWidth(2f); // set custom bar width
+
 
         //Get the Chart
-        PieChart chart = (PieChart)getView().findViewById(R.id.chart2);
-        chart.setDrawHoleEnabled(false);
-        chart.setEntryLabelColor(Color.BLACK);
+        BarChart chart = (BarChart)getView().findViewById(chart_id);
         chart.setData(data);
+        chart.setFitBars(true);
         chart.animateY(1000);
         chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setDrawGridBackground(false);
+        chart.setDrawBarShadow(false);
+        chart.setDrawBorders(false);
+        chart.getXAxis().setLabelRotationAngle(0);
+        chart.setTouchEnabled(false);
+
+        //X AXIS
+        XAxis xl = chart.getXAxis();
+        xl.setGranularity(1f);
+        xl.setCenterAxisLabels(false);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xl.setAxisMinimum(0);
+        xl.setAxisMaximum(100);
+        xl.setLabelCount(10);
+        xl.isForceLabelsEnabled();
+        xl.setLabelRotationAngle(0);
+        labels.add("0");
+        Collections.sort(labels);
+        xl.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                if (value >= 0) {
+                    return labels.get((int) value/10);
+                }
+                return "";
+            }
+        });
+
+        //Y AXIS
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setLabelCount(5);
+        leftAxis.setSpaceTop(30f);
+        leftAxis.setAxisMinimum(0f);
+
+        chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setEnabled(true);
 
         chart.invalidate();
     }
 
-    private void setUpPieChart3() {
-        // populating a list of PieEntries
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (int i = 0; i < questions2.length; i++) {
-            pieEntries.add(new PieEntry(questions2[i], groups[i]));
-        }
-
-        TextView title3 = getView().findViewById(R.id.title3);
-        title3.setText("התפלגות 3 כלשהי");
-        PieDataSet dataSet = new PieDataSet(pieEntries, "");
-        dataSet.setSliceSpace(3f);
-        dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
-        dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(15f);
-        dataSet.setSelectionShift(10f);
-        dataSet.setValueLinePart1OffsetPercentage(80.f);
-        dataSet.setValueLinePart1Length(0.5f);
-        dataSet.setValueLinePart2Length(0.35f);
-        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        PieData data = new PieData(dataSet);
-
-        //Get the Chart
-        PieChart chart = (PieChart)getView().findViewById(R.id.chart3);
-        chart.setDrawHoleEnabled(false);
-        chart.setEntryLabelColor(Color.BLACK);
-        chart.setData(data);
-        chart.animateY(1000);
-        chart.invalidate();
-        chart.getLegend().setEnabled(false);
-        chart.getDescription().setEnabled(false);
+    private int getLabel(String key) {
+        String[] split = key.split("-");
+        return Integer.parseInt(split[0]) + 10;
     }
-
 
 }

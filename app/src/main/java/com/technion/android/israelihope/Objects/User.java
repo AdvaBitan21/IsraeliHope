@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    //for sign up
     public enum UserType {
         Jewish1,
         Jewish2,
@@ -18,7 +17,7 @@ public class User implements Serializable {
         Druze,
         Bedouin
     }
-    public enum AcademicRole{
+    public enum AcademicRole {
         Student,
         Academic_Staff,
         Administrative_Staff
@@ -62,7 +61,6 @@ public class User implements Serializable {
         this.score_first_quiz = -1;
     }
 
-
     public AcademicRole getAcademicRole() {
         return academicRole;
     }
@@ -95,7 +93,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-
     public String getCity() {
         return city;
     }
@@ -103,7 +100,6 @@ public class User implements Serializable {
     public void setCity(String city) {
         this.city = city;
     }
-
 
     public UserType getType() {
         return type;

@@ -2,7 +2,6 @@ package com.technion.android.israelihope.Objects;
 
 import com.technion.android.israelihope.CheckBoxQuestionFragment;
 import com.technion.android.israelihope.CloseQuestionFragment;
-import com.technion.android.israelihope.Utils;
 import com.technion.android.israelihope.YesNoQuestionFragment;
 
 import java.io.Serializable;
@@ -14,31 +13,6 @@ import androidx.fragment.app.Fragment;
 
 public class Question implements Serializable {
 
-    public enum QuestionType {
-        YES_NO,
-        CLOSE,
-        CHECKBOX
-    }
-
-
-    //for subject type
-    public enum QuestionSubjectType {
-        Jewish1,
-        Jewish2,
-        Jewish3,
-        Christian1,
-        Christian2,
-        Christian3,
-        Muslim1,
-        Muslim2,
-        Muslim3,
-        Druze,
-        Bedouin,
-        Ethiopian,
-        Moroccan
-
-    }
-
     private String id;
     private String content;
     private QuestionType question_type;
@@ -47,10 +21,7 @@ public class Question implements Serializable {
     private Map<String, Integer> countRights;   // firebase demands String key
     private int count_answers;
     private int first_quiz_index;               // if it is not first quiz it will be -1
-    private QuestionSubjectType subject;
-    //private Religon religon_target need to add the religon the question discusses on
-
-
+    private QuestionSubject subject;
     public Question() {
         this.id = "";
         this.content = "";
@@ -67,12 +38,11 @@ public class Question implements Serializable {
         this.countRights = new HashMap<>();
         this.count_answers = 0;
         this.first_quiz_index = -1;
-        this.subject = QuestionSubjectType.Bedouin;
+        this.subject = QuestionSubject.Bedouin;
 
         InitCountRights();
     }
-
-    public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, QuestionSubjectType subject) {
+    public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, QuestionSubject subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
@@ -95,7 +65,6 @@ public class Question implements Serializable {
         this.id = id;
     }
 
-
     public String getContent() {
         return content;
     }
@@ -104,15 +73,13 @@ public class Question implements Serializable {
         this.content = content;
     }
 
-
-    public QuestionSubjectType getSubject() {
+    public QuestionSubject getSubject() {
         return subject;
     }
 
-    public void setSubject(QuestionSubjectType subject) {
+    public void setSubject(QuestionSubject subject) {
         this.subject = subject;
     }
-
 
     public QuestionType getQuestion_type() {
         return question_type;
@@ -122,7 +89,6 @@ public class Question implements Serializable {
         this.question_type = question_type;
     }
 
-
     public ArrayList<String> getPossible_answers() {
         return possible_answers;
     }
@@ -130,7 +96,6 @@ public class Question implements Serializable {
     public void setPossible_answers(ArrayList<String> possible_answers) {
         this.possible_answers = possible_answers;
     }
-
 
     public ArrayList<String> getRight_answers() {
         return right_answers;
@@ -144,7 +109,6 @@ public class Question implements Serializable {
         countRights.put("" + type, countRights.get("" + type) + 1);
     }
 
-
     public Map<String, Integer> getCountRights() {
         return countRights;
     }
@@ -154,26 +118,10 @@ public class Question implements Serializable {
     }
 
     private void InitCountRights() {
-
-
-        countRights.put("" + QuestionSubjectType.Jewish1, 0);
-        countRights.put("" + QuestionSubjectType.Jewish2, 0);
-        countRights.put("" + QuestionSubjectType.Jewish3, 0);
-        countRights.put("" + QuestionSubjectType.Christian1, 0);
-        countRights.put("" + QuestionSubjectType.Christian2, 0);
-        countRights.put("" + QuestionSubjectType.Christian3, 0);
-        countRights.put("" + QuestionSubjectType.Muslim1, 0);
-        countRights.put("" + QuestionSubjectType.Muslim2, 0);
-        countRights.put("" + QuestionSubjectType.Muslim3, 0);
-        countRights.put("" + QuestionSubjectType.Druze, 0);
-        countRights.put("" + QuestionSubjectType.Bedouin, 0);
-        countRights.put("" + QuestionSubjectType.Ethiopian, 0);
-        countRights.put("" + QuestionSubjectType.Moroccan, 0);
-
-
-
+        for (QuestionSubject subject : QuestionSubject.values()) {
+            countRights.put(subject.name(), 0);
+        }
     }
-
 
     public int getCount_answers() {
         return count_answers;
@@ -183,7 +131,6 @@ public class Question implements Serializable {
         this.count_answers = count_answers;
     }
 
-
     public int getFirst_quiz_index() {
         return first_quiz_index;
     }
@@ -191,7 +138,6 @@ public class Question implements Serializable {
     public void setFirst_quiz_index(int first_quiz_index) {
         this.first_quiz_index = first_quiz_index;
     }
-
 
     public Fragment createQuestionFragment() {
 
@@ -210,5 +156,29 @@ public class Question implements Serializable {
                 break;
         }
         return fragment;
+    }
+
+    public enum QuestionType {
+        YES_NO,
+        CLOSE,
+        CHECKBOX
+    }
+
+
+    public enum QuestionSubject {
+        Jewish1,
+        Jewish2,
+        Jewish3,
+        Christian1,
+        Christian2,
+        Christian3,
+        Muslim1,
+        Muslim2,
+        Muslim3,
+        Druze,
+        Bedouin,
+        Ethiopian,
+        Moroccan
+
     }
 }
