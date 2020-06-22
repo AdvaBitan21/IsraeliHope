@@ -38,7 +38,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,7 +45,6 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
 
     private String senderEmail;
     private String receiverEmail;
-    private String receiverName;
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<Chat> mChat;
@@ -64,20 +62,16 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
 
         Intent intent = getIntent();
         String senderName = intent.getStringExtra("receiverName");
-        if(senderName!=null){
+        String receiverName;
+        if (senderName != null) {
             senderEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             receiverEmail = intent.getStringExtra("userEmail");
-            receiverName =  intent.getStringExtra("userName");
-        }
-        else{
+            receiverName = intent.getStringExtra("userName");
+        } else {
             receiverEmail = ((User) intent.getSerializableExtra("receiver")).getEmail();
             senderEmail = ((User) intent.getSerializableExtra("sender")).getEmail();
             receiverName = ((User) intent.getSerializableExtra("receiver")).getUserName();
-            //senderName=((User) intent.getSerializableExtra("sender")).getUserName();
         }
-
-
-
 
         ((TextView) findViewById(R.id.user_name)).setText(receiverName);
 
@@ -146,7 +140,6 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
     }
 
 
-
     private void initChat() {
 
         recyclerView = findViewById(R.id.messages_view);
@@ -213,7 +206,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         if (uri == null)
             return;
 
-        final String sender =senderEmail;
+        final String sender = senderEmail;
         final String receiver = receiverEmail;
 
         final Chat chat = new Chat(sender, receiver, Timestamp.now(), getPictureString(uri));
