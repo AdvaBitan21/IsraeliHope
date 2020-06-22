@@ -33,7 +33,8 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".MessageActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="int.ISRAELI_HOPE.TARGETNOTIFICATIONS" />
 
