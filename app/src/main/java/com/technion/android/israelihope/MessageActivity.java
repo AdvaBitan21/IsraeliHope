@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -37,13 +38,15 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MessageActivity extends AppCompatActivity implements Serializable {
 
-    private User senderUser;
-    private User receiverUser;
+    private String senderEmail;
+    private String receiverEmail;
+    private String receiverName;
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<Chat> mChat;
@@ -60,10 +63,23 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         Intent intent = getIntent();
-        receiverUser = (User) intent.getSerializableExtra("receiver");
-        senderUser = (User) intent.getSerializableExtra("sender");
+        String senderName = intent.getStringExtra("receiverName");
+        if(senderName!=null){
+            senderEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            receiverEmail = intent.getStringExtra("userEmail");
+            receiverName =  intent.getStringExtra("userName");
+        }
+        else{
+            receiverEmail = ((User) intent.getSerializableExtra("receiver")).getEmail();
+            senderEmail = ((User) intent.getSerializableExtra("sender")).getEmail();
+            receiverName = ((User) intent.getSerializableExtra("receiver")).getUserName();
+            //senderName=((User) intent.getSerializableExtra("sender")).getUserName();
+        }
 
-        ((TextView) findViewById(R.id.user_name)).setText(receiverUser.getUserName());
+
+
+
+        ((TextView) findViewById(R.id.user_name)).setText(receiverName);
 
         initBackButton();
         initSendMessageComponents();
@@ -114,7 +130,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 String msg = txt_send.getText().toString();
-                sendMessage(senderUser.getEmail(), receiverUser.getEmail(), msg);
+                sendMessage(senderEmail, receiverEmail, msg);
                 txt_send.setText("");
             }
         });
@@ -128,6 +144,8 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
             }
         });
     }
+
+
 
     private void initChat() {
 
@@ -195,8 +213,8 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         if (uri == null)
             return;
 
-        final String sender = senderUser.getEmail();
-        final String receiver = receiverUser.getEmail();
+        final String sender =senderEmail;
+        final String receiver = receiverEmail;
 
         final Chat chat = new Chat(sender, receiver, Timestamp.now(), getPictureString(uri));
         FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -211,8 +229,8 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         if (question == null)
             return;
 
-        final String sender = senderUser.getEmail();
-        final String receiver = receiverUser.getEmail();
+        final String sender = senderEmail;
+        final String receiver = receiverEmail;
 
         final Chat chat = new Chat(sender, receiver, Timestamp.now(), new Challenge(question.getId()));
         FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -238,20 +256,20 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
 
     private void addChatToUsersConversations(final Chat chat, final String chatId) {
 
-        Conversation senderConversation = new Conversation(receiverUser.getEmail(), chat.getMessageTime(), chatId);
+        Conversation senderConversation = new Conversation(receiverEmail, chat.getMessageTime(), chatId);
         FirebaseFirestore.getInstance()
                 .collection("Users")
-                .document(senderUser.getEmail())
+                .document(senderEmail)
                 .collection("Conversations")
-                .document(receiverUser.getEmail())
+                .document(receiverEmail)
                 .set(senderConversation);
 
-        Conversation receiverConversation = new Conversation(senderUser.getEmail(), chat.getMessageTime(), chatId);
+        final Conversation receiverConversation = new Conversation(senderEmail, chat.getMessageTime(), chatId);
         FirebaseFirestore.getInstance()
                 .collection("Users")
-                .document(receiverUser.getEmail())
+                .document(receiverEmail)
                 .collection("Conversations")
-                .document(senderUser.getEmail())
+                .document(senderEmail)
                 .set(receiverConversation);
     }
 
@@ -259,9 +277,9 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
 
         FirebaseFirestore.getInstance()
                 .collection("Users")
-                .document(senderUser.getEmail())
+                .document(senderEmail)
                 .collection("Conversations")
-                .document(receiverUser.getEmail())
+                .document(receiverEmail)
                 .update("unseenCount", 0);
     }
 
@@ -275,8 +293,8 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
     }
 
     private boolean chatBelongsToConversation(Chat chat) {
-        return (chat.getReceiver().equals(senderUser.getEmail()) && chat.getSender().equals(receiverUser.getEmail())) ||
-                (chat.getReceiver().equals(receiverUser.getEmail()) && chat.getSender().equals(senderUser.getEmail()));
+        return (chat.getReceiver().equals(senderEmail) && chat.getSender().equals(receiverEmail)) ||
+                (chat.getReceiver().equals(receiverEmail) && chat.getSender().equals(senderEmail));
     }
 
 

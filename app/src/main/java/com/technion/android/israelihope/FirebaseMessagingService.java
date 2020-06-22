@@ -34,6 +34,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         String userName = remoteMessage.getData().get("userName");
         String userEmail = remoteMessage.getData().get("userEmail");
+        String receiverName = remoteMessage.getData().get("receiverName");
         String get_action = remoteMessage.getNotification().getClickAction();
 
         NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(this,"defaultId").setContentTitle(messageTitle)
@@ -44,6 +45,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Intent res = new Intent(get_action);
         res.putExtra("userName",userName);
         res.putExtra("userEmail",userEmail);
+        res.putExtra("receiverName",receiverName);
 
 
 
