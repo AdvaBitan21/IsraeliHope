@@ -148,7 +148,8 @@ public class CloseQuestionFragment extends Fragment {
 
     private void checkAnswer() {
         final Map<String, Object> updates = new HashMap<String, Object>();
-        updates.put("count_answers", mQuestion.getCount_answers() + 1);
+        mQuestion.addAnswerByUser(mUser.getType());
+        updates.put("countAnswers", mQuestion.getCountAnswers());
 
         if (mChosen != null && mQuestion.getRight_answers().contains(mChosen.getText())) {
             if (mChosen != null)
@@ -169,27 +170,7 @@ public class CloseQuestionFragment extends Fragment {
     }
 
 
-//    private void initTimer() {
-//        final TextView timeLeft = getActivity().findViewById(R.id.time_left);
-//        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                mTimeLeftInMillis = millisUntilFinished;
-//                timeLeft.setText("" + ((int) (mTimeLeftInMillis / 1000) % 60));
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                nextQuestion();
-//                //can add message that time is over
-//            }
-//        }.start();
-//    }
-
-
     private void nextQuestion() {
-
-        //mCountDownTimer.cancel();
 
         Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
         checkAnswer();

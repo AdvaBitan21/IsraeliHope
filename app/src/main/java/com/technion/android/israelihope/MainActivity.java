@@ -45,20 +45,18 @@ public class MainActivity extends AppCompatActivity {
 
         initCurrentUser();
         initToolBar();
-        if(mAuth.getCurrentUser().getEmail().equals("admin@gmail.com")) {
+
+        if (mAuth.getCurrentUser().getEmail().equals("admin@gmail.com")) {
             adminUIMode();
             loadFragment(new AdminMainFragment());
-        }
-        else
+        } else
             loadFragment(new ChatsFragment());
     }
 
-    private void adminUIMode(){
+    private void adminUIMode() {
         findViewById(R.id.statistics).setVisibility(View.GONE);
         findViewById(R.id.add_users).setVisibility(View.GONE);
         findViewById(R.id.profile).setVisibility(View.GONE);
-
-
     }
 
 

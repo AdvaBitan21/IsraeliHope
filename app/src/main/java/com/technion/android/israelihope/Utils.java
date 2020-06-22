@@ -213,13 +213,13 @@ public class Utils {
 
     public static void addFieldsToFirebase() {
 
-        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("Chats");
+        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("Questions");
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
-                        document.getReference().update("seen", true);
+                        //document.getReference().update()
                     }
                 }
             }

@@ -238,7 +238,6 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
 
     private void addChatToUsersConversations(final Chat chat, final String chatId) {
 
-        //Sender - current chat is the last message, all messages seen.
         Conversation senderConversation = new Conversation(receiverUser.getEmail(), chat.getMessageTime(), chatId);
         FirebaseFirestore.getInstance()
                 .collection("Users")
@@ -247,8 +246,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
                 .document(receiverUser.getEmail())
                 .set(senderConversation);
 
-        //Receiver - current chat is the last message, increment unseenCount.
-        final Conversation receiverConversation = new Conversation(senderUser.getEmail(), chat.getMessageTime(), chatId);
+        Conversation receiverConversation = new Conversation(senderUser.getEmail(), chat.getMessageTime(), chatId);
         FirebaseFirestore.getInstance()
                 .collection("Users")
                 .document(receiverUser.getEmail())

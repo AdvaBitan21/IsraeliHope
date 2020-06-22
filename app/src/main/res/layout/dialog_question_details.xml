@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparentBlack"
+    android:layoutDirection="rtl"
+    tools:context=".Dialogs.QuestionDetailsDialog">
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginVertical="70dp"
+        android:background="@drawable/background_white_soft_corners"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/statistics_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp">
+
+            <ProgressBar
+                android:id="@+id/jewish"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@id/muslims"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progressDrawable="@drawable/circle_determinate_progressbar" />
+
+            <TextView
+                android:id="@+id/jewish_percentage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_toRightOf="@id/muslims"
+                android:gravity="center"
+                android:textColor="@color/Grey"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/muslims"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@id/muslims"
+                android:gravity="center"
+                android:text="@string/jewish"
+                android:textColor="@color/Grey" />
+
+            <ProgressBar
+                android:id="@+id/muslims"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="30dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:progressDrawable="@drawable/circle_determinate_progressbar" />
+
+            <TextView
+                android:id="@+id/muslims_percentage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textColor="@color/Grey"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/muslims"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:text="@string/muslims"
+                android:textColor="@color/Grey" />
+
+            <ProgressBar
+                android:id="@+id/christians"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_toLeftOf="@id/muslims"
+                android:indeterminateTint="@color/colorPrimary"
+                android:progressDrawable="@drawable/circle_determinate_progressbar" />
+
+            <TextView
+                android:id="@+id/christians_percentage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_toLeftOf="@id/muslims"
+                android:gravity="center"
+                android:textColor="@color/Grey"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/muslims"
+                android:layout_marginTop="3dp"
+                android:layout_toLeftOf="@id/muslims"
+                android:gravity="center"
+                android:text="@string/christians"
+                android:textColor="@color/Grey" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_white_soft_corners"
+            android:backgroundTint="@color/lightGrey"
+            android:text="@string/ok"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+</RelativeLayout>

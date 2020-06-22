@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparentBlack"
+    android:layoutDirection="rtl"
     tools:context=".SendChallengeActivity">
 
     <RelativeLayout
@@ -67,9 +68,9 @@
             android:layout_alignParentBottom="true"
             android:elevation="15dp"
             android:gravity="center_horizontal|bottom"
+            android:layoutDirection="rtl"
             android:orientation="horizontal"
-            android:paddingHorizontal="15dp"
-            android:layoutDirection="rtl">
+            android:paddingHorizontal="15dp">
 
             <Button
                 android:id="@+id/clear_filter"
@@ -79,16 +80,16 @@
                 android:background="@color/transparent"
                 android:text="@string/reset"
                 android:textColor="@color/colorPrimaryDark"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/filter"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/circle"
                 android:backgroundTint="@color/colorPrimaryDark"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
                 android:elevation="10dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/filter" />
@@ -102,7 +103,7 @@
                 android:text="@string/apply"
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -114,8 +115,8 @@
             android:layout_marginBottom="15dp"
             android:background="@color/lightGrey"
             android:elevation="10dp"
-            android:visibility="gone"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/user_types_RV"

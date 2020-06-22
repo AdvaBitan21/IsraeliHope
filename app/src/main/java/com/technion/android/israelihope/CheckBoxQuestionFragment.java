@@ -143,7 +143,8 @@ public class CheckBoxQuestionFragment extends Fragment {
         Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 
         final Map<String, Object> updates = new HashMap<String, Object>();
-        updates.put("count_answers", mQuestion.getCount_answers() + 1);
+        mQuestion.addAnswerByUser(mUser.getType());
+        updates.put("countAnswers", mQuestion.getCountAnswers());
 
         colorTheRightAndWrongAnswers();
 

@@ -22,12 +22,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Adapters.QuestionSubjectFilterAdapter;
 import com.technion.android.israelihope.Adapters.QuestionsAdapter;
+import com.technion.android.israelihope.Dialogs.QuestionDetailsDialog;
 import com.technion.android.israelihope.Objects.Question;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -263,6 +266,20 @@ public class SendChallengeActivity extends AppCompatActivity {
         intent.putExtra("question", question);
         setResult(Utils.SEND_CHALLENGE_REQUEST, intent);
         animateOut();
+    }
+
+
+    public void showQuestionStatistics(Question question, View view) {
+        Intent intent = new Intent(this, QuestionDetailsDialog.class);
+        intent.putExtra("question", question);
+        intent.putExtra("transitionName", ViewCompat.getTransitionName(view));
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                view,
+                ViewCompat.getTransitionName(view));
+
+        startActivity(intent, options.toBundle());
     }
 
     @Override

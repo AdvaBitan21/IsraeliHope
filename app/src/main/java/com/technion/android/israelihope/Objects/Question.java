@@ -18,10 +18,12 @@ public class Question implements Serializable {
     private QuestionType question_type;
     private ArrayList<String> possible_answers;  // from 2 to 4
     private ArrayList<String> right_answers;
-    private Map<String, Integer> countRights;   // firebase demands String key
-    private int count_answers;
+    private Map<String, Integer> countRights;
+    private Map<String, Integer> countAnswers;
     private int first_quiz_index;               // if it is not first quiz it will be -1
     private QuestionSubject subject;
+
+
     public Question() {
         this.id = "";
         this.content = "";
@@ -35,25 +37,24 @@ public class Question implements Serializable {
 
         this.right_answers = new ArrayList<>();
         right_answers.add("dummy");
-        this.countRights = new HashMap<>();
-        this.count_answers = 0;
         this.first_quiz_index = -1;
         this.subject = QuestionSubject.Bedouin;
 
-        InitCountRights();
+        initCountRights();
+        initCountAnswers();
     }
+
     public Question(String id, String content, QuestionType questionType, ArrayList<String> possible_answers, ArrayList<String> right_answers, int firstQuizIndex, QuestionSubject subject) {
         this.id = id;
         this.content = content;
         this.question_type = questionType;
         this.possible_answers = possible_answers;
         this.right_answers = right_answers;
-        this.countRights = new HashMap<>();
-        this.count_answers = 0;
         this.first_quiz_index = firstQuizIndex;
         this.subject = subject;
 
-        InitCountRights();
+        initCountRights();
+        initCountAnswers();
     }
 
 
@@ -65,6 +66,7 @@ public class Question implements Serializable {
         this.id = id;
     }
 
+
     public String getContent() {
         return content;
     }
@@ -72,6 +74,7 @@ public class Question implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
+
 
     public QuestionSubject getSubject() {
         return subject;
@@ -81,6 +84,7 @@ public class Question implements Serializable {
         this.subject = subject;
     }
 
+
     public QuestionType getQuestion_type() {
         return question_type;
     }
@@ -88,6 +92,7 @@ public class Question implements Serializable {
     public void setQuestion_type(QuestionType question_type) {
         this.question_type = question_type;
     }
+
 
     public ArrayList<String> getPossible_answers() {
         return possible_answers;
@@ -97,6 +102,7 @@ public class Question implements Serializable {
         this.possible_answers = possible_answers;
     }
 
+
     public ArrayList<String> getRight_answers() {
         return right_answers;
     }
@@ -105,8 +111,12 @@ public class Question implements Serializable {
         this.right_answers = right_answers;
     }
 
-    public void addRightAnswerByUser(User.UserType type) {
-        countRights.put("" + type, countRights.get("" + type) + 1);
+
+    private void initCountRights() {
+        this.countRights = new HashMap<>();
+        for (QuestionSubject subject : QuestionSubject.values()) {
+            countRights.put(subject.name(), 0);
+        }
     }
 
     public Map<String, Integer> getCountRights() {
@@ -117,19 +127,30 @@ public class Question implements Serializable {
         this.countRights = countRights;
     }
 
-    private void InitCountRights() {
+    public void addRightAnswerByUser(User.UserType type) {
+        countRights.put("" + type, countRights.get("" + type) + 1);
+    }
+
+
+    private void initCountAnswers() {
+        this.countAnswers = new HashMap<>();
         for (QuestionSubject subject : QuestionSubject.values()) {
-            countRights.put(subject.name(), 0);
+            countAnswers.put(subject.name(), 0);
         }
     }
 
-    public int getCount_answers() {
-        return count_answers;
+    public Map<String, Integer> getCountAnswers() {
+        return countAnswers;
     }
 
-    public void setCount_answers(int count_answers) {
-        this.count_answers = count_answers;
+    public void setCountAnswers(Map<String, Integer> countAnswers) {
+        this.countAnswers = countAnswers;
     }
+
+    public void addAnswerByUser(User.UserType type) {
+        countAnswers.put(type.name(), countAnswers.get(type.name()) + 1);
+    }
+
 
     public int getFirst_quiz_index() {
         return first_quiz_index;
@@ -138,6 +159,7 @@ public class Question implements Serializable {
     public void setFirst_quiz_index(int first_quiz_index) {
         this.first_quiz_index = first_quiz_index;
     }
+
 
     public Fragment createQuestionFragment() {
 
@@ -158,27 +180,22 @@ public class Question implements Serializable {
         return fragment;
     }
 
+
     public enum QuestionType {
         YES_NO,
         CLOSE,
         CHECKBOX
     }
 
-
     public enum QuestionSubject {
-        Jewish1,
-        Jewish2,
-        Jewish3,
-        Christian1,
-        Christian2,
-        Christian3,
-        Muslim1,
-        Muslim2,
-        Muslim3,
+        General,
+        Jewish,
+        Christian,
+        Muslim,
         Druze,
         Bedouin,
         Ethiopian,
         Moroccan
-
     }
+
 }

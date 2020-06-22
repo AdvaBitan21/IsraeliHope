@@ -23,10 +23,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.technion.android.israelihope.Objects.Challenge;
 import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 import com.technion.android.israelihope.R;
 
 import java.util.concurrent.TimeUnit;
@@ -41,16 +43,15 @@ import static nl.dionsegijn.konfetti.models.Shape.RECT;
 
 public class ChallengeDialog extends AppCompatActivity {
 
+    private static int CHALLENGE_TIME_IN_SECONDS = 30;
+
     private Challenge challenge;
     private Question question;
 
     private String selected_answer = "";
-
     private TextView[] multichoice_texts;
     private TextView[] yesno_texts;
-
     private CountDownTimer countDownTimer;
-    private static int CHALLENGE_TIME_IN_SECONDS = 30;
     private boolean isDone = false; // true iff times up or answer was chosen
 
     @Override
@@ -220,10 +221,12 @@ public class ChallengeDialog extends AppCompatActivity {
                 final Challenge.ChallengeState state;
                 if (selected_answer.equals(question.getRight_answers().get(0))) {
                     state = Challenge.ChallengeState.CORRECT;
+                    updateQuestionCounters(true);
                     updateCorrectLayoutDetails();
                     startCorrectAnimations();
                 } else {
                     state = Challenge.ChallengeState.WRONG;
+                    updateQuestionCounters(false);
                     startWrongAnimations();
                 }
 
@@ -320,6 +323,20 @@ public class ChallengeDialog extends AppCompatActivity {
         ((TextView) findViewById(R.id.congrats)).setText(congrats);
     }
 
+    private void updateQuestionCounters(final boolean rightAnswer) {
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User user = task.getResult().toObject(User.class);
+                question.addAnswerByUser(user.getType());
+                if (rightAnswer)
+                    question.addRightAnswerByUser(user.getType());
+                FirebaseFirestore.getInstance().collection("Questions").document(question.getId()).set(question);
+            }
+        });
+    }
+
     private int calculatePoints() {
         int secondsLeft = Integer.parseInt(((TextView) findViewById(R.id.clock)).getText().toString());
         return 50 + secondsLeft;
@@ -332,7 +349,7 @@ public class ChallengeDialog extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    // ======================================= Animations =========================================== //
+// ======================================= Animations =========================================== //
 
     private void startCorrectAnimations() {
 

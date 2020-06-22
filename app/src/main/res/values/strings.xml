@@ -101,5 +101,10 @@
     <string name="in_october">באוקטובר</string>
     <string name="in_november">בנובמבר</string>
     <string name="in_december">בדצמבר</string>
+    <string name="question_statistics">אחוזי הצלחה</string>
+    <string name="muslims">מוסלמים</string>
+    <string name="jewish">יהודים</string>
+    <string name="christians">נוצרים</string>
+    <string name="preview">תצוגה מקדימה</string>
 
 </resources>

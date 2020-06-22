@@ -127,7 +127,8 @@ public class YesNoQuestionFragment extends Fragment {
     private void checkAnswer() {
 
         final Map<String, Object> updates = new HashMap<String, Object>();
-        updates.put("count_answers", mQuestion.getCount_answers() + 1);
+        mQuestion.addAnswerByUser(mUser.getType());
+        updates.put("countAnswers", mQuestion.getCountAnswers());
 
         if (mChosen != null && mQuestion.getRight_answers().contains(mChosen.getText())) {
 
