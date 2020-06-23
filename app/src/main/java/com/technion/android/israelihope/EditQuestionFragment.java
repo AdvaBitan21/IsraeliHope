@@ -56,6 +56,7 @@ public class EditQuestionFragment extends Fragment {
     private CheckBox forth_check;
     private CheckBox fifth_check;
     private Spinner typeSpinner;
+    private Spinner subjectSpinner;
 
 
 
@@ -92,6 +93,13 @@ public class EditQuestionFragment extends Fragment {
                 R.array.question_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(adapter);
+
+        subjectSpinner= getActivity().findViewById(R.id.subject_spinner);
+        ArrayAdapter<CharSequence> adapterSubject = ArrayAdapter.createFromResource(getContext(),
+                R.array.question_subjects, android.R.layout.simple_spinner_item);
+        adapterSubject.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subjectSpinner.setAdapter(adapterSubject);
+        subjectSpinner.setSelection(0);
 
         content=getActivity().findViewById(R.id.content_edit);
        first_ans=getActivity().findViewById(R.id.first_edit);
@@ -176,6 +184,7 @@ public class EditQuestionFragment extends Fragment {
                         return;
                     final HashMap<String,Object> updates = new HashMap<>();
                     question.setContent(content.getText().toString());
+                    question.setSubject(getSubject(subjectSpinner.getSelectedItem().toString()));
                     if(typeSpinner.getSelectedItem().toString().equals("שאלת כן לא"))
                     question.setQuestion_type( Question.QuestionType.YES_NO);
                     if(typeSpinner.getSelectedItem().toString().equals("שאלה אמריקאית"))
@@ -229,6 +238,29 @@ public class EditQuestionFragment extends Fragment {
 
 
             }});
+    }
+
+    private Question.QuestionSubject getSubject(String s)
+    {
+
+        if(s.equals("שאלה כללית"))
+            return Question.QuestionSubject.General;
+        if(s.equals("יהודים"))
+            return Question.QuestionSubject.Jewish;
+        if(s.equals("נוצרים"))
+            return Question.QuestionSubject.Christian;
+        if(s.equals("מוסלמים"))
+            return Question.QuestionSubject.Muslim;
+        if(s.equals("דרוזים"))
+            return Question.QuestionSubject.Druze;
+        if(s.equals("בדואים"))
+            return Question.QuestionSubject.Bedouin;
+        if(s.equals("בני העדה האתיופית"))
+            return Question.QuestionSubject.Ethiopian;
+        if(s.equals("בני העדה המרוקאית"))
+            return Question.QuestionSubject.Moroccan;
+        return Question.QuestionSubject.General;
+
     }
 
 
