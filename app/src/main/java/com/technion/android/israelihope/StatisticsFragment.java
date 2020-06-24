@@ -79,6 +79,7 @@ public class StatisticsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 
         db.collection("Statistics").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -86,6 +87,8 @@ public class StatisticsFragment extends Fragment {
                 for( QueryDocumentSnapshot documentSnapshot : task.getResult()){
                     setUp(documentSnapshot);
                 }
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+
             }
         });
 

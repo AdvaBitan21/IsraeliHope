@@ -53,6 +53,7 @@ public class Utils {
     public static int STATUS_CHANGE_PAYLOAD = 20;
     public static int PICTURE_CHANGE_PAYLOAD = 21;
     public static int LAST_MESSAGE_CHANGE_PAYLOAD = 22;
+    public static boolean clicksEnabled = true;
 
 
 // ================================= Profile Picture Management ================================= //
@@ -259,6 +260,8 @@ public class Utils {
      * @param enabled   true to enable, false to disable
      */
     public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
+        clicksEnabled = enabled;
+
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);
@@ -268,6 +271,10 @@ public class Utils {
             }
         }
     }
+                      public static void enableDisableBackPressed(boolean val){
+                        clicksEnabled= val;
+                      }
+
 
     public static void animateClick(View view) {
         ObjectAnimator.ofPropertyValuesHolder(view,

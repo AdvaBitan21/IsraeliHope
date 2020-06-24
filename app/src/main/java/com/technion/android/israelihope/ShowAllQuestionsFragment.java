@@ -73,6 +73,8 @@ public class ShowAllQuestionsFragment extends Fragment {
 
 
     private void getAllQuestions(){
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+
         final List<Question> questions=new ArrayList<>() ;
 
         Query query = FirebaseFirestore.getInstance().collection("Questions").orderBy("first_quiz_index");
@@ -84,6 +86,7 @@ public class ShowAllQuestionsFragment extends Fragment {
                 }
                 questionsList.addAll(questions);
                 myAdapter.notifyDataSetChanged();
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
 
 
             }

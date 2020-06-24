@@ -76,6 +76,7 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     private void getUsersToSearch() {
         diffusersList = new ArrayList<>();
         allUsersList = new ArrayList<>();
+        Utils.enableDisableBackPressed(false);
 
         Query requestQuery = db.collection("Users").whereEqualTo("email", firebaseUser.getEmail());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -104,6 +105,8 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
                             recyclerView.setAdapter(userAdapter);
                             recyclerView.setVisibility(View.INVISIBLE);
                             initRandomDifferentUsers();
+                            Utils.enableDisableBackPressed(true);
+
                         }
                     });
                 }
@@ -155,7 +158,7 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     private void initRandomDifferentUsers() {
 
         //remove underline
-        b.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
+//        b.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

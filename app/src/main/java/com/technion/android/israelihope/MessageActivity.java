@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -185,6 +186,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
                         for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (dc.getType().equals(DocumentChange.Type.ADDED)) {
                                 Chat chat = dc.getDocument().toObject(Chat.class);
@@ -197,6 +199,7 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
                                 }
                             }
                         }
+
                     }
                 });
     }
@@ -330,4 +333,17 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
             }
         }
     }
+/*
+    @Override
+    public void onBackPressed() {
+        if (!Utils.clicksEnabled) return;
+
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+
+        if (count == 1) finish();
+        else if (count > 1) getSupportFragmentManager().popBackStack();
+        else super.onBackPressed();
+    }*/
+
 }

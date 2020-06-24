@@ -57,6 +57,7 @@ public class ChatsFragment extends Fragment {
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                Utils.enableDisableBackPressed(false);
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
 
                     //On conversation addition - add it to the top
@@ -81,6 +82,8 @@ public class ChatsFragment extends Fragment {
                         adapter.notifyItemChanged(0, Utils.LAST_MESSAGE_CHANGE_PAYLOAD);
                     }
                 }
+                Utils.enableDisableBackPressed(true);
+
             }
         });
     }
