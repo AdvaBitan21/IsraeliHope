@@ -44,8 +44,9 @@
     <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
 
     <!-- First Quiz -->
-    <string name="welcome">ברוכים הבאים</string>
-    <string name="welcome_title">בשאלון הבא נלמד להכיר אותך כדי להבין כמה אתה מכיר את האחר</string>
+    <string name="welcome">ברוכים הבאים!</string>
+    <string name="thank_you_for_joining">תודה שהצטרפת לקהילה שלנו.</string>
+    <string name="first_quiz_introduction">כעת יוצג בפניך שאלון קצר שיעזור לנו להכיר אותך קצת יותר טוב, ולהבין עד כמה אתה מכיר את האחר.</string>
     <string name="question_number">שאלה מספר</string>
 
     <!-- Search and Filters -->
@@ -106,5 +107,34 @@
     <string name="jewish">יהודים</string>
     <string name="christians">נוצרים</string>
     <string name="preview">תצוגה מקדימה</string>
+    <string name="next">הבא</string>
+    <string name="religious">דתי</string>
+    <string name="secular">חילוני</string>
+    <string name="light_religious">מסורתי</string>
+    <string name="academic_role">תפקיד אקדמי</string>
+    <string name="religion_and_intensity">דת ומידת דתיות</string>
+    <string name="back">הקודם</string>
+    <string name="lets_begin">בואו נתחיל!</string>
+
+    <string-array name="religions">
+        <item>יהדות</item>
+        <item>איסלאם</item>
+        <item>נצרות</item>
+        <item>הדת שלך</item>
+    </string-array>
+
+    <string-array name="religion_measures">
+        <item>חילוני</item>
+        <item>מסורתי</item>
+        <item>דתי</item>
+        <item>מידת הדתיות שלך</item>
+    </string-array>
+
+    <string-array name="academicRoles">
+        <item>סטודנט</item>
+        <item>סגל אקדמי</item>
+        <item>סגל מנהלי</item>
+        <item>התפקיד האקדמי שלך</item>
+    </string-array>
 
 </resources>

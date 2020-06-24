@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text"
+    android:layout_width="300dp"
+    android:layout_height="40dp"
+    android:background="@drawable/background_signup_edittext"
+    android:textColor="@color/black"
+    android:text="@string/academic_role"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="15dp"
+    android:drawableLeft="@drawable/drop_down_arrow"
+    android:drawableRight="@drawable/religion"
+    android:drawablePadding="7dp"/>

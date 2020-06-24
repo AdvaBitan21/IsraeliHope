@@ -36,13 +36,12 @@ import static android.app.Activity.RESULT_OK;
 
 public class UsersFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
+    FirebaseUser firebaseUser;
     private RecyclerView recyclerView;
-
     private UserAdapter userAdapter;
     private ArrayList<User> diffusersList;
     private ArrayList<User> allUsersList;
     private User mUser;
-    FirebaseUser firebaseUser;
     private FirebaseFirestore db;
     private Button b;
 
@@ -59,13 +58,13 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        searchView = ((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView));
+        searchView = getActivity().findViewById(R.id.searchView);
         recyclerView = getView().findViewById(R.id.my_user_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
-        b = (Button) getActivity().findViewById(R.id.diffrent_user_btn);
+        b = getActivity().findViewById(R.id.diffrent_user_btn);
         initBackButton();
         initSearchView();
         initSpeechButton();

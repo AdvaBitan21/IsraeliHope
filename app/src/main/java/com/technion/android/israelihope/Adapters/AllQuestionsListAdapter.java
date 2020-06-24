@@ -62,7 +62,7 @@ public class AllQuestionsListAdapter extends RecyclerView.Adapter<AllQuestionsLi
 
             View view ;
             LayoutInflater mInflater = LayoutInflater.from(mContext);
-            view = mInflater.inflate(R.layout.question_admin_list_item,parent,false);
+            view = mInflater.inflate(R.layout.item_question_admin_list,parent,false);
             return new AllQuestionsListAdapter.MyViewHolder(view);
         }
 

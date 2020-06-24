@@ -80,24 +80,18 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
 
         //Listening to user modifications for user details updates.
         FirebaseFirestore.getInstance().collection("Users").document(conversation.getEmail())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                .addSnapshotListener((documentSnapshot, e) -> {
                         final User user = documentSnapshot.toObject(User.class);
                         holder.username.setText(user.getUserName());
                         Utils.loadProfileImage(mContext, holder.profile_image, user.getEmail());
                         bindUserStatus(holder, user);
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(mContext, MessageActivity.class);
-                                intent.putExtra("receiver", user);
-                                intent.putExtra("sender", ((MainActivity) mContext).getCurrentUser());
-                                mContext.startActivity(intent);
-                                holder.unseenCount.setVisibility(View.GONE);
-                            }
+                        holder.itemView.setOnClickListener(view -> {
+                            Intent intent = new Intent(mContext, MessageActivity.class);
+                            intent.putExtra("receiver", user);
+                            intent.putExtra("sender", ((MainActivity) mContext).getCurrentUser());
+                            mContext.startActivity(intent);
+                            holder.unseenCount.setVisibility(View.GONE);
                         });
-                    }
                 });
     }
 

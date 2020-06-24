@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,15 +18,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.auth.FirebaseUser;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,8 +55,23 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpSignUpBtn();
         initLoginBtn();
+
+        Utils.addFieldsToFirebase();
     }
 
+
+    private void setUpSignUpBtn() {
+
+        findViewById(R.id.signupButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(LoginActivity.this, findViewById(R.id.signupButton), "layout");
+                startActivity(intent, options.toBundle());
+            }
+        });
+    }
 
     private void initLoginBtn() {
 
@@ -70,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                 String email = ((EditText) findViewById(R.id.email)).getText().toString();
                 String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-                if(email.equals("admin@gmail.com")&&password.equals("admin123"))
                 if (!checkEnteredDetails(email, password))
                     return;
 
@@ -215,49 +228,36 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.wrong_details).setVisibility(View.INVISIBLE);
     }
 
+//    private void fadeOutAll() {
+//        Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+//        findViewById(R.id.logo).startAnimation(fadeOut);
+//        findViewById(R.id.login).startAnimation(fadeOut);
+//        findViewById(R.id.password).startAnimation(fadeOut);
+//        findViewById(R.id.email).startAnimation(fadeOut);
+//        findViewById(R.id.signupButton).startAnimation(fadeOut);
+//    }
+//
+//    private void fadeInAll() {
+//        Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+//        findViewById(R.id.logo).startAnimation(fadeIn);
+//        findViewById(R.id.login).startAnimation(fadeIn);
+//        findViewById(R.id.password).startAnimation(fadeIn);
+//        findViewById(R.id.email).startAnimation(fadeIn);
+//        findViewById(R.id.signupButton).startAnimation(fadeIn);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//       // fadeInAll();
+//    }
 
-    private void setUpSignUpBtn() {
-        findViewById(R.id.signupButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fadeOutAll();
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_up, 0);
-            }
-        });
-    }
-
-    private void fadeOutAll() {
-        Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
-        findViewById(R.id.logo).startAnimation(fadeOut);
-        findViewById(R.id.login).startAnimation(fadeOut);
-        findViewById(R.id.password).startAnimation(fadeOut);
-        findViewById(R.id.email).startAnimation(fadeOut);
-        findViewById(R.id.signupButton).startAnimation(fadeOut);
-    }
-
-    private void fadeInAll() {
-        Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-        findViewById(R.id.logo).startAnimation(fadeIn);
-        findViewById(R.id.login).startAnimation(fadeIn);
-        findViewById(R.id.password).startAnimation(fadeIn);
-        findViewById(R.id.email).startAnimation(fadeIn);
-        findViewById(R.id.signupButton).startAnimation(fadeIn);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fadeInAll();
-    }
-
-    private void editTokenId(){
+    private void editTokenId() {
 
         String token_id = FirebaseInstanceId.getInstance().getToken();
         String user_email = mAuth.getCurrentUser().getEmail();
 
-        Map<String,Object> tokenMap = new HashMap<>();
+        Map<String, Object> tokenMap = new HashMap<>();
         tokenMap.put("token_id", token_id);
         db.collection("Users").document(user_email).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -267,6 +267,5 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-
 
 }

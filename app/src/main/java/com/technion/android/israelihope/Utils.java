@@ -214,14 +214,13 @@ public class Utils {
 
     public static void addFieldsToFirebase() {
 
-        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("Questions");
-        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        //document.getReference().update()
-                    }
+        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("Users");
+        collectionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot document : task.getResult()) {
+                    String token = (String) document.get("token_id");
+                    document.getReference().update("tokenId", token);
+                    document.getReference().update("token_id", FieldValue.delete());
                 }
             }
         });
@@ -271,9 +270,10 @@ public class Utils {
             }
         }
     }
-                      public static void enableDisableBackPressed(boolean val){
-                        clicksEnabled= val;
-                      }
+
+    public static void enableDisableBackPressed(boolean val) {
+        clicksEnabled = val;
+    }
 
 
     public static void animateClick(View view) {

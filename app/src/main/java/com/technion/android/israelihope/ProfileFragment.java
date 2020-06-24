@@ -58,7 +58,6 @@ public class ProfileFragment extends Fragment {
         getUserDetails();
         initChangeImage();
         initEditUserName();
-        initDatePicker();
         initChangePasswordDialog();
         initLogOutButton();
     }
@@ -69,8 +68,6 @@ public class ProfileFragment extends Fragment {
         TextView userName = getView().findViewById(R.id.userName);
         userName.setText(mUser.getUserName());
 
-        TextView userBirthday = getView().findViewById(R.id.birthDate);
-        userBirthday.setText(mUser.getBirthDate());
 
         CircleImageView profileImage = getView().findViewById(R.id.profile_image);
         Utils.loadProfileImage(getContext(), profileImage, mUser.getEmail());
@@ -137,40 +134,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void initDatePicker() {
-
-        final EditText birthDate = getView().findViewById(R.id.birthDate);
-        final ImageView editBirthDate = getView().findViewById(R.id.editBirthDate);
-
-        final Calendar myCalendar = Calendar.getInstance();
-
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
-                birthDate.setText(sdf.format(myCalendar.getTime()));
-                updateBirthDate(sdf.format(myCalendar.getTime()));
-            }
-
-        };
-
-        editBirthDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog dialog = new DatePickerDialog(getContext(),
-                        R.style.MySpinnerDatePickerStyle, date,
-                        myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
-                dialog.show();
-            }
-        });
-    }
 
     private void initLogOutButton() {
 
@@ -215,16 +178,6 @@ public class ProfileFragment extends Fragment {
                 .collection("Users")
                 .document(mUser.getEmail())
                 .update("userName", name);
-    }
-
-    private void updateBirthDate(String birthDate) {
-        mUser.setBirthDate(birthDate);
-        ((MainActivity) getActivity()).setCurrentUser(mUser);
-
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(mUser.getEmail())
-                .update("birthDate", birthDate);
     }
 
 

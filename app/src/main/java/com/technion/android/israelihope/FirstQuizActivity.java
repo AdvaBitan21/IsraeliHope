@@ -7,6 +7,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.technion.android.israelihope.Objects.Question;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -25,7 +34,7 @@ public class FirstQuizActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        loadFragment(new FirstQuizWelcomeFragment());
+        startQuiz();
 
     }
 
@@ -68,6 +77,19 @@ public class FirstQuizActivity extends AppCompatActivity {
 
     public void IncreaseScore() {
         rights_amount++;
+    }
+
+
+    private void startQuiz() {
+        Query questionRef = FirebaseFirestore.getInstance().collection("Questions").whereEqualTo("first_quiz_index", 1);
+        questionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot doc : task.getResult()) {
+                    Question question = doc.toObject(Question.class);
+                    loadFragment(question.createQuestionFragment());
+                }
+            }
+        });
     }
 
 }

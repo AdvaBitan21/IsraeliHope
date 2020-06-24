@@ -111,11 +111,9 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         mUser = document.toObject(User.class);
-                        if (mUser.getScore_first_quiz() < 0)
+                        if (mUser.getScoreFirstQuiz() < 0)
                             throw new AssertionError("Current user didnt do the first quiz.");
                     }
-
-
                 }
             }
         });

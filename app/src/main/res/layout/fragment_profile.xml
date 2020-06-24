@@ -100,54 +100,11 @@
             android:layout_below="@id/userName"
             android:background="?android:attr/listDivider" />
 
-        <EditText
-            android:id="@+id/birthDate"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/divider15"
-            android:layout_margin="10dp"
-            android:layout_toRightOf="@id/editBirthDate"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:drawableStart="@drawable/gift"
-            android:drawableLeft="@drawable/gift"
-            android:drawablePadding="15dp"
-            android:drawableTint="@color/colorPrimaryDark"
-            android:editable="false"
-            android:focusable="false"
-            android:gravity="center_vertical|start"
-            android:hint="@string/age"
-            android:lines="1"
-            android:maxLines="1"
-            android:paddingLeft="10dp"
-            android:paddingRight="15dp"
-            android:singleLine="true"
-            android:textAlignment="viewStart"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/editBirthDate"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_below="@id/divider15"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/edit"
-            android:tint="@color/Grey" />
-
-        <View
-            android:id="@+id/divider16"
-            android:layout_width="match_parent"
-            android:layout_height="0.2dp"
-            android:layout_below="@id/birthDate"
-            android:background="?android:attr/listDivider" />
-
         <View
             android:id="@+id/divider18"
             android:layout_width="match_parent"
             android:layout_height="0.2dp"
-            android:layout_below="@id/divider16"
+            android:layout_below="@id/divider15"
             android:layout_marginTop="10dp"
             android:background="?android:attr/listDivider" />
 

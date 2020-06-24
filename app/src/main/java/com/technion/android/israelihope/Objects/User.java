@@ -25,64 +25,33 @@ public class User implements Serializable {
 
     private String email;
     private String userName;
-    private String city;
-    private String birthDate;
     private UserType type;
-    private int score_first_quiz;
-    private int num_challenges;
-    private String status;
-    private String token_id;
     private AcademicRole academicRole;
+
+    private int scoreFirstQuiz;
+    private String status;
+    private String tokenId;
+
 
     public User() {
     }
 
-    public User(String email, String userName, String city, String birthDate, UserType type, int num_challenges, String status) {
+    public User(String email, String userName, UserType type, AcademicRole role) {
         this.email = email;
         this.userName = userName;
-        this.city = city;
-        this.birthDate = birthDate;
         this.type = type;
-        this.score_first_quiz = -1;//marked as not answered
-        this.num_challenges = num_challenges;
-        this.status = status;
-        this.token_id = "";
-        this.academicRole = AcademicRole.Student;
-
-    }
-
-    public User(String email, String userName, String city, String birthDate) {
-        this.email = email;
-        this.userName = userName;
-        this.city = city;
-        this.type = UserType.Jewish1;//need to change
-        this.birthDate = birthDate;
+        this.academicRole = role;
+        this.scoreFirstQuiz = -1;
         this.status = "online";
-        this.score_first_quiz = -1;
     }
 
-    public AcademicRole getAcademicRole() {
-        return academicRole;
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAcademicRole(AcademicRole academicRole) {
-        this.academicRole = academicRole;
-    }
-
-    public int getScore_first_quiz() {
-        return score_first_quiz;
-    }
-
-    public void setScore_first_quiz(int score_first_quiz) {
-        this.score_first_quiz = score_first_quiz;
-    }
-
-    public String getToken_id() {
-        return token_id;
-    }
-
-    public void setToken_id(String token_id) {
-        this.token_id = token_id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -93,14 +62,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public UserType getType() {
         return type;
     }
@@ -109,12 +70,20 @@ public class User implements Serializable {
         this.type = type;
     }
 
-    public int getNum_challenges() {
-        return num_challenges;
+    public AcademicRole getAcademicRole() {
+        return academicRole;
     }
 
-    public void setNum_challenges(int num_challenges) {
-        this.num_challenges = num_challenges;
+    public void setAcademicRole(AcademicRole academicRole) {
+        this.academicRole = academicRole;
+    }
+
+    public int getScoreFirstQuiz() {
+        return scoreFirstQuiz;
+    }
+
+    public void setScoreFirstQuiz(int scoreFirstQuiz) {
+        this.scoreFirstQuiz = scoreFirstQuiz;
     }
 
     public String getStatus() {
@@ -125,20 +94,12 @@ public class User implements Serializable {
         this.status = status;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getTokenId() {
+        return tokenId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
     }
 
     @Override

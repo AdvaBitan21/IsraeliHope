@@ -1,6 +1,5 @@
 package com.technion.android.israelihope;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,12 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.technion.android.israelihope.Adapters.AllQuestionsListAdapter;
 import com.technion.android.israelihope.Objects.Question;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class EditQuestionFragment extends Fragment {
 
@@ -81,7 +77,7 @@ public class EditQuestionFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        return inflater.inflate(R.layout.edit_question_fragment, null);
+        return inflater.inflate(R.layout.fragment_edit_question, null);
     }
 
 
