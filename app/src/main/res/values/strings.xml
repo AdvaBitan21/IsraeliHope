@@ -102,18 +102,15 @@
     <string name="in_october">באוקטובר</string>
     <string name="in_november">בנובמבר</string>
     <string name="in_december">בדצמבר</string>
+
     <string name="question_statistics">אחוזי הצלחה</string>
     <string name="muslims">מוסלמים</string>
     <string name="jewish">יהודים</string>
     <string name="christians">נוצרים</string>
-    <string name="preview">תצוגה מקדימה</string>
     <string name="next">הבא</string>
-    <string name="religious">דתי</string>
-    <string name="secular">חילוני</string>
-    <string name="light_religious">מסורתי</string>
+
     <string name="academic_role">תפקיד אקדמי</string>
     <string name="religion_and_intensity">דת ומידת דתיות</string>
-    <string name="back">הקודם</string>
     <string name="lets_begin">בואו נתחיל!</string>
 
     <string-array name="religions">
@@ -130,11 +127,37 @@
         <item>מידת הדתיות שלך</item>
     </string-array>
 
-    <string-array name="academicRoles">
+    <string-array name="academic_roles">
         <item>סטודנט</item>
         <item>סגל אקדמי</item>
         <item>סגל מנהלי</item>
         <item>התפקיד האקדמי שלך</item>
     </string-array>
+
+    <string-array name="question_types">
+        <item>שאלת נכון/לא נכון</item>
+        <item>שאלה אמריקאית</item>
+        <item>שאלת סימון תשובות</item>
+    </string-array>
+
+    <string-array name="question_subjects">
+        <item>@string/question_subject_general</item>
+        <item>@string/question_subject_jewish</item>
+        <item>@string/christians</item>
+        <item>@id/muslims</item>
+        <item>@string/question_subject_druze</item>
+        <item>@string/question_subject_bedouin</item>
+        <item>@string/question_subject_ethiopian</item>
+        <item>@string/question_subject_moroccan</item>
+    </string-array>
+
+    <string name="question_subject_general">כללי</string>
+    <string name="question_subject_jewish">יהדות</string>
+    <string name="question_subject_christian">נצרות</string>
+    <string name="question_subject_muslim">איסלאם</string>
+    <string name="question_subject_druze">דרוזים</string>
+    <string name="question_subject_bedouin">בדואים</string>
+    <string name="question_subject_ethiopian">אתיופים</string>
+    <string name="question_subject_moroccan">מרוקאים</string>
 
 </resources>

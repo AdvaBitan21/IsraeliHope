@@ -55,8 +55,6 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpSignUpBtn();
         initLoginBtn();
-
-        Utils.addFieldsToFirebase();
     }
 
 

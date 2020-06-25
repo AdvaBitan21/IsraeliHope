@@ -133,7 +133,6 @@
                 android:id="@+id/yesno_question_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title"
                 android:layout_margin="15dp"
                 android:background="@drawable/background_white_soft_corners"
                 android:elevation="5dp"
@@ -166,6 +165,8 @@
                         android:background="@drawable/answer_background"
                         android:backgroundTint="@color/lightGrey"
                         android:enabled="false"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="5dp"
                         android:text="נכון"
                         android:textColor="@color/Grey" />
 
@@ -178,6 +179,8 @@
                         android:background="@drawable/answer_background"
                         android:backgroundTint="@color/lightGrey"
                         android:enabled="false"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="5dp"
                         android:text="לא נכון"
                         android:textColor="@color/Grey" />
 
@@ -222,6 +225,8 @@
                         android:background="@drawable/answer_background"
                         android:backgroundTint="@color/lightGrey"
                         android:enabled="false"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="5dp"
                         android:textColor="@color/Grey" />
 
                     <Button
@@ -233,6 +238,8 @@
                         android:background="@drawable/answer_background"
                         android:backgroundTint="@color/lightGrey"
                         android:enabled="false"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="5dp"
                         android:textColor="@color/Grey" />
 
                     <Button
@@ -244,6 +251,8 @@
                         android:background="@drawable/answer_background"
                         android:backgroundTint="@color/lightGrey"
                         android:enabled="false"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="5dp"
                         android:textColor="@color/Grey" />
 
                     <Button
@@ -255,6 +264,8 @@
                         android:background="@drawable/answer_background"
                         android:backgroundTint="@color/lightGrey"
                         android:enabled="false"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="5dp"
                         android:textColor="@color/Grey" />
 
                 </LinearLayout>

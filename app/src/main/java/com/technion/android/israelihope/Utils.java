@@ -31,12 +31,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Objects.Question;
+import com.technion.android.israelihope.Objects.User;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 
@@ -214,13 +216,15 @@ public class Utils {
 
     public static void addFieldsToFirebase() {
 
-        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("Users");
+        final CollectionReference collectionRef = FirebaseFirestore.getInstance().collection("Questions");
         collectionRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot document : task.getResult()) {
-                    String token = (String) document.get("token_id");
-                    document.getReference().update("tokenId", token);
-                    document.getReference().update("token_id", FieldValue.delete());
+                    Map<String, Integer> countRights = new HashMap<>();
+                    for (User.UserType type : User.UserType.values()) {
+                        countRights.put(type.name(), 0);
+                    }
+                    document.getReference().update("countRights", countRights);
                 }
             }
         });

@@ -35,29 +35,26 @@ public class QuestionSubjectFilterAdapter extends RecyclerView.Adapter<QuestionS
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_question_subject_filter, parent, false);
-        return new QuestionSubjectFilterAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final Question.QuestionSubject subject = Question.QuestionSubject.values()[position];
-        holder.subject.setText(subject.name());
+        holder.subject.setText(getSubjectNameString(subject));
 
         updateItemChosen(holder, position);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.itemView.setOnClickListener(view -> {
 
-                Utils.animateClick(view);
-                if (tempChosenSubjects.contains(subject))
-                    tempChosenSubjects.remove(subject);
-                else
-                    tempChosenSubjects.add(subject);
+            Utils.animateClick(view);
+            if (tempChosenSubjects.contains(subject))
+                tempChosenSubjects.remove(subject);
+            else
+                tempChosenSubjects.add(subject);
 
-                updateItemChosen(holder, position);
-            }
+            updateItemChosen(holder, position);
         });
 
         ObjectAnimator.ofPropertyValuesHolder(holder.itemView,
@@ -108,7 +105,31 @@ public class QuestionSubjectFilterAdapter extends RecyclerView.Adapter<QuestionS
         tempChosenSubjects.addAll(chosenSubjects);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private String getSubjectNameString(Question.QuestionSubject subject) {
+
+        switch (subject) {
+            case Druze:
+                return mContext.getString(R.string.question_subject_druze);
+            case Jewish:
+                return mContext.getString(R.string.question_subject_jewish);
+            case Christian:
+                return mContext.getString(R.string.question_subject_christian);
+            case Muslim:
+                return mContext.getString(R.string.question_subject_muslim);
+            case Moroccan:
+                return mContext.getString(R.string.question_subject_moroccan);
+            case Bedouin:
+                return mContext.getString(R.string.question_subject_bedouin);
+            case General:
+                return mContext.getString(R.string.question_subject_general);
+            case Ethiopian:
+                return mContext.getString(R.string.question_subject_ethiopian);
+        }
+        return null;
+    }
+
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView subject;
 

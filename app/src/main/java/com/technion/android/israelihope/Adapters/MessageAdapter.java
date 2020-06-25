@@ -23,21 +23,13 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Dialogs.ChallengeDialog;
 import com.technion.android.israelihope.Objects.Challenge;
 import com.technion.android.israelihope.Objects.Chat;
@@ -150,20 +142,34 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return;
         chatViewHolder.message_time.setText(hour_format.format(time.toDate()));
 
-        bindDateLayout(chatViewHolder, position);
+        bindDateLayout(chatViewHolder);
 
         if (holder instanceof MessageViewHolder)
-            onBindMessageViewHolder((MessageViewHolder) holder, position);
+            onBindMessageViewHolder((MessageViewHolder) holder);
         if (holder instanceof MyChallengeViewHolder)
-            onBindMyChallengeViewHolder((MyChallengeViewHolder) holder, position);
+            onBindMyChallengeViewHolder((MyChallengeViewHolder) holder);
         if (holder instanceof TheirChallengeViewHolder)
-            onBindTheirChallengeViewHolder((TheirChallengeViewHolder) holder, position);
+            onBindTheirChallengeViewHolder((TheirChallengeViewHolder) holder);
         if (holder instanceof PictureViewHolder)
-            onBindPictureViewHolder((PictureViewHolder) holder, position);
+            onBindPictureViewHolder((PictureViewHolder) holder);
     }
 
-    private void bindDateLayout(ChatViewHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
 
+        Chat chat = mChat.get(position);
+        if (!payloads.isEmpty()) {
+            if (payloads.get(0).equals(Utils.PICTURE_CHANGE_PAYLOAD)) {
+                loadPictureToImageView((PictureViewHolder) holder, Uri.parse(chat.getPictureUri()));
+            }
+        }
+    }
+
+
+    private void bindDateLayout(ChatViewHolder holder) {
+
+        final int position = holder.getAdapterPosition();
         holder.date_title_layout.setVisibility(View.GONE);
 
         Chat currentChat = mChat.get(position);
@@ -185,27 +191,16 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
 
-        Chat chat = mChat.get(position);
-        if (!payloads.isEmpty()) {
-            if (payloads.get(0).equals(Utils.PICTURE_CHANGE_PAYLOAD)) {
-                loadPictureToImageView((PictureViewHolder) holder, Uri.parse(chat.getPictureUri()));
-            }
-        }
-    }
-
-
-    private void onBindMessageViewHolder(@NonNull final MessageViewHolder holder, int position) {
-        Chat chat = mChat.get(position);
+    private void onBindMessageViewHolder(@NonNull final MessageViewHolder holder) {
+        Chat chat = mChat.get(holder.getAdapterPosition());
         holder.message.setText(chat.getMessage());
     }
 
 
-    private void onBindPictureViewHolder(@NonNull final PictureViewHolder holder, final int position) {
+    private void onBindPictureViewHolder(@NonNull final PictureViewHolder holder) {
 
+        final int position = holder.getAdapterPosition();
         final Chat chat = mChat.get(position);
 
         holder.picture.setVisibility(View.INVISIBLE);
@@ -216,42 +211,28 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .child(mDocuments.get(position).getId() + ".jpeg");
 
         //If picture already on firebase, load it from the server. Otherwise, upload it.
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                mDocuments.get(position).update("pictureUri", uri.toString());
-                loadPictureToImageView(holder, uri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (((StorageException) e).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+        reference.getDownloadUrl().addOnSuccessListener(uri -> {
+            mDocuments.get(position).update("pictureUri", uri.toString());
+            loadPictureToImageView(holder, uri);
+        }).addOnFailureListener(e -> {
+            if (((StorageException) e).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
 
-                    //Receiver - Listen to uploading progress on sender side
-                    if (!currentUserIsSender(chat)) {
-                        mDocuments.get(position).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                notifyItemChanged(position, Utils.PICTURE_CHANGE_PAYLOAD);
-                            }
-                        });
-                        return;
-                    }
+                //Receiver - Listen to uploading progress on sender side
+                if (!currentUserIsSender(chat)) {
+                    mDocuments.get(position).addSnapshotListener((documentSnapshot, e1) ->
+                            notifyItemChanged(position, Utils.PICTURE_CHANGE_PAYLOAD));
+                    return;
+                }
 
-                    //Sender - upload picture to firebase
-                    try {
-                        final Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(chat.getPictureUri()));
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        reference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                loadPictureToImageView(holder, Uri.parse(chat.getPictureUri()));
-                            }
-                        });
-                    } catch (IOException exception) {
-                        exception.printStackTrace();
-                    }
+                //Sender - upload picture to firebase
+                try {
+                    final Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(chat.getPictureUri()));
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    reference.putBytes(baos.toByteArray()).addOnSuccessListener(taskSnapshot ->
+                            loadPictureToImageView(holder, Uri.parse(chat.getPictureUri())));
+                } catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
         });
@@ -278,134 +259,129 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    private void onBindMyChallengeViewHolder(@NonNull final MyChallengeViewHolder holder, int position) {
+    private void onBindMyChallengeViewHolder(@NonNull final MyChallengeViewHolder holder) {
 
-        final String questionId = mChat.get(position).getChallenge().getQuestionId();
+        final String questionId = mChat.get(holder.getAdapterPosition()).getChallenge().getQuestionId();
         FirebaseFirestore.getInstance().collection("Questions").document(questionId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Question question = task.getResult().toObject(Question.class);
-                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
-                    holder.yesno_question_layout.setVisibility(View.VISIBLE);
-                    holder.yesno_question.setText(question.getContent());
-                }
-                if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
-                    holder.multichoice_question_layout.setVisibility(View.VISIBLE);
-                    holder.multichoice_question.setText(question.getContent());
-                    holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
-                    holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
-                    holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
-                    holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
-                }
+                .get().addOnCompleteListener(task -> {
+            Question question = task.getResult().toObject(Question.class);
+            if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
+                holder.yesno_question_layout.setVisibility(View.VISIBLE);
+                holder.multichoice_question_layout.setVisibility(View.GONE);
+                holder.yesno_question.setText(question.getContent());
+            } else if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
+                holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+                holder.yesno_question_layout.setVisibility(View.GONE);
+                holder.multichoice_question.setText(question.getContent());
+                holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
+                holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
+                holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
+                holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
             }
         });
 
-        addMyChallengeListeners(holder, position);
+        addMyChallengeListeners(holder);
     }
 
-    private void addMyChallengeListeners(@NonNull final MyChallengeViewHolder holder, int position) {
-        mDocuments.get(position).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+    private void addMyChallengeListeners(@NonNull final MyChallengeViewHolder holder) {
+        mDocuments.get(holder.getAdapterPosition()).addSnapshotListener((documentSnapshot, e) -> {
 
-                Challenge challenge = documentSnapshot.toObject(Chat.class).getChallenge();
+            Challenge challenge = documentSnapshot.toObject(Chat.class).getChallenge();
 
-                if (challenge.getState().equals(Challenge.ChallengeState.IN_PROGRESS)) {
-                    holder.dots.setVisibility(View.VISIBLE);
-                    holder.status.setVisibility(View.GONE);
-                } else {
-                    holder.dots.setVisibility(View.GONE);
-                    holder.status.setVisibility(View.VISIBLE);
-                }
-
-                if (challenge.getState().equals(Challenge.ChallengeState.CORRECT)) {
-                    holder.status.setText(mContext.getResources().getString(R.string.challenge_answered_correct));
-                    holder.status.setTextColor(mContext.getResources().getColor(R.color.green));
-                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.messageGreen)));
-                }
-
-                if (challenge.getState().equals(Challenge.ChallengeState.WRONG)) {
-                    holder.status.setText(mContext.getResources().getString(R.string.challenge_answered_wrong));
-                    holder.status.setTextColor(mContext.getResources().getColor(R.color.colorRed));
-                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.lightRed)));
-                }
-
-                if (challenge.getState().equals(Challenge.ChallengeState.OUT_OF_TIME)) {
-                    holder.status.setText(mContext.getResources().getString(R.string.times_up));
-                    holder.status.setTextColor(mContext.getResources().getColor(R.color.darkGrey));
-                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
-                }
-
+            if (challenge.getState().equals(Challenge.ChallengeState.SENT)) {
+                holder.status.setText(mContext.getResources().getString(R.string.challenge_sent));
+                holder.status.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+                holder.challenge_layout.setBackgroundTintList(null);
             }
+
+            if (challenge.getState().equals(Challenge.ChallengeState.IN_PROGRESS)) {
+                holder.dots.setVisibility(View.VISIBLE);
+                holder.status.setVisibility(View.GONE);
+            } else {
+                holder.dots.setVisibility(View.GONE);
+                holder.status.setVisibility(View.VISIBLE);
+            }
+
+            if (challenge.getState().equals(Challenge.ChallengeState.CORRECT)) {
+                holder.status.setText(mContext.getResources().getString(R.string.challenge_answered_correct));
+                holder.status.setTextColor(mContext.getResources().getColor(R.color.green));
+                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.messageGreen)));
+            }
+
+            if (challenge.getState().equals(Challenge.ChallengeState.WRONG)) {
+                holder.status.setText(mContext.getResources().getString(R.string.challenge_answered_wrong));
+                holder.status.setTextColor(mContext.getResources().getColor(R.color.colorRed));
+                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.lightRed)));
+            }
+
+            if (challenge.getState().equals(Challenge.ChallengeState.OUT_OF_TIME)) {
+                holder.status.setText(mContext.getResources().getString(R.string.times_up));
+                holder.status.setTextColor(mContext.getResources().getColor(R.color.darkGrey));
+                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
+            }
+
         });
     }
 
 
-    private void onBindTheirChallengeViewHolder(@NonNull TheirChallengeViewHolder holder, final int position) {
+    private void onBindTheirChallengeViewHolder(@NonNull TheirChallengeViewHolder holder) {
 
+        final int position = holder.getAdapterPosition();
         final Chat chat = mChat.get(position);
 
-        holder.start_challenge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, ChallengeDialog.class);
-                intent.putExtra("challenge", chat.getChallenge());
-                intent.putExtra("documentId", mDocuments.get(position).getId());
-                mContext.startActivity(intent);
-            }
+        holder.start_challenge.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, ChallengeDialog.class);
+            intent.putExtra("challenge", chat.getChallenge());
+            intent.putExtra("documentId", mDocuments.get(position).getId());
+            mContext.startActivity(intent);
         });
 
-        addTheirChallengeListeners(holder, position);
+        addTheirChallengeListeners(holder);
     }
 
-    private void bindTheirChallengeQuestion(@NonNull final TheirChallengeViewHolder holder, int position) {
-        String questionId = mChat.get(position).getChallenge().getQuestionId();
+    private void bindTheirChallengeQuestion(@NonNull final TheirChallengeViewHolder holder) {
+        String questionId = mChat.get(holder.getAdapterPosition()).getChallenge().getQuestionId();
         FirebaseFirestore.getInstance().collection("Questions").document(questionId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Question question = task.getResult().toObject(Question.class);
-                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
-                    holder.yesno_question_layout.setVisibility(View.VISIBLE);
-                    holder.yesno_question.setText(question.getContent());
-                }
-                if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
-                    holder.multichoice_question_layout.setVisibility(View.VISIBLE);
-                    holder.multichoice_question.setText(question.getContent());
-                    holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
-                    holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
-                    holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
-                    holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
-                }
+                .get().addOnCompleteListener(task -> {
+            Question question = task.getResult().toObject(Question.class);
+            if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
+                holder.yesno_question_layout.setVisibility(View.VISIBLE);
+                holder.multichoice_question_layout.setVisibility(View.GONE);
+                holder.yesno_question.setText(question.getContent());
+            }
+            if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
+                holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+                holder.yesno_question_layout.setVisibility(View.GONE);
+                holder.multichoice_question.setText(question.getContent());
+                holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
+                holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
+                holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
+                holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
             }
         });
     }
 
-    private void addTheirChallengeListeners(@NonNull final TheirChallengeViewHolder holder, final int position) {
-        mDocuments.get(position).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+    private void addTheirChallengeListeners(@NonNull final TheirChallengeViewHolder holder) {
+        mDocuments.get(holder.getAdapterPosition()).addSnapshotListener((documentSnapshot, e) -> {
 
-                Challenge challenge = documentSnapshot.toObject(Chat.class).getChallenge();
+            Challenge challenge = documentSnapshot.toObject(Chat.class).getChallenge();
 
-                if (challenge.getState().equals(Challenge.ChallengeState.CORRECT)) {
-                    bindTheirChallengeQuestion(holder, position);
-                    holder.empty_question_layout.setVisibility(View.GONE);
-                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.messageGreen)));
-                }
+            if (challenge.getState().equals(Challenge.ChallengeState.CORRECT)) {
+                bindTheirChallengeQuestion(holder);
+                holder.empty_question_layout.setVisibility(View.GONE);
+                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.messageGreen)));
+            }
 
-                if (challenge.getState().equals(Challenge.ChallengeState.WRONG)) {
-                    bindTheirChallengeQuestion(holder, position);
-                    holder.empty_question_layout.setVisibility(View.GONE);
-                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.lightRed)));
-                }
+            if (challenge.getState().equals(Challenge.ChallengeState.WRONG)) {
+                bindTheirChallengeQuestion(holder);
+                holder.empty_question_layout.setVisibility(View.GONE);
+                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.lightRed)));
+            }
 
-                if (challenge.getState().equals(Challenge.ChallengeState.OUT_OF_TIME)) {
-                    bindTheirChallengeQuestion(holder, position);
-                    holder.empty_question_layout.setVisibility(View.GONE);
-                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
-                }
+            if (challenge.getState().equals(Challenge.ChallengeState.OUT_OF_TIME)) {
+                bindTheirChallengeQuestion(holder);
+                holder.empty_question_layout.setVisibility(View.GONE);
+                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
             }
         });
     }

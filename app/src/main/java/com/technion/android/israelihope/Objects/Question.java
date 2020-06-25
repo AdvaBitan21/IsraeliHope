@@ -16,11 +16,11 @@ public class Question implements Serializable {
     private String id;
     private String content;
     private QuestionType question_type;
-    private ArrayList<String> possible_answers;  // from 2 to 4
+    private ArrayList<String> possible_answers;     // from 2 to 4
     private ArrayList<String> right_answers;
     private Map<String, Integer> countRights;
     private Map<String, Integer> countAnswers;
-    private int first_quiz_index;               // if it is not first quiz it will be -1
+    private int first_quiz_index;                   // if it is not first quiz it will be -1
     private QuestionSubject subject;
 
 
@@ -114,8 +114,8 @@ public class Question implements Serializable {
 
     private void initCountRights() {
         this.countRights = new HashMap<>();
-        for (QuestionSubject subject : QuestionSubject.values()) {
-            countRights.put(subject.name(), 0);
+        for (User.UserType type : User.UserType.values()) {
+            countRights.put(type.name(), 0);
         }
     }
 
@@ -134,8 +134,8 @@ public class Question implements Serializable {
 
     private void initCountAnswers() {
         this.countAnswers = new HashMap<>();
-        for (QuestionSubject subject : QuestionSubject.values()) {
-            countAnswers.put(subject.name(), 0);
+        for (User.UserType type : User.UserType.values()) {
+            countAnswers.put(type.name(), 0);
         }
     }
 

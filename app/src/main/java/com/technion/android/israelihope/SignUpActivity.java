@@ -324,7 +324,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         };
 
-        adapter.addAll(getResources().getStringArray(R.array.academicRoles));
+        adapter.addAll(getResources().getStringArray(R.array.academic_roles));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());

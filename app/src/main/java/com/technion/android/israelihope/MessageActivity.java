@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -229,12 +228,8 @@ public class MessageActivity extends AppCompatActivity implements Serializable {
         final String receiver = receiverEmail;
 
         final Chat chat = new Chat(sender, receiver, Timestamp.now(), new Challenge(question.getId()));
-        FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                addChatToUsersConversations(chat, task.getResult().getId());
-            }
-        });
+        FirebaseFirestore.getInstance().collection("Chats").add(chat).addOnCompleteListener(task ->
+                addChatToUsersConversations(chat, task.getResult().getId()));
     }
 
     private void sendMessage(final String sender, final String receiver, String message) {
