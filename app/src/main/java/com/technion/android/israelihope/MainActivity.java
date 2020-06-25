@@ -1,7 +1,6 @@
 package com.technion.android.israelihope;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.fragmant_container);
+        return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
 
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmant_container, fragment, fragment.toString())
+                    .replace(R.id.fragment_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
         }
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragmant_container, fragment, fragment.toString())
+                    .add(R.id.fragment_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
         }
@@ -197,6 +196,10 @@ public class MainActivity extends AppCompatActivity {
         // Customize onBackPressed for specific fragments //
         if (getCurrentFragment() instanceof ProfileFragment) {
             ((ProfileFragment) getCurrentFragment()).animateOut();
+            return;
+        }
+        if (getCurrentFragment() instanceof UsersFragment) {
+            ((UsersFragment) getCurrentFragment()).animateOut();
             return;
         }
         if (getCurrentFragment() instanceof FirstQuizFinishFragment) {

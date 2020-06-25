@@ -21,21 +21,12 @@
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <ImageView
-                android:id="@+id/menu"
+                android:id="@+id/add_users"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="16dp"
-                android:src="@drawable/menu"
-                android:tint="@color/Grey" />
-
-            <ImageView
-                android:id="@+id/add_users"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/add_users"
+                android:src="@drawable/new_chat"
                 android:tint="@color/Grey" />
 
             <ImageView
@@ -64,10 +55,10 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/fragmant_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appBar"
-        android:backgroundTint="@color/lightGrey"/>
+        android:backgroundTint="@color/lightGrey" />
 
 </RelativeLayout>

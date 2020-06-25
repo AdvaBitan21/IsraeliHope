@@ -4,77 +4,198 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UsersFragment">
+    tools:context=".ProfileFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:id="@+id/top_bar"
-        android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll|enterAlways"
-        android:layoutDirection="rtl">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        app:layout_scrollFlags="scroll|enterAlways">
-
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:maxWidth="300dp"
-            app:searchHintIcon="@color/transparent"
-            app:queryHint="@string/search_hint" />
-
-        <ImageView
-            android:id="@+id/speechButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="right"
-            android:src="@drawable/speech_btn"
-            android:tint="@color/darkGrey" />
-
-        <ImageView
-            android:id="@+id/backButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="right"
-            android:src="@drawable/arrow_right"
-            android:tint="@color/darkGrey" />
-
-    </androidx.appcompat.widget.Toolbar>
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            app:tabGravity="fill"
-            app:tabMode="fixed"
-            android:background="@color/white"
-            app:tabIndicatorColor="@color/colorPrimaryDark"
-            android:layoutDirection="rtl">
-
-
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <Button
-            android:id="@+id/diffrent_user_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="הגרל משתמשים שונים ממך" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_user_recycler_view"
+    <View
+        android:id="@+id/backLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/top_bar"
+        android:background="@color/transparentBlack" />
 
-        android:layout_marginTop="-2dp" />
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_semi_round_down"
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/background_white_rounded_border"
+            android:backgroundTint="@color/lightGrey"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="-5dp"
+                android:layout_weight="1"
+                app:queryHint="@string/search_hint"
+                app:searchIcon="@drawable/search"
+                app:voiceIcon="@drawable/speech_btn" />
+
+            <ImageView
+                android:id="@+id/speechButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/speech_btn"
+                android:tint="@color/darkGrey" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/lightGrey" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/myUserRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/lightGrey" />
+
+        <RelativeLayout
+            android:id="@+id/randomUsersLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:layout_marginTop="5dp"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/users_yous_should_know"
+                android:textColor="@color/darkGrey"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/refresh"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/refresh"
+                android:background="@color/transparent"
+                android:scaleType="centerInside"
+                android:layout_alignTop="@id/title"
+                android:tint="@color/darkGrey"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_soft_corners"
+                    android:elevation="3dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="15dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImage1"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:elevation="3dp"
+                        android:src="@color/lightGrey"
+                        app:civ_circle_background_color="@color/white" />
+
+                    <TextView
+                        android:id="@+id/username1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_soft_corners"
+                    android:elevation="3dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="15dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImage2"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:elevation="3dp"
+                        android:src="@color/lightGrey"
+                        app:civ_circle_background_color="@color/white" />
+
+                    <TextView
+                        android:id="@+id/username2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_soft_corners"
+                    android:elevation="3dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="15dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImage3"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:elevation="3dp"
+                        android:src="@color/lightGrey"
+                        app:civ_circle_background_color="@color/white" />
+
+                    <TextView
+                        android:id="@+id/username3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

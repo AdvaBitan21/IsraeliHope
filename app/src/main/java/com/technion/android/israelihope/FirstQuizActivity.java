@@ -7,15 +7,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.android.israelihope.Objects.Question;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -48,7 +44,7 @@ public class FirstQuizActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmant_container, fragment, fragment.toString())
+                .replace(R.id.fragment_container, fragment, fragment.toString())
                 .addToBackStack(fragment.getClass().toString())
                 .commit();
     }
