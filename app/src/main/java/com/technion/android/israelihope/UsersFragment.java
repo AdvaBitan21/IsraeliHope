@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -76,7 +74,7 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT, ("ניתן לומר שם של ספר או חבר"));
-                startActivityForResult(intent, 1000);
+                startActivityForResult(intent, Utils.RECOGNIZE_SPEECH_REQUEST);
             }
         });
     }
@@ -149,10 +147,10 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
         User mUser = ((MainActivity) getActivity()).getCurrentUser();
 
         Query requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-        requestCollectionRef.addSnapshotListener((queryDocumentSnapshots, e) -> {
+        requestCollectionRef.get().addOnCompleteListener(task -> {
             diffusersList.clear();
             allUsersList.clear();
-            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+            for (QueryDocumentSnapshot document : task.getResult()) {
                 User user = document.toObject(User.class);
                 if (user.getEmail().equals(mUser.getEmail()))
                     continue;
@@ -216,15 +214,11 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1000: {
-                if (resultCode == RESULT_OK && data != null) {
-                    ArrayList<String> res = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    searchView.setQuery(res.get(0), false);
-                }
+        if (requestCode == Utils.RECOGNIZE_SPEECH_REQUEST) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> res = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                searchView.setQuery(res.get(0), false);
             }
         }
     }
-
-
 }

@@ -51,6 +51,8 @@ public class Utils {
     public static int ADD_CONTENT_REQUEST = 10;
     public static int OPEN_GALLERY_REQUEST = 12;
     public static int SEND_CHALLENGE_REQUEST = 13;
+    public static int RECOGNIZE_SPEECH_REQUEST = 14;
+
 
     public static int STATUS_CHANGE_PAYLOAD = 20;
     public static int PICTURE_CHANGE_PAYLOAD = 21;
