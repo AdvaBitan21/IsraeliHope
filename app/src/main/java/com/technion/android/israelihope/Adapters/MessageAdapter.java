@@ -264,30 +264,31 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final String questionId = mChat.get(holder.getAdapterPosition()).getChallenge().getQuestionId();
         FirebaseFirestore.getInstance().collection("Questions").document(questionId)
                 .get().addOnCompleteListener(task -> {
-          if(task.isSuccessful()){
-            Question question = task.getResult().toObject(Question.class);
-            if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
-                holder.yesno_question_layout.setVisibility(View.VISIBLE);
-                holder.multichoice_question_layout.setVisibility(View.GONE);
-                holder.yesno_question.setText(question.getContent());
-            } else if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
-                holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+            if (task.getResult().exists()) {
+                Question question = task.getResult().toObject(Question.class);
+                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
+                    holder.yesno_question_layout.setVisibility(View.VISIBLE);
+                    holder.multichoice_question_layout.setVisibility(View.GONE);
+                    holder.yesno_question.setText(question.getContent());
+                } else if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
+                    holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+                    holder.yesno_question_layout.setVisibility(View.GONE);
+                    holder.multichoice_question.setText(question.getContent());
+                    holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
+                    holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
+                    holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
+                    holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
+                }
+
+                addMyChallengeListeners(holder);
+
+            } else {
                 holder.yesno_question_layout.setVisibility(View.GONE);
-                holder.multichoice_question.setText(question.getContent());
-                holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
-                holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
-                holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
-                holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
+                holder.multichoice_question_layout.setVisibility(View.GONE);
+                holder.deleted_question_layout.setVisibility(View.VISIBLE);
+                holder.status.setVisibility(View.GONE);
             }
-        }
-          else{
-                //TODO
-          }
-
-                });
-
-
-        addMyChallengeListeners(holder);
+        });
     }
 
     private void addMyChallengeListeners(@NonNull final MyChallengeViewHolder holder) {
@@ -350,45 +351,52 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         String questionId = mChat.get(holder.getAdapterPosition()).getChallenge().getQuestionId();
         FirebaseFirestore.getInstance().collection("Questions").document(questionId)
                 .get().addOnCompleteListener(task -> {
-            Question question = task.getResult().toObject(Question.class);
-            if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
-                holder.yesno_question_layout.setVisibility(View.VISIBLE);
-                holder.multichoice_question_layout.setVisibility(View.GONE);
-                holder.yesno_question.setText(question.getContent());
-            }
-            if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
-                holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+            if (task.getResult().exists()) {
+                Question question = task.getResult().toObject(Question.class);
+                if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
+                    holder.yesno_question_layout.setVisibility(View.VISIBLE);
+                    holder.multichoice_question_layout.setVisibility(View.GONE);
+                    holder.yesno_question.setText(question.getContent());
+                }
+                if (question.getQuestion_type().equals(Question.QuestionType.CLOSE)) {
+                    holder.multichoice_question_layout.setVisibility(View.VISIBLE);
+                    holder.yesno_question_layout.setVisibility(View.GONE);
+                    holder.multichoice_question.setText(question.getContent());
+                    holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
+                    holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
+                    holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
+                    holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
+                }
+            } else {
                 holder.yesno_question_layout.setVisibility(View.GONE);
-                holder.multichoice_question.setText(question.getContent());
-                holder.multichoice_choice1.setText(question.getPossible_answers().get(0));
-                holder.multichoice_choice2.setText(question.getPossible_answers().get(1));
-                holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
-                holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
+                holder.multichoice_question_layout.setVisibility(View.GONE);
+                holder.deleted_question_layout.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void addTheirChallengeListeners(@NonNull final TheirChallengeViewHolder holder) {
         mDocuments.get(holder.getAdapterPosition()).addSnapshotListener((documentSnapshot, e) -> {
+            if (documentSnapshot.exists()) {
+                Challenge challenge = documentSnapshot.toObject(Chat.class).getChallenge();
 
-            Challenge challenge = documentSnapshot.toObject(Chat.class).getChallenge();
+                if (challenge.getState().equals(Challenge.ChallengeState.CORRECT)) {
+                    bindTheirChallengeQuestion(holder);
+                    holder.empty_question_layout.setVisibility(View.GONE);
+                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.messageGreen)));
+                }
 
-            if (challenge.getState().equals(Challenge.ChallengeState.CORRECT)) {
-                bindTheirChallengeQuestion(holder);
-                holder.empty_question_layout.setVisibility(View.GONE);
-                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.messageGreen)));
-            }
+                if (challenge.getState().equals(Challenge.ChallengeState.WRONG)) {
+                    bindTheirChallengeQuestion(holder);
+                    holder.empty_question_layout.setVisibility(View.GONE);
+                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.lightRed)));
+                }
 
-            if (challenge.getState().equals(Challenge.ChallengeState.WRONG)) {
-                bindTheirChallengeQuestion(holder);
-                holder.empty_question_layout.setVisibility(View.GONE);
-                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.lightRed)));
-            }
-
-            if (challenge.getState().equals(Challenge.ChallengeState.OUT_OF_TIME)) {
-                bindTheirChallengeQuestion(holder);
-                holder.empty_question_layout.setVisibility(View.GONE);
-                holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
+                if (challenge.getState().equals(Challenge.ChallengeState.OUT_OF_TIME)) {
+                    bindTheirChallengeQuestion(holder);
+                    holder.empty_question_layout.setVisibility(View.GONE);
+                    holder.challenge_layout.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
+                }
             }
         });
     }
@@ -449,6 +457,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public Button multichoice_choice3;
         public Button multichoice_choice4;
 
+        public RelativeLayout deleted_question_layout;
+
         public MyChallengeViewHolder(@NonNull View itemView) {
             super(itemView);
             challenge_layout = itemView.findViewById(R.id.challenge_layout);
@@ -462,6 +472,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             multichoice_choice4 = itemView.findViewById(R.id.multichoice_choice4);
             dots = itemView.findViewById(R.id.dots);
             status = itemView.findViewById(R.id.status);
+            deleted_question_layout = itemView.findViewById(R.id.deleted_question_container);
         }
     }
 
@@ -483,6 +494,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public Button multichoice_choice3;
         public Button multichoice_choice4;
 
+        public RelativeLayout deleted_question_layout;
+
 
         public TheirChallengeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -497,6 +510,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             multichoice_choice4 = itemView.findViewById(R.id.multichoice_choice4);
             start_challenge = itemView.findViewById(R.id.start_challenge);
             empty_question_layout = itemView.findViewById(R.id.empty_question_container);
+            deleted_question_layout = itemView.findViewById(R.id.deleted_question_container);
+
         }
     }
 

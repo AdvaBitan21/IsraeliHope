@@ -272,6 +272,29 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/deleted_question_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/background_white_soft_corners"
+                android:elevation="5dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/deleted_question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:drawableRight="@drawable/block"
+                    android:drawablePadding="5dp"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/question_not_exists"
+                    android:textColor="@color/Grey"
+                    android:textSize="14sp"/>
+
+            </RelativeLayout>
+
         </LinearLayout>
 
         <TextView

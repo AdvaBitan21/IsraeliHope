@@ -161,5 +161,6 @@
     <string name="question_subject_ethiopian">אתיופים</string>
     <string name="question_subject_moroccan">מרוקאים</string>
     <string name="users_yous_should_know">משתמשים שכדאי לך להכיר</string>
+    <string name="question_not_exists">השאלה כבר לא קיימת במאגר</string>
 
 </resources>
