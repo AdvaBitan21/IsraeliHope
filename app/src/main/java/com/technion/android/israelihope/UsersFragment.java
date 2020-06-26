@@ -1,6 +1,7 @@
 package com.technion.android.israelihope;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
@@ -103,21 +104,67 @@ public class UsersFragment extends Fragment implements androidx.appcompat.widget
 
     private void initRandomDifferentUsers() {
         ArrayList<User> randomDifferentUsers = getRandomDifferentUsers();
-
+        if (randomDifferentUsers.size() == 0)
+            return;
         User user1 = randomDifferentUsers.get(0);
-        if (user1 == null) return;
+        //if (user1 == null) return;
         Utils.loadProfileImage(getContext(), getView().findViewById(R.id.profileImage1), user1.getEmail());
         ((TextView) getView().findViewById(R.id.username1)).setText(user1.getUserName());
-
+        getView().findViewById(R.id.profileImage1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickImage(user1);
+            }
+        });
+        getView().findViewById(R.id.username1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickImage(user1);
+            }
+        });
+        if (randomDifferentUsers.size() == 1)
+            return;
         User user2 = randomDifferentUsers.get(1);
-        if (user2 == null) return;
+        //if (user2 == null) return;
         Utils.loadProfileImage(getContext(), getView().findViewById(R.id.profileImage2), user2.getEmail());
         ((TextView) getView().findViewById(R.id.username2)).setText(user2.getUserName());
-
+        getView().findViewById(R.id.profileImage2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickImage(user2);
+            }
+        });
+        getView().findViewById(R.id.username2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickImage(user2);
+            }
+        });
+        if (randomDifferentUsers.size() == 2)
+            return;
         User user3 = randomDifferentUsers.get(2);
-        if (user3 == null) return;
+        //if (user3 == null) return;
         Utils.loadProfileImage(getContext(), getView().findViewById(R.id.profileImage3), user3.getEmail());
         ((TextView) getView().findViewById(R.id.username3)).setText(user3.getUserName());
+        getView().findViewById(R.id.profileImage3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickImage(user3);
+            }
+        });
+        getView().findViewById(R.id.username3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickImage(user3);
+            }
+        });
+
+    }
+    private void onClickImage(User user){
+        Intent intent = new Intent(getContext(), MessageActivity.class);
+        intent.putExtra("receiver", user);
+        intent.putExtra("sender", ((MainActivity) getContext()).getCurrentUser());
+        getContext().startActivity(intent);
     }
 
 
