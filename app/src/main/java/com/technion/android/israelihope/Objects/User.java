@@ -14,8 +14,9 @@ public class User implements Serializable {
         Muslim1,
         Muslim2,
         Muslim3,
-        Druze,
-        Bedouin
+        Druze1,
+        Druze2,
+        Druze3
     }
     public enum AcademicRole {
         Student,

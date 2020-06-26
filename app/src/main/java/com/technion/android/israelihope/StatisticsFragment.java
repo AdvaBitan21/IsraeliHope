@@ -59,9 +59,9 @@ public class StatisticsFragment extends Fragment {
                 hist.put( "Christian", hist.get(type) + 1);
             if(type.equals(User.UserType.Jewish1)||type.equals(User.UserType.Jewish2)||type.equals(User.UserType.Jewish3))
                 hist.put( "Jewish", hist.get(type) + 1);
-            if(type.equals(User.UserType.Muslim1)||type.equals(User.UserType.Muslim2)||type.equals(User.UserType.Muslim3)||type.equals(User.UserType.Bedouin))
+            if(type.equals(User.UserType.Muslim1)||type.equals(User.UserType.Muslim2)||type.equals(User.UserType.Muslim3))
                 hist.put( "Muslim", hist.get(type) + 1);
-            if(type.equals(User.UserType.Druze))
+            if(type.equals(User.UserType.Druze1) || type.equals(User.UserType.Druze2) || type.equals(User.UserType.Druze3))
                 hist.put( "Druze", hist.get(type) + 1);
             else
                 hist.put( type, hist.get(type) + 1);

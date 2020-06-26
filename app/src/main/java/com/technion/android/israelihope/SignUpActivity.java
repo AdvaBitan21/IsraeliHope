@@ -392,6 +392,15 @@ public class SignUpActivity extends AppCompatActivity {
                 return User.UserType.Christian3;
         }
 
+        if (religion.equals("הדת הדרוזית")) {
+            if (religionMeasure.equals("חילוני"))
+                return User.UserType.Druze1;
+            if (religionMeasure.equals("מסורתי"))
+                return User.UserType.Druze2;
+            if (religionMeasure.equals("דתי"))
+                return User.UserType.Druze3;
+        }
+
         return null;
     }
 
