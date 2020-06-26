@@ -237,7 +237,6 @@ public class StatisticsFragment extends Fragment {
                 hist.put("Druze", hist.get(type) + 1);
             else
                 hist.put(type, hist.get(type) + 1);
-
         }
     }
 

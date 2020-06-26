@@ -502,6 +502,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void initStep3NextButton() {
         findViewById(R.id.step3finish).setOnClickListener(view -> {
+            updateCountUsersHist(getUserType());
             Intent intent = new Intent(SignUpActivity.this, FirstQuizActivity.class);
             startActivity(intent);
             finish();
