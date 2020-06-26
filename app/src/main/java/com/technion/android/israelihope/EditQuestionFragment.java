@@ -87,7 +87,7 @@ public class EditQuestionFragment extends Fragment {
                 R.array.question_subjects, android.R.layout.simple_spinner_item);
         adapterSubject.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subjectSpinner.setAdapter(adapterSubject);
-        subjectSpinner.setSelection(0);
+        subjectSpinner.setSelection(GetIndexOfSubject(question.getSubject()));
 
         content = getActivity().findViewById(R.id.content_edit);
         first_ans = getActivity().findViewById(R.id.first_edit);
@@ -122,6 +122,20 @@ public class EditQuestionFragment extends Fragment {
 
             }
 
+        });
+        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
         });
 
 
@@ -176,7 +190,7 @@ public class EditQuestionFragment extends Fragment {
                 final HashMap<String, Object> updates = new HashMap<>();
                 question.setContent(content.getText().toString());
                 question.setSubject(getSubject(subjectSpinner.getSelectedItem().toString()));
-                if (typeSpinner.getSelectedItem().toString().equals("שאלת כן לא"))
+                if (typeSpinner.getSelectedItem().toString().equals("שאלת נכון/לא נכון"))
                     question.setQuestion_type(Question.QuestionType.YES_NO);
                 if (typeSpinner.getSelectedItem().toString().equals("שאלה אמריקאית"))
                     question.setQuestion_type(Question.QuestionType.CLOSE);
@@ -229,24 +243,43 @@ public class EditQuestionFragment extends Fragment {
             }
         });
     }
+private int GetIndexOfSubject(Question.QuestionSubject sub){
+        if(sub == Question.QuestionSubject.General)
+            return 0;
+    if(sub == Question.QuestionSubject.Jewish)
+    return 1;
+    if(sub == Question.QuestionSubject.Muslim)
+        return 2;
+    if(sub == Question.QuestionSubject.Christian)
+        return 3;
+    if(sub == Question.QuestionSubject.Druze)
+        return 4;
+    if(sub == Question.QuestionSubject.Bedouin)
+        return 5;
+    if(sub == Question.QuestionSubject.Ethiopian)
+        return 6;
+    if(sub == Question.QuestionSubject.Moroccan)
+        return 7;
 
+    return 0;
+
+}
     private Question.QuestionSubject getSubject(String s) {
-
-        if (s.equals("שאלה כללית"))
+        if (s.equals(R.string.question_subject_general))
             return Question.QuestionSubject.General;
-        if (s.equals("יהודים"))
+        if (s.equals(R.string.question_subject_jewish))
             return Question.QuestionSubject.Jewish;
-        if (s.equals("נוצרים"))
+        if (s.equals(R.string.question_subject_christian))
             return Question.QuestionSubject.Christian;
-        if (s.equals("מוסלמים"))
+        if (s.equals(R.string.question_subject_muslim))
             return Question.QuestionSubject.Muslim;
-        if (s.equals("דרוזים"))
+        if (s.equals(R.string.question_subject_druze))
             return Question.QuestionSubject.Druze;
-        if (s.equals("בדואים"))
+        if (s.equals(R.string.question_subject_bedouin))
             return Question.QuestionSubject.Bedouin;
-        if (s.equals("בני העדה האתיופית"))
+        if (s.equals(R.string.question_subject_ethiopian))
             return Question.QuestionSubject.Ethiopian;
-        if (s.equals("בני העדה המרוקאית"))
+        if (s.equals(R.string.question_subject_moroccan))
             return Question.QuestionSubject.Moroccan;
         return Question.QuestionSubject.General;
 
@@ -259,7 +292,7 @@ public class EditQuestionFragment extends Fragment {
             return false;
         }
 
-        if (type.equals("שאלת כן לא")) {
+        if (type.equals("שאלת נכון/לא נכון")) {
             if (first_ans.getText().toString().length() == 0 || second_ans.getText().toString().length() == 0) {
                 Toast.makeText(getContext(), "יש לכתוב תוכן לתשובות האפשריות", Toast.LENGTH_SHORT).show();
                 return false;
@@ -306,7 +339,7 @@ public class EditQuestionFragment extends Fragment {
         ArrayList<String> ans = question.getPossible_answers();
         for (int i = 0; i < 5 - ans.size(); i++)
             ans.add("");
-        if (type.equals("שאלת כן לא")) {
+        if (type.equals("שאלת נכון/לא נכון")) {
             first_ans.setText(ans.get(0));
             second_ans.setText(ans.get(1));
             third_ans.setVisibility(View.GONE);

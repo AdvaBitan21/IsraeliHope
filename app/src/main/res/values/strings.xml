@@ -143,8 +143,8 @@
     <string-array name="question_subjects">
         <item>@string/question_subject_general</item>
         <item>@string/question_subject_jewish</item>
-        <item>@string/christians</item>
-        <item>@id/muslims</item>
+        <item>@string/question_subject_muslim</item>
+        <item>@string/question_subject_christian</item>
         <item>@string/question_subject_druze</item>
         <item>@string/question_subject_bedouin</item>
         <item>@string/question_subject_ethiopian</item>
