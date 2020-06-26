@@ -264,6 +264,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final String questionId = mChat.get(holder.getAdapterPosition()).getChallenge().getQuestionId();
         FirebaseFirestore.getInstance().collection("Questions").document(questionId)
                 .get().addOnCompleteListener(task -> {
+          if(task.isSuccessful()){
             Question question = task.getResult().toObject(Question.class);
             if (question.getQuestion_type().equals(Question.QuestionType.YES_NO)) {
                 holder.yesno_question_layout.setVisibility(View.VISIBLE);
@@ -278,7 +279,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 holder.multichoice_choice3.setText(question.getPossible_answers().get(2));
                 holder.multichoice_choice4.setText(question.getPossible_answers().get(3));
             }
-        });
+        }
+          else{
+                //TODO
+          }
+
+                });
+
 
         addMyChallengeListeners(holder);
     }
