@@ -76,12 +76,7 @@ public class Utils {
         }
 
         FirebaseStorage.getInstance().getReference().child("profileImages/" + email + ".jpeg")
-                .getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                Glide.with(context).load(task.getResult()).into(imageView);
-            }
-        });
+                .getDownloadUrl().addOnCompleteListener(task -> Glide.with(context).load(task.getResult()).into(imageView));
     }
 
     /**
@@ -227,6 +222,7 @@ public class Utils {
                         countRights.put(type.name(), 0);
                     }
                     document.getReference().update("countRights", countRights);
+                    document.getReference().update("countAnswers", countRights);
                 }
             }
         });

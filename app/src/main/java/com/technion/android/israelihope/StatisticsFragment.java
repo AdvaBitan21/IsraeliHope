@@ -7,13 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -37,35 +32,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 public class StatisticsFragment extends Fragment {
 
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public static class HistogramObject{
-        private HashMap<String, Integer> hist;
-
-        public HistogramObject() { }
-
-        public HashMap<String, Integer> getHist() {
-            return hist;
-        }
-
-        public void setHist(HashMap<String, Integer> hist) {
-            this.hist = hist;
-        }
-
-        public void addToHistByUser(String type) {
-            if(type.equals(User.UserType.Christian1)||type.equals(User.UserType.Christian2)||type.equals(User.UserType.Christian3))
-                hist.put( "Christian", hist.get(type) + 1);
-            if(type.equals(User.UserType.Jewish1)||type.equals(User.UserType.Jewish2)||type.equals(User.UserType.Jewish3))
-                hist.put( "Jewish", hist.get(type) + 1);
-            if(type.equals(User.UserType.Muslim1)||type.equals(User.UserType.Muslim2)||type.equals(User.UserType.Muslim3)||type.equals(User.UserType.Bedouin))
-                hist.put( "Muslim", hist.get(type) + 1);
-            if(type.equals(User.UserType.Druze))
-                hist.put( "Druze", hist.get(type) + 1);
-            else
-                hist.put( type, hist.get(type) + 1);
-
+    private static String updateTitle(String name) {
+        switch (name) {
+            case "Jewish":
+                return "יהודים";
+            case "Christian":
+                return "נוצרים";
+            case "Muslim":
+                return "מוסלמים";
+            default:
+                return "דרוזים";
         }
     }
 
@@ -84,7 +68,7 @@ public class StatisticsFragment extends Fragment {
         db.collection("Statistics").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                for( QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                     setUp(documentSnapshot);
                 }
                 Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
@@ -96,18 +80,18 @@ public class StatisticsFragment extends Fragment {
 
     private void setUp(QueryDocumentSnapshot dc) {
         HistogramObject histogramObject = dc.toObject(HistogramObject.class);
-        switch (dc.getId()){
+        switch (dc.getId()) {
             case "CountUsers":
                 setUpAllUsersStatistics(histogramObject.getHist());
                 break;
             case "FirstQuizHistogram_AcademicStaff":
-                setUpBarChart(histogramObject.getHist(), R.id.titleBar1,"הסגל האקדמי", R.id.chartBar1);
+                setUpBarChart(histogramObject.getHist(), R.id.titleBar1, "הסגל האקדמי", R.id.chartBar1);
                 break;
             case "FirstQuizHistogram_AdministrativeStaff":
-                setUpBarChart(histogramObject.getHist(), R.id.titleBar2,"הסגל המנהלי", R.id.chartBar2);
+                setUpBarChart(histogramObject.getHist(), R.id.titleBar2, "הסגל המנהלי", R.id.chartBar2);
                 break;
             case "FirstQuizHistogram_Students":
-                setUpBarChart(histogramObject.getHist(), R.id.titleBar3,"הסטודנטים", R.id.chartBar3);
+                setUpBarChart(histogramObject.getHist(), R.id.titleBar3, "הסטודנטים", R.id.chartBar3);
                 break;
 
         }
@@ -115,7 +99,7 @@ public class StatisticsFragment extends Fragment {
 
     private void setUpAllUsersStatistics(Map<String, Integer> hist) {
         final List<PieEntry> pieEntries = new ArrayList<>();
-        for ( HashMap.Entry<String, Integer> entry : hist.entrySet()) {
+        for (HashMap.Entry<String, Integer> entry : hist.entrySet()) {
             String key = updateTitle(entry.getKey());
             Integer value = entry.getValue();
             if (value > 0)
@@ -138,7 +122,7 @@ public class StatisticsFragment extends Fragment {
         data.setDrawValues(false);
 
         //Get the Chart
-        PieChart chart = (PieChart)getView().findViewById(R.id.chart0);
+        PieChart chart = getView().findViewById(R.id.chart0);
         chart.setDrawHoleEnabled(false);
         chart.setEntryLabelColor(Color.BLACK);
         chart.setData(data);
@@ -149,36 +133,23 @@ public class StatisticsFragment extends Fragment {
         chart.invalidate();
     }
 
-    private static String updateTitle(String name){
-        switch (name) {
-            case "Jewish":
-                return "יהודים";
-            case "Christian":
-                return "נוצרים";
-            case "Muslim":
-                return "מוסלמים";
-            default:
-                return "דרוזים";
-        }
-    }
-
     private void setUpBarChart(HashMap<String, Integer> hist, int title_id, String role, int chart_id) {
         List<BarEntry> barEntries = new ArrayList<>();
 
-       final ArrayList<String> labels = new ArrayList<>(hist.keySet());
+        final ArrayList<String> labels = new ArrayList<>(hist.keySet());
         Collections.sort(labels);
 
-        for (int i = 0; i < labels.size(); i++){
+        for (int i = 0; i < labels.size(); i++) {
             int label = getLabel(labels.get(i));
             int value = hist.get(labels.get(i));
-            if (value > 0 ){
+            if (value > 0) {
                 barEntries.add(new BarEntry(label, value, label));
             }
         }
 
 
         TextView title = getView().findViewById(title_id);
-        title.setText("אחוז התשובות הנכונות בקרב "+ role);
+        title.setText("אחוז התשובות הנכונות בקרב " + role);
         BarDataSet dataSet = new BarDataSet(barEntries, "אחוזים");
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
 //        dataSet.setStackLabels(labels.toArray(new String[labels.size()]));
@@ -190,7 +161,7 @@ public class StatisticsFragment extends Fragment {
 
 
         //Get the Chart
-        BarChart chart = (BarChart)getView().findViewById(chart_id);
+        BarChart chart = getView().findViewById(chart_id);
         chart.setData(data);
         chart.setFitBars(true);
         chart.animateY(1000);
@@ -214,11 +185,11 @@ public class StatisticsFragment extends Fragment {
         xl.setLabelRotationAngle(0);
         labels.add("0");
         Collections.sort(labels);
-        xl.setValueFormatter(new IndexAxisValueFormatter(){
+        xl.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 if (value >= 0) {
-                    return labels.get((int) value/10);
+                    return labels.get((int) value / 10);
                 }
                 return "";
             }
@@ -239,6 +210,34 @@ public class StatisticsFragment extends Fragment {
     private int getLabel(String key) {
         String[] split = key.split("-");
         return Integer.parseInt(split[0]) + 10;
+    }
+
+    public static class HistogramObject {
+        private HashMap<String, Integer> hist;
+
+        public HistogramObject() {
+        }
+
+        public HashMap<String, Integer> getHist() {
+            return hist;
+        }
+
+        public void setHist(HashMap<String, Integer> hist) {
+            this.hist = hist;
+        }
+
+        public void addToHistByUser(String type) {
+            if (type.equals(User.UserType.Christian1) || type.equals(User.UserType.Christian2) || type.equals(User.UserType.Christian3))
+                hist.put("Christian", hist.get(type) + 1);
+            if (type.equals(User.UserType.Jewish1) || type.equals(User.UserType.Jewish2) || type.equals(User.UserType.Jewish3))
+                hist.put("Jewish", hist.get(type) + 1);
+            if (type.equals(User.UserType.Muslim1) || type.equals(User.UserType.Muslim2) || type.equals(User.UserType.Muslim3))
+                hist.put("Muslim", hist.get(type) + 1);
+            if (type.equals(User.UserType.Druze1) || type.equals(User.UserType.Druze2) || type.equals(User.UserType.Druze3))
+                hist.put("Druze", hist.get(type) + 1);
+            else
+                hist.put(type, hist.get(type) + 1);
+        }
     }
 
 }

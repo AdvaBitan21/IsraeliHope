@@ -392,6 +392,15 @@ public class SignUpActivity extends AppCompatActivity {
                 return User.UserType.Christian3;
         }
 
+        if (religion.equals("הדת הדרוזית")) {
+            if (religionMeasure.equals("חילוני"))
+                return User.UserType.Druze1;
+            if (religionMeasure.equals("מסורתי"))
+                return User.UserType.Druze2;
+            if (religionMeasure.equals("דתי"))
+                return User.UserType.Druze3;
+        }
+
         return null;
     }
 
@@ -493,6 +502,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void initStep3NextButton() {
         findViewById(R.id.step3finish).setOnClickListener(view -> {
+            updateCountUsersHist(getUserType());
             Intent intent = new Intent(SignUpActivity.this, FirstQuizActivity.class);
             startActivity(intent);
             finish();
