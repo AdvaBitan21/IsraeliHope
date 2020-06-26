@@ -38,7 +38,7 @@ public class Question implements Serializable {
         this.right_answers = new ArrayList<>();
         right_answers.add("dummy");
         this.first_quiz_index = -1;
-        this.subject = QuestionSubject.Bedouin;
+        this.subject = QuestionSubject.General;
 
         initCountRights();
         initCountAnswers();
