@@ -625,7 +625,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     StatisticsFragment.HistogramObject document = task.getResult().toObject(StatisticsFragment.HistogramObject.class);
-                    document.addToHistByUser("" + userType);
+                    document.addToHistByUser(User.generalUserType(userType));
                     statRef.update("hist", document.getHist());
                 }
             }
