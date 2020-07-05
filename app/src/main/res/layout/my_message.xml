@@ -48,7 +48,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:elevation="2dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/round_user" />
 
         <RelativeLayout
             android:id="@+id/content_layout"
