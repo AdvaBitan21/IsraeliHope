@@ -72,10 +72,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ImageView add_users = findViewById(R.id.add_users);
-        add_users.setOnClickListener(view -> loadFragment(new UsersFragment()));
+        add_users.setOnClickListener(view -> {
+            if (getCurrentFragment() instanceof UsersFragment) {
+                onBackPressed();
+                return;
+            }
+            addFragment(new UsersFragment());
+        });
 
         ImageView statistics = findViewById(R.id.statistics);
-        statistics.setOnClickListener(view -> loadFragment(new StatisticsFragment()));
+        statistics.setOnClickListener(view -> {
+            if (getCurrentFragment() instanceof StatisticsFragment)
+                return;
+            addFragment(new StatisticsFragment());
+        });
 
     }
 

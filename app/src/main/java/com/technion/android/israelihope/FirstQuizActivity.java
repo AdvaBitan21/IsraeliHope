@@ -83,6 +83,7 @@ public class FirstQuizActivity extends AppCompatActivity {
                 for (DocumentSnapshot doc : task.getResult()) {
                     Question question = doc.toObject(Question.class);
                     loadFragment(question.createQuestionFragment());
+                    startQuizProgressBar();
                 }
             }
         });
