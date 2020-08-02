@@ -149,7 +149,7 @@ public class StatisticsFragment extends Fragment {
 
 
         TextView title = getView().findViewById(title_id);
-        title.setText("אחוז התשובות הנכונות בקרב " + role);
+        title.setText("התפלגות הציונים בשאלון הראשוני בקרב " + role);
         BarDataSet dataSet = new BarDataSet(barEntries, "אחוזים");
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
 //        dataSet.setStackLabels(labels.toArray(new String[labels.size()]));

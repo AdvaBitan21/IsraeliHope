@@ -249,6 +249,7 @@
             android:layout_centerHorizontal="true"
             android:background="@color/colorRed"
             android:text="מחיקת השאלה"
+            android:visibility="invisible"
             android:textColor="@color/white"
             android:textSize="18sp" />
         <Button

@@ -45,6 +45,8 @@ public class EditQuestionFragment extends Fragment {
     private EditText forth_ans;
     private EditText fifth_ans;
     private boolean isAdding;
+    private boolean isFirstQuiz;
+
 
     private CheckBox first_check;
     private CheckBox second_check;
@@ -55,9 +57,9 @@ public class EditQuestionFragment extends Fragment {
     private Spinner subjectSpinner;
 
 
-    public EditQuestionFragment(Question question, boolean isAdding) {
+public EditQuestionFragment(Question question, boolean isAdding) {
         this.question = question;
-
+        this.isFirstQuiz=question.getFirst_quiz_index()>0;
         this.isAdding = isAdding;
 
     }
@@ -138,8 +140,8 @@ public class EditQuestionFragment extends Fragment {
             }
         });
 
-
-        setUpDeleteBtn();
+        if(!isFirstQuiz)
+            setUpDeleteBtn();
         setUpUpdateBtn();
 
 
@@ -149,6 +151,7 @@ public class EditQuestionFragment extends Fragment {
     private void setUpDeleteBtn() {
 
         Button deleteBtn = getActivity().findViewById(R.id.delete);
+        deleteBtn.setVisibility(View.VISIBLE);
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

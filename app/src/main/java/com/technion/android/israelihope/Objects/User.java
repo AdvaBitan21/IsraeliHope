@@ -18,6 +18,18 @@ public class User implements Serializable {
         Druze2,
         Druze3
     }
+
+    public static String generalUserType(UserType userType){
+        if(userType.equals(UserType.Jewish1)||userType.equals(UserType.Jewish2)||userType.equals(UserType.Jewish3))
+            return "Jewish";
+        if(userType.equals(UserType.Christian1)||userType.equals(UserType.Christian2)||userType.equals(UserType.Christian3))
+        return "Christian";
+        if(userType.equals(UserType.Muslim1)||userType.equals(UserType.Muslim2)||userType.equals(UserType.Muslim3))
+            return "Muslim";
+        if(userType.equals(UserType.Druze1)||userType.equals(UserType.Druze2)||userType.equals(UserType.Druze3))
+            return "Druze";
+       return "Jewish";
+    }
     public enum AcademicRole {
         Student,
         Academic_Staff,
