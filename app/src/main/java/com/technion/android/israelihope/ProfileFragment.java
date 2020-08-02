@@ -68,7 +68,6 @@ public class ProfileFragment extends Fragment {
         TextView userName = getView().findViewById(R.id.userName);
         userName.setText(mUser.getUserName());
 
-
         CircleImageView profileImage = getView().findViewById(R.id.profile_image);
         Utils.loadProfileImage(getContext(), profileImage, mUser.getEmail());
 

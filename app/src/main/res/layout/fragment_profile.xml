@@ -26,9 +26,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:elevation="10dp"
-            android:src="@color/lightGrey"
+            android:src="@drawable/round_user"
             app:civ_border_color="@color/white"
-            app:civ_border_width="1dp" />
+            app:civ_border_width="1dp"
+            app:civ_circle_background_color="@color/white" />
 
         <ImageButton
             android:id="@+id/editImageButton"

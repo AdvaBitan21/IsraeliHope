@@ -61,34 +61,21 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = mAuth.getCurrentUser();
         final CircleImageView profileImage = findViewById(R.id.profile);
-        Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
+        Utils.loadProfileImage(this, profileImage, user.getEmail());
 
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getCurrentFragment() instanceof ProfileFragment) {
-                    onBackPressed();
-                    return;
-                }
-                addFragment(new ProfileFragment());
+        profileImage.setOnClickListener(view -> {
+            if (getCurrentFragment() instanceof ProfileFragment) {
+                onBackPressed();
+                return;
             }
+            addFragment(new ProfileFragment());
         });
 
         ImageView add_users = findViewById(R.id.add_users);
-        add_users.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadFragment(new UsersFragment());
-            }
-        });
+        add_users.setOnClickListener(view -> loadFragment(new UsersFragment()));
 
         ImageView statistics = findViewById(R.id.statistics);
-        statistics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadFragment(new StatisticsFragment());
-            }
-        });
+        statistics.setOnClickListener(view -> loadFragment(new StatisticsFragment()));
 
     }
 

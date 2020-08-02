@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         //Shared element - enter transition
         supportPostponeEnterTransition();
@@ -154,9 +157,6 @@ public class SignUpActivity extends AppCompatActivity {
             findViewById(R.id.passwordIndicator).setVisibility(View.VISIBLE);
             findViewById(R.id.illegal_password).setVisibility(View.GONE);
         }
-
-        if (profileImage == null)
-            enable = false;
 
         setNextButtonEnabled(findViewById(R.id.step1Next), enable);
         return enable;
@@ -443,9 +443,7 @@ public class SignUpActivity extends AppCompatActivity {
                         FirebaseFirestore.getInstance()
                                 .collection("Users")
                                 .document(user.getEmail())
-                                .set(user).addOnCompleteListener(task1 -> {
-                            showStep3Layout();
-                        });
+                                .set(user).addOnCompleteListener(task1 -> showStep3Layout());
                     } else {
                         Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }

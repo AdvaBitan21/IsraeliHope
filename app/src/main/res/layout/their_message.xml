@@ -48,7 +48,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:elevation="2dp"
-            android:src="@drawable/round_user" />
+            android:src="@drawable/round_user"
+            app:civ_circle_background_color="@color/white"/>
 
         <RelativeLayout
             android:id="@+id/content_layout"

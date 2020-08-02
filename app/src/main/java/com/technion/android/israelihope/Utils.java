@@ -16,7 +16,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.technion.android.israelihope.Objects.Question;
 import com.technion.android.israelihope.Objects.User;
 
@@ -76,7 +74,13 @@ public class Utils {
         }
 
         FirebaseStorage.getInstance().getReference().child("profileImages/" + email + ".jpeg")
-                .getDownloadUrl().addOnCompleteListener(task -> Glide.with(context).load(task.getResult()).into(imageView));
+                .getDownloadUrl()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful())
+                        imageView.setImageResource(R.drawable.round_user);
+                        //Glide.with(context).load(context.getDrawable(R.drawable.round_user)).into(imageView);
+                    else Glide.with(context).load(task.getResult()).into(imageView);
+                });
     }
 
     /**
@@ -98,6 +102,8 @@ public class Utils {
      */
     public static void uploadProfileImage(Bitmap bitmap, String email) {
 
+        if (bitmap == null) return;
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
@@ -106,21 +112,11 @@ public class Utils {
                 .child(email + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        getDownloadUrl(reference);
-                    }
-                });
+                .addOnSuccessListener(taskSnapshot -> getDownloadUrl(reference));
     }
 
     private static void getDownloadUrl(StorageReference reference) {
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                setUserProfileUri(uri);
-            }
-        });
+        reference.getDownloadUrl().addOnSuccessListener(uri -> setUserProfileUri(uri));
     }
 
     private static void setUserProfileUri(Uri uri) {
@@ -134,6 +130,7 @@ public class Utils {
         assert user != null;
         user.updateProfile(request);
     }
+
 
 // ===================================== Firebase Functions ===================================== //
 
