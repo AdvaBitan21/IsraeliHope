@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".StatisticsFragment">
 
     <ProgressBar
-        android:layout_height="100dp"
-        android:layout_width="match_parent"
-        android:layout_marginTop="300dp"
-        android:visibility="visible"
         android:id="@+id/progress_bar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="visible" />
 
-        />
     <ScrollView
+        android:id="@+id/statistics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/statistics"
         android:visibility="gone">
 
         <LinearLayout
@@ -35,7 +35,7 @@
                 android:text="chart1"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/chart0"
@@ -43,7 +43,7 @@
                 android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.PieChart>
+                android:layout_marginBottom="20dp"/>
 
             <TextView
                 android:id="@+id/titleBar1"
@@ -54,7 +54,7 @@
                 android:text="chart1"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chartBar1"
@@ -64,7 +64,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.BarChart>
+                android:layout_marginBottom="20dp"/>
 
             <TextView
                 android:id="@+id/titleBar2"
@@ -75,7 +75,7 @@
                 android:text="chart1"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chartBar2"
@@ -85,7 +85,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.BarChart>
+                android:layout_marginBottom="20dp"/>
 
             <TextView
                 android:id="@+id/titleBar3"
@@ -96,7 +96,7 @@
                 android:text="chart2"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chartBar3"
@@ -106,30 +106,29 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.BarChart>
+                android:layout_marginBottom="20dp"/>
 
-<!--            <TextView-->
-<!--                android:id="@+id/title3"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:text="chart3"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"></TextView>-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/title3"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                android:text="chart3"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="18sp"-->
+            <!--                android:textStyle="bold"></TextView>-->
 
-<!--            <com.github.mikephil.charting.charts.PieChart-->
-<!--                android:id="@+id/chart3"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="250dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.PieChart>-->
+            <!--            <com.github.mikephil.charting.charts.PieChart-->
+            <!--                android:id="@+id/chart3"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="250dp"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.PieChart>-->
         </LinearLayout>
 
     </ScrollView>
-
 
 
 </LinearLayout>
