@@ -65,6 +65,14 @@
         android:paddingBottom="5dp"
         android:background="@color/colorLightGrey"/>
 
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_above="@id/edit_layout"/>
+
     <LinearLayout
         android:id="@+id/edit_layout"
         android:layout_width="match_parent"

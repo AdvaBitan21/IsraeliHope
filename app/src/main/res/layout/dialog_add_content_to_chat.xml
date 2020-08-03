@@ -13,14 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
-        android:layout_marginBottom="30dp"
-
         android:padding="7dp">
 
         <LinearLayout
             android:id="@+id/buttons"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
             android:layout_above="@id/cancel"
             android:background="@drawable/background_white_rounded_border"
@@ -81,7 +78,6 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="5dp"
-
             android:background="@drawable/background_white_rounded_border"
             android:backgroundTint="@color/white"
             android:text="@string/cancel"
