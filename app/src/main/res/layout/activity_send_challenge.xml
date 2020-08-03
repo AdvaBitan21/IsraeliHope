@@ -7,8 +7,6 @@
     android:background="@color/transparentBlack"
     android:layoutDirection="rtl"
     tools:context=".SendChallengeActivity"
-    android:layout_marginBottom="40dp"
-
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -70,7 +68,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:elevation="15dp"
-
             android:gravity="center_horizontal|bottom"
             android:layoutDirection="rtl"
             android:orientation="horizontal"
@@ -91,6 +88,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/circle"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:elevation="10dp"
