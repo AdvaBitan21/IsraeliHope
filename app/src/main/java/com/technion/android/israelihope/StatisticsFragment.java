@@ -72,6 +72,8 @@ public class StatisticsFragment extends Fragment {
                     setUp(documentSnapshot);
                 }
                 Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+                view.findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                view.findViewById(R.id.statistics).setVisibility(View.VISIBLE);
 
             }
         });
@@ -119,7 +121,7 @@ public class StatisticsFragment extends Fragment {
         dataSet.setValueLinePart2Length(0.35f);
         dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         PieData data = new PieData(dataSet);
-        data.setDrawValues(false);
+        data.setDrawValues(true);
 
         //Get the Chart
         PieChart chart = getView().findViewById(R.id.chart0);

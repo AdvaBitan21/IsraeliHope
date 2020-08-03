@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="180dp"
-        android:text="סיימת את השאלון הראשוני בציון של:"
+        android:text="סיימת את השאלון הראשוני בציון של"
         android:textSize="40dp"
         android:id="@+id/title"></TextView>
     <TextView
