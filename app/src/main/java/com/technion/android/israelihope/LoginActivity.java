@@ -255,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
         String user_email = mAuth.getCurrentUser().getEmail();
 
         Map<String, Object> tokenMap = new HashMap<>();
-        tokenMap.put("token_id", token_id);
+        tokenMap.put("tokenId", token_id);
         db.collection("Users").document(user_email).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

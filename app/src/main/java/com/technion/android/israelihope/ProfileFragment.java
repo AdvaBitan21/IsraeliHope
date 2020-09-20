@@ -151,7 +151,7 @@ public class ProfileFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> removeToken = new HashMap<>();
-        removeToken.put("token_id", "");
+        removeToken.put("tokenId", "");
         db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
